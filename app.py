@@ -111,13 +111,13 @@ with st.sidebar:
 
 # ---------- tabs ----------
 
-st.title("Supplier Risk Radar")
+st.title("RailRisk Radar")
 s = ds.summary()
 st.caption(f"{s['suppliers']:,} suppliers · average TRI {s['avg_tri']} · {s['critical']} Critical · "
            f"{s['high']:,} High · {s['po_volume'] / 1e9:.1f} bn € purchase volume")
 
 tabs = st.tabs(["🔎 Find suppliers", "⚖️ Compare shortlist", "🧬 Supplier profile", "💬 Ask the data",
-                "🌐 Research agent", "🚆 Rail impact lab"])
+                "🌐 Research agent", "🚆 Rail impact lab (demo data)"])
 with tabs[0]:
     explore.render()
 with tabs[1]:

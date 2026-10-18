@@ -13,7 +13,7 @@ A train is built from tens of thousands of parts. A buyer sourcing a critical co
 | **Supplier profile** | Exact explanation of any supplier's TRI (waterfall from the dataset average), percentile per score, operational metrics, and lower-risk alternatives with a similar profile |
 | **Ask the data** | Chat assistant that calls tools over the dataset (filter, compare, explain, statistics). It picks its own charts to show under the answer and can add suppliers to the shortlist. The full tool trace is visible |
 | **Research agent** | Name a real company. The agent plans its research, searches news and the web, reads the company's own site, **digs deeper on red flags**, closes evidence gaps, then scores the company on the dataset's 18 dimensions with a source link behind each finding. It computes a TRI with the dataset's formula, so you can see where a real company would rank among your 10,000 suppliers |
-| **Rail impact lab** | Extension on a separate, fictional 32-supplier rail dataset: supplier → component → train project → € penalty cascade, live news scan, what-if disruption simulation, rail copilot |
+| **Rail impact lab (demo data)** | Extension on a separate, fictional 32-supplier rail network: supplier → component → train project → € penalty cascade, live news scan, what-if disruption simulation, rail copilot. Suppliers here carry their own **exposure score** (act now ≥ 60, watch 40–59, low < 40), a different scale from the dataset TRI |
 
 ## What we found in the data
 
