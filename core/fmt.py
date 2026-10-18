@@ -1,4 +1,16 @@
 """Formatting helpers shared by the UI and the cache pre-warm script."""
+import html
+
+
+def esc(text, quote: bool = True) -> str:
+    """HTML-escape untrusted text (LLM output, web titles) before it goes into unsafe_allow_html markup."""
+    return html.escape("" if text is None else str(text), quote=quote)
+
+
+def safe_url(url) -> str:
+    """The URL if it is plain http(s), else empty. Use for href attributes and markdown links."""
+    u = str(url or "").strip()
+    return u if u.lower().startswith(("http://", "https://")) and not any(c in u for c in "\"'<> \n") else ""
 
 
 def eur(x: float) -> str:
@@ -8,18 +20,20 @@ def eur(x: float) -> str:
 
 
 def trace_line(step: dict) -> str:
+    """One markdown line per agent step. Rendered with unsafe_allow_html, so every piece of step content
+    (LLM thoughts, tool args, search titles, error text) is HTML-escaped; only the markup added here is live."""
     t = step["type"]
-    who = f"[{step['supplier']}] " if step.get("supplier") else ""
+    who = f"[{esc(step['supplier'], False)}] " if step.get("supplier") else ""
     if t == "tool_call":
-        args = ", ".join(f"{k}={v!r}" for k, v in step.get("args", {}).items())
-        return f"🔧 {who}`{step['name']}`({args})"
+        args = ", ".join(f"{esc(k, False)}={esc(repr(v), False)}" for k, v in step.get("args", {}).items())
+        return f"🔧 {who}`{esc(step['name'], False)}`({args})"
     if t == "tool_result":
-        return f"&nbsp;&nbsp;↳ {who}{summarize(step.get('name', ''), step['content'])}"
+        return f"&nbsp;&nbsp;↳ {who}{esc(summarize(step.get('name', ''), step['content']), False)}"
     if t == "thought":
-        return f"💭 {step['content']}"
+        return f"💭 {esc(step['content'], False)}"
     if t == "error":
-        return f"⚠️ {step['content']}"
-    return step.get("content", "")
+        return f"⚠️ {esc(step['content'], False)}"
+    return esc(step.get("content", ""), False)
 
 
 def summarize(name: str, c) -> str:

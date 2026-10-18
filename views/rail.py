@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from core import agent, model as m, workflows as wf
-from core.fmt import eur, trace_line
+from core.fmt import esc, eur, safe_url, trace_line
 from views.common import ACCENT, BAND_COLOR, pill, remember, run_streaming
 
 
@@ -187,9 +187,11 @@ def render(keys: dict):
         else:
             st.caption(f"{sev.get('summary', '')}  ·  {sev.get('sources', 0)} articles read · scanned {sev.get('scanned_at', '')}")
             for e in sev.get("events", []):
-                st.markdown(f"<div class='evt'><b>{e.get('title', '')}</b> · {e.get('type', '')} · severity {e.get('severity')}/5 · "
-                            f"confidence {float(e.get('confidence', 0)):.0%}<br>{e.get('summary', '')}<br>"
-                            f"<a href='{e.get('url', '')}' target='_blank'>{e.get('url', '')[:90]}</a></div>", unsafe_allow_html=True)
+                url = safe_url(e.get("url"))
+                link = f"<br><a href='{esc(url)}' target='_blank'>{esc(url[:90])}</a>" if url else ""
+                st.markdown(f"<div class='evt'><b>{esc(e.get('title', ''))}</b> · {esc(e.get('type', ''))} · severity {esc(e.get('severity'))}/5 · "
+                            f"confidence {float(e.get('confidence', 0)):.0%}<br>{esc(e.get('summary', ''))}"
+                            f"{link}</div>", unsafe_allow_html=True)
             if not sev.get("events"):
                 st.success("No relevant risk events found in recent news.")
 
@@ -243,8 +245,8 @@ def render(keys: dict):
                     with col:
                         st.markdown(f"**{th.get('headline', '')}**")
                         st.caption(th.get("why", ""))
-                        if th.get("url"):
-                            st.markdown(f"<a class='muted' href='{th['url']}' target='_blank'>source ↗</a>", unsafe_allow_html=True)
+                        if safe_url(th.get("url")):
+                            st.markdown(f"<a class='muted' href='{esc(safe_url(th['url']))}' target='_blank'>source ↗</a>", unsafe_allow_html=True)
                         if st.button("Simulate →", key=f"th_{i}", width="stretch"):
                             st.session_state["scenario_text"] = th.get("scenario", th.get("headline", ""))
                             st.session_state["auto_run"] = True
