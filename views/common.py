@@ -1,5 +1,7 @@
 """Streamlit helpers shared by all tabs: pills, agent streaming, demo cache, shortlist and risk lens state."""
+import contextvars
 import json
+import os
 import queue
 import threading
 
@@ -29,7 +31,8 @@ def run_streaming(fn, *args, label="Agent working", keep=14, **kwargs):
         except Exception as e:
             out["error"] = e
 
-    th = threading.Thread(target=target, daemon=True)
+    # copy the context so the worker sees this session's model choice (llm.set_model)
+    th = threading.Thread(target=contextvars.copy_context().run, args=(target,), daemon=True)
     th.start()
     lines = []
     with st.status(label, expanded=True) as status:
@@ -47,20 +50,40 @@ def run_streaming(fn, *args, label="Agent working", keep=14, **kwargs):
     return out.get("result"), lines
 
 
-# Last successful results persist to cache/ so tabs open populated and the demo survives a slow API
+# Results live in the user's session. Tabs open populated from cache/last_<key>.json (local runs) or the
+# tracked read-only seeds in cache/demo/<key>.json (fresh clone / deploy, regenerate with prewarm.py).
+DEMO_SEEDS = agent.CACHE / "demo"
+
+
+def persist_enabled() -> bool:
+    """Opt-in (PERSIST_DEMO_CACHE=1) for the presenter's machine; a shared deployment must leave it off."""
+    return os.getenv("PERSIST_DEMO_CACHE", "").strip().lower() in ("1", "true", "yes")
+
+
 def remember(key: str, value):
     st.session_state[key] = value
+    if not persist_enabled():
+        return
+    f = agent.CACHE / f"last_{key}.json"
+    tmp = f.with_name(f"{f.name}.{os.getpid()}.{threading.get_ident()}.tmp")
     try:
-        (agent.CACHE / f"last_{key}.json").write_text(json.dumps(value, default=str))
+        tmp.write_text(json.dumps(value, default=str))
+        tmp.replace(f)  # atomic, so a concurrent reader never sees half a file
     except OSError:
-        pass
+        tmp.unlink(missing_ok=True)
 
 
 def restore(keys: list[str]):
+    """Fill missing session keys: session -> local cache/last_<key>.json -> cache/demo/<key>.json."""
     for k in keys:
-        f = agent.CACHE / f"last_{k}.json"
-        if k not in st.session_state and f.exists():
-            st.session_state[k] = json.loads(f.read_text())
+        if k in st.session_state:
+            continue
+        for f in (agent.CACHE / f"last_{k}.json", DEMO_SEEDS / f"{k}.json"):
+            try:
+                st.session_state[k] = json.loads(f.read_text())
+                break
+            except (OSError, ValueError):
+                continue
 
 
 # ---------- shortlist ----------

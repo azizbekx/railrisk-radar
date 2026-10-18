@@ -6,7 +6,7 @@ from core import dataset as ds
 from views import charts, team
 from views.common import MAX_SHORTLIST, lens, lens_label, set_shortlist, shortlist
 
-JURY_EXAMPLE = ["SUPP_00012", "SUPP_00450", "SUPP_00731", "SUPP_00018"]
+EXAMPLE_SHORTLIST = ["SUPP_00012", "SUPP_00450", "SUPP_00731", "SUPP_00018"]
 
 
 def ranking(ids: list[str], weights: dict) -> pd.DataFrame:
@@ -40,15 +40,15 @@ def render():
     top[0].multiselect(f"Shortlist (up to {MAX_SHORTLIST})", ds.df().index.tolist(), max_selections=MAX_SHORTLIST,
                        key="shortlist_ms", placeholder="Add suppliers by ID",
                        on_change=lambda: set_shortlist(st.session_state["shortlist_ms"]))
-    if top[1].button("Jury example", width="stretch", help=", ".join(JURY_EXAMPLE)):
-        set_shortlist(JURY_EXAMPLE)
+    if top[1].button("Load example", width="stretch", help=", ".join(EXAMPLE_SHORTLIST)):
+        set_shortlist(EXAMPLE_SHORTLIST)
         st.rerun()
     if top[2].button("Clear", width="stretch", disabled=not ids):
         set_shortlist([])
         st.rerun()
     if len(ids) < 2:
         st.info("Add at least two suppliers: tick rows in **Find suppliers**, ask the assistant to shortlist them, "
-                "or load the jury example above.")
+                "or load the example above.")
         return
 
     lens_name, weights = lens()

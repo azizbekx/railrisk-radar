@@ -1,6 +1,10 @@
 """Pre-run the slow agent workflows so every tab opens populated (and the demo survives a slow API).
 
-Run: .venv/bin/python prewarm.py [--scan] [--team]   (--team: only the Compare tab's agent team run)
+Run: .venv/bin/python prewarm.py [--scan] [--team] [--local]   (--team: only the Compare tab's agent team run)
+
+By default this regenerates the tracked demo seeds in cache/demo/<key>.json, which a fresh clone or a
+deployment loads into each new session. With --local it writes cache/last_<key>.json instead (gitignored,
+takes precedence over the seeds on this machine only). Review seeds before committing them.
 """
 import json
 import sys
@@ -12,11 +16,15 @@ SCENARIO = "Severe flooding in Penang, Malaysia shuts semiconductor plants for 5
 DD_COMPANY = "Knorr-Bremse"
 TEAM_IDS = ["SUPP_00012", "SUPP_00450", "SUPP_00731", "SUPP_00018"]  # the Compare tab's jury example
 TEAM_CONTEXT = "Brake control units for a regional train: safety-critical, 5-year frame contract"
+LOCAL = "--local" in sys.argv
+OUT = agent.CACHE if LOCAL else agent.CACHE / "demo"
 
 
 def save(key, value):
-    (agent.CACHE / f"last_{key}.json").write_text(json.dumps(value, default=str))
-    print(f"saved {key}")
+    OUT.mkdir(exist_ok=True)
+    f = OUT / (f"last_{key}.json" if LOCAL else f"{key}.json")
+    f.write_text(json.dumps(value, default=str))
+    print(f"saved {f.relative_to(agent.CACHE.parent)}")
 
 
 if "--scan" in sys.argv:

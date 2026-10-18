@@ -94,9 +94,11 @@ def row(sid: str, weights: dict | None = None) -> dict:
 
 
 def last(key: str):
-    """Last cached demo result (cache/last_<key>.json) or None."""
-    f = agent.CACHE / f"last_{key}.json"
-    return json.loads(f.read_text()) if f.exists() else None
+    """Last result: local cache/last_<key>.json, else the tracked seed cache/demo/<key>.json, else None."""
+    for f in (agent.CACHE / f"last_{key}.json", agent.CACHE / "demo" / f"{key}.json"):
+        if f.exists():
+            return json.loads(f.read_text())
+    return None
 
 
 def remember(key: str, value):

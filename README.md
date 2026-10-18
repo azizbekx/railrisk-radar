@@ -14,6 +14,7 @@ A train is built from tens of thousands of parts. A buyer sourcing a critical co
 | **Supplier profile** | Exact explanation of any supplier's TRI (waterfall from the dataset average), percentile per score, operational metrics, and lower-risk alternatives with a similar profile |
 | **Ask the data** | Chat assistant that calls tools over the dataset (filter, compare, explain, statistics). It picks its own charts to show under the answer and can add suppliers to the shortlist. The full tool trace is visible |
 | **Research agent** | Name a real company. The agent plans its research, searches news and the web, reads the company's own site, **digs deeper on red flags**, closes evidence gaps, then scores the company on the dataset's 18 dimensions with a source link behind each finding. It computes a TRI with the dataset's formula, so you can see where a real company would rank among your 10,000 suppliers |
+| **Rail impact lab (demo data)** | Extension on a separate, fictional 32-supplier rail network: supplier → component → train project → € penalty cascade, live news scan, what-if disruption simulation, rail copilot. Suppliers here carry their own **exposure score** (act now ≥ 60, watch 40–59, low < 40), a different scale from the dataset TRI |
 
 ## What we found in the data
 
@@ -67,6 +68,23 @@ For frontend work run `.venv/bin/uvicorn api.main:app --reload --port 8000` and 
 Deploy: the `Dockerfile` builds the frontend and serves everything from one container; `render.yaml` is a ready Render blueprint (set `NEBIUS_API_KEY`, `TAVILY_API_KEY`, `APP_USERS`).
 
 Filtering, comparison and profiles work without any keys. The chat assistant, memo and research agent need an LLM key, and the research agent also needs Tavily. `python prewarm.py` pre-runs the slow agent workflows into `cache/` so every tab opens populated.
+
+## Deploy
+
+Every new session opens with the demo results tracked in `cache/demo/` (research report, memo, threats, scenario, response plan). Results a user produces stay in that user's session, and so does the model picked in the sidebar, so jurors don't overwrite each other. `python prewarm.py` regenerates the seeds; `python prewarm.py --local` writes gitignored `cache/last_*.json` instead, which take precedence on that machine. Set `PERSIST_DEMO_CACHE=1` locally to save each new result there too. Leave it unset on a shared deployment.
+
+**Login.** `APP_USERS="jury:password,alice:other"` turns on a sign-in form. Without it the app is open.
+
+**Streamlit Community Cloud.** Point the app at `app.py` and paste the keys under *App settings → Secrets*, using [`.streamlit/secrets.toml.example`](.streamlit/secrets.toml.example) as the template (`APP_USERS`, `NEBIUS_API_KEY`, `TAVILY_API_KEY`). `app.py` copies these secrets into the environment unless the variable is already set there.
+
+**Docker.**
+
+```bash
+docker build -t railrisk-radar .
+docker run --rm -p 8501:8501 --env-file .env railrisk-radar   # honours $PORT if the platform sets it
+```
+
+`.env`, `.streamlit/secrets.toml`, `.venv` and `.git` are kept out of the image by `.dockerignore`. Pass keys at runtime.
 
 ## Data
 

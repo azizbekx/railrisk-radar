@@ -1,7 +1,14 @@
 .venv/
 .env
+.streamlit/secrets.toml
 __pycache__/
 *.pyc
 .DS_Store
+.devin/
+.claude/
 web/node_modules/
 web/dist/
+# local demo state (PERSIST_DEMO_CACHE=1 / prewarm.py --local); tracked seeds live in cache/demo/
+cache/last_*.json
+evals/results/
+cache/*.tmp
