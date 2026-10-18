@@ -9,6 +9,7 @@ import { AgentTrace, type TraceStep } from '../components/AgentTrace'
 import { Button, Card, CardHeader, Chip, clsx, Empty, Field, LevelBadge, Markdown, PageHeader, Skeleton, Tag, TextArea } from '../components/ui'
 import { get, post, streamPost } from '../lib/api'
 import { levelOf } from '../lib/format'
+import { quoteLine } from '../lib/quotes'
 import type { SupplierRow } from '../lib/types'
 import { useApp, useLens } from '../lib/store'
 import { BuildUpBars, type ChartData, FlowDiagram, SpecChart, type TeamReport, type TeamResult, TeamScorecard, TeamScoreBars, WeightsChart } from './team/charts'
@@ -118,6 +119,9 @@ function recommendation(memo: string): string {
 export default function Page() {
   const shortlist = useApp(s => s.shortlist)
   const notify = useApp(s => s.notify)
+  const meta = useApp(s => s.meta)
+  const partType = useApp(s => s.partType)
+  const quotes = useApp(s => s.quotes)
   const go = useApp(s => s.go)
   const lens = useLens()
   const [context, setContext] = useState('')
@@ -150,12 +154,15 @@ export default function Page() {
     })
   }
 
+  // part type and buyer quotes (from Compare > Price vs risk) are appended to the buying context
+  const extra = quoteLine(partType, meta, quotes, shortlist)
+
   function run() {
     if (shortlist.length < 2) { notify('Add at least 2 suppliers to the shortlist first', 'warn'); return }
     setRunning(true); setSteps({}); setResult(null); setCharts({})
     const ctrl = new AbortController()
     abortRef.current = ctrl
-    streamPost<TraceStep, TeamResult>('/team/run', { ids: shortlist, context, lens_name: lens.name, lens_weights: lens.weights }, ev => {
+    streamPost<TraceStep, TeamResult>('/team/run', { ids: shortlist, context: [context.trim(), extra].filter(Boolean).join('\n'), lens_name: lens.name, lens_weights: lens.weights }, ev => {
       if (ev.event === 'step') {
         const a = ev.data.agent || 'Leader'
         setSteps(s => ({ ...s, [a]: [...(s[a] || []), ev.data] }))
@@ -203,6 +210,12 @@ export default function Page() {
             <div className="flex flex-wrap gap-1.5">
               {EXAMPLES.map(ex => <Chip key={ex} active={context === ex} onClick={() => setContext(ex)}>{ex}</Chip>)}
             </div>
+            {extra && (
+              <div className="rounded-xl border border-dashed border-line-strong bg-sunken/50 px-3 py-2 text-xs text-ink-2">
+                <span className="font-semibold text-ink">Also sent to the team:</span> {extra}
+                <button onClick={() => go('compare')} className="ml-1.5 font-semibold text-accent hover:underline">Edit in Compare</button>
+              </div>
+            )}
             <div className="flex items-center justify-between gap-3 pt-1">
               <Tag tone="accent">Lens: {lens.name}</Tag>
               <Button variant="primary" icon={<Sparkles className="size-4" />} loading={running} onClick={run}>Ask the agent team</Button>

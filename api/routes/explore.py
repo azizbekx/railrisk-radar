@@ -38,6 +38,7 @@ class QueryIn(BaseModel):
     sort: str = "tri"
     ascending: bool = True
     limit: int = 300
+    part_type: str | None = None  # what the buyer is sourcing: applies the part type's risk gate
 
 
 def _rows(d: pd.DataFrame, has_lens: bool) -> list[dict]:
@@ -81,6 +82,12 @@ def query_suppliers(body: QueryIn):
         sid = ds.resolve(f.text)
         m &= (d.index == sid) if sid else (d["Supplier Name"].str.contains(f.text, case=False, regex=False) |
                                             d.index.str.contains(f.text, case=False, regex=False))
+    gate = None
+    if body.part_type in ds.PART_TYPES:
+        spec = ds.PART_TYPES[body.part_type]
+        ok = ds.part_gate(d, body.part_type)
+        gate = {"part_type": body.part_type, "label": spec["label"], "why": spec["why"], "hidden": int((m & ~ok).sum())}
+        m &= ok
     filtered = d[m]
 
     weights = ds.normalize_weights(body.lens_weights) if body.lens_weights else None
@@ -121,4 +128,4 @@ def query_suppliers(body: QueryIn):
 
     return jsonable({"total": int(len(filtered)), "summary": summary, "rows": rows, "histogram": histogram,
                       "scatter": scatter, "sourcing_levels": sourcing_levels,
-                      "rank_basis": "lens_index" if weights else "tri"})
+                      "rank_basis": "lens_index" if weights else "tri", "gate": gate})

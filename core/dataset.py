@@ -67,7 +67,42 @@ LENSES = {
     "ESG & compliance first": {**{s: 0.02 for s in SCORES}, "ESG_Performance_Score": 0.18, "Compliance_Risk_Score": 0.16,
                                "Labor_Stability_Score": 0.10, "Governance_Risk_Score": 0.10, "Safety_Incident_Score": 0.10,
                                "Environmental_Exposure_Score": 0.08},
+    "Non-critical part (budget)": {**{s: 0.02 for s in SCORES}, "Operational_Resilience_Score": 0.20, "Financial_Health_Score": 0.16,
+                                   "Credit_Rating_Score": 0.12, "Sub_Tier_Visibility_Score": 0.08, "Geopolitical_Risk_Score": 0.08},
 }
+
+# What the buyer is sourcing decides how strict the risk gate is and how much a quoted price may count against risk.
+# gate: suppliers are hidden when any listed score reaches `max` (or the TRI reaches `tri_max`).
+# price_weight: share of the value score that comes from price; the rest is risk (lens index).
+PART_TYPES = {
+    "safety_critical": {
+        "label": "Safety-critical", "examples": "brakes, bogies, couplers, doors, traction",
+        "lens": "Safety-critical component", "price_weight": 0.1,
+        "gate": {"scores": ["Safety_Incident_Score", "Quality_Risk_Score", "Compliance_Risk_Score"], "max": 50, "tri_max": 50},
+        "why": "Never trade safety for price: suppliers with High or Critical safety, quality or compliance risk, or a High TRI, are hidden."},
+    "standard": {
+        "label": "Standard part", "examples": "interior fittings, HVAC, lighting, cabling",
+        "lens": "Dataset TRI (official)", "price_weight": 0.4,
+        "gate": {"scores": ["Safety_Incident_Score", "Quality_Risk_Score"], "max": 75, "tri_max": 75},
+        "why": "Balanced: Critical TRI suppliers and Critical safety or quality risk are hidden."},
+    "budget": {
+        "label": "Non-critical / budget", "examples": "seat covers, signage, cable ties, consumables",
+        "lens": "Non-critical part (budget)", "price_weight": 0.7,
+        "gate": {"scores": [], "max": 100, "tri_max": 75},
+        "why": "Price matters most: only Critical TRI suppliers are hidden; ranking favours suppliers that can reliably deliver."},
+}
+
+
+def part_gate(d: pd.DataFrame, part_type: str | None) -> pd.Series:
+    """True for suppliers that pass the part type's risk gate (all True for an unknown or empty part type)."""
+    spec = PART_TYPES.get(part_type or "")
+    if not spec:
+        return pd.Series(True, index=d.index)
+    g = spec["gate"]
+    ok = d["Total_Risk_Index"] < g["tri_max"]
+    for c in g["scores"]:
+        ok &= d[c] < g["max"]
+    return ok
 
 
 def check_tri_formula() -> float:

@@ -10,6 +10,7 @@ import Compare from './pages/compare'
 import Explore from './pages/explore'
 import Profile from './pages/profile'
 import Research from './pages/research'
+import Source from './pages/source'
 import Team from './pages/team'
 import Tracking from './pages/tracking'
 
@@ -56,7 +57,7 @@ function Toast() {
   )
 }
 
-const PAGES = { explore: Explore, compare: Compare, team: Team, profile: Profile, chat: Chat, research: Research, tracking: Tracking }
+const PAGES = { source: Source, explore: Explore, compare: Compare, team: Team, profile: Profile, chat: Chat, research: Research, tracking: Tracking }
 
 export default function App() {
   const { page, setMeta, meta } = useApp()

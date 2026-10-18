@@ -16,7 +16,7 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 
 from api.common import jsonable, row  # noqa: E402
-from api.routes import chat, compare, explore, profile, research, team, tracking as tracking_routes  # noqa: E402
+from api.routes import chat, compare, explore, profile, research, sourcing, team, tracking as tracking_routes  # noqa: E402
 from core import dataset as ds, llm, tracking  # noqa: E402
 
 app = FastAPI(title="RailRisk Radar")
@@ -91,6 +91,7 @@ def meta():
         "categorical": {c: ds.CAT_ORDER[c] for c in ds.CATEGORICAL},
         "levels": ds.LEVELS,
         "lenses": {name: ds.normalize_weights(w) for name, w in ds.LENSES.items()},
+        "part_types": {k: {**v, "gate_hidden": int((~ds.part_gate(ds.df(), k)).sum())} for k, v in ds.PART_TYPES.items()},
         "summary": ds.summary(),
         "means": ds.means().round(2).to_dict(),
         "tri_check": ds.check_tri_formula(),
@@ -124,7 +125,7 @@ def lookup(q: str = "", limit: int = 8):
     return jsonable([row(i) for i in hits[:limit]])
 
 
-for r in (explore, compare, team, profile, chat, research, tracking_routes):
+for r in (sourcing, explore, compare, team, profile, chat, research, tracking_routes):
     app.include_router(r.router, prefix="/api")
 
 

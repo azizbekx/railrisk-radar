@@ -43,3 +43,33 @@ export interface CompareResp {
 
 /** Scores grouped by risk family, in a fixed display order (matches the TRI composition legend). */
 export const familyOrder = (families: Record<string, string[]>) => Object.values(families).flat()
+
+/** POST /api/compare/value response (api/routes/compare.py). */
+export interface ValueRow {
+  id: string
+  name: string
+  risk: number
+  level: Level
+  price: number | null
+  price_vs_cheapest: number | null
+  risk_pts: number | null
+  price_pts: number | null
+  value_score: number | null
+  rank: number | null
+  frontier: boolean
+  passes_gate: boolean
+  gate_reason: string | null
+}
+
+export interface ValueResp {
+  part_type: string
+  label: string
+  price_weight: number
+  risk_weight: number
+  risk_label: 'TRI' | 'Lens index'
+  rows: ValueRow[]
+  best: string | null
+  cheapest: string | null
+  safest: string | null
+  explanation: string
+}

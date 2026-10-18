@@ -8,11 +8,12 @@ import {
   PageHeader, Segmented, Select, Skeleton, Slider, Stat, Tag,
 } from '../components/ui'
 import { ShortlistButton } from '../components/ShortlistButton'
+import { PartTypePicker, type Gate } from './explore/PartTypePicker'
 import { post } from '../lib/api'
 import { axisProps, gridProps, LEVEL } from '../lib/chart'
 import { eur } from '../lib/format'
-import { MAX_SHORTLIST, useApp, useLens } from '../lib/store'
-import type { Level, SupplierRow } from '../lib/types'
+import { MAX_SHORTLIST, OFFICIAL_LENS, useApp, useLens } from '../lib/store'
+import type { Level, PartType, SupplierRow } from '../lib/types'
 
 interface Filters {
   tri_min: number; tri_max: number
@@ -46,6 +47,7 @@ interface QueryResult {
   histogram: { from: number; to: number; count: number; level: Level }[]
   scatter: { id: string; tri: number; delivery: number; level: Level }[]
   rank_basis: 'tri' | 'lens_index'
+  gate: Gate | null
 }
 
 const ROW_H = 46
@@ -91,10 +93,13 @@ export default function Page() {
   const openProfile = useApp(s => s.openProfile)
   const customWeights = useApp(s => s.customWeights)
   const setCustomWeights = useApp(s => s.setCustomWeights)
+  const partType = useApp(s => s.partType)
+  const setPartType = useApp(s => s.setPartType)
+  const setLens = useApp(s => s.setLens)
   const lens = useLens()
 
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS)
-  const [sort, setSort] = useState('tri')
+  const [sort, setSort] = useState(() => (lens.isOfficial ? 'tri' : 'lens_index'))
   const [ascending, setAscending] = useState(true)
   const [result, setResult] = useState<QueryResult | null>(null)
   const [loading, setLoading] = useState(false)
@@ -104,19 +109,29 @@ export default function Page() {
   const toggleIn = (k: 'levels' | 'sourcing' | 'complexity' | 'knockout', v: string) =>
     setFilters(f => ({ ...f, [k]: f[k].includes(v) ? f[k].filter(x => x !== v) : [...f[k], v] }))
 
+  // a part type ranks by its own lens index (the official TRI lens has no separate index)
+  const pickPartType = (p: PartType) => {
+    setPartType(p)
+    setSort(meta.part_types[p].lens === OFFICIAL_LENS ? 'tri' : 'lens_index')
+  }
+  const useSuggestedLens = () => {
+    const l = meta.part_types[partType].lens
+    setLens(l); setSort(l === OFFICIAL_LENS ? 'tri' : 'lens_index')
+  }
+
   const effectiveSort = !lens.weights && sort === 'lens_index' ? 'tri' : sort
 
   useEffect(() => {
     const t = setTimeout(() => {
       setLoading(true)
-      post<QueryResult>('/suppliers/query', { filters, lens_weights: lens.weights, sort: effectiveSort, ascending, limit: 300 })
+      post<QueryResult>('/suppliers/query', { filters, lens_weights: lens.weights, sort: effectiveSort, ascending, limit: 300, part_type: partType })
         .then(r => { setResult(r); setSelected(new Set()) })
         .catch(() => {})
         .finally(() => setLoading(false))
     }, 260)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, effectiveSort, ascending, JSON.stringify(lens.weights)])
+  }, [filters, effectiveSort, ascending, partType, JSON.stringify(lens.weights)])
 
   const rows = result?.rows ?? []
   const shortlistSet = useMemo(() => new Set(shortlist), [shortlist])
@@ -146,6 +161,9 @@ export default function Page() {
     <div>
       <PageHeader title="Find suppliers" icon={<Compass className="size-5" />}
         subtitle="Narrow 10,000 suppliers to a shortlist. Rank by the official Total Risk Index or by a risk lens (sidebar) that re-weights the 18 scores for your sourcing situation." />
+
+      <PartTypePicker value={partType} types={meta.part_types} lensName={lens.name} gate={result?.gate ?? null}
+        onPick={pickPartType} onUseSuggested={useSuggestedLens} />
 
       <Card className="mb-5">
         <CardHeader title="Filters" icon={<SlidersHorizontal className="size-4" />}

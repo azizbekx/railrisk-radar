@@ -15,6 +15,7 @@ expected values follow the data rather than hard-coded numbers.
 ```bash
 # offline robustness tests for the agent loop (fake LLM, no credits)
 .venv/bin/python -m evals.test_agent_offline
+.venv/bin/python -m evals.test_sourcing_offline   # Find suppliers pipeline (core/sourcing.py), no credits
 
 # live evals against Nemotron on Nebius Token Factory (each run costs credits)
 .venv/bin/python -m evals.chat_evals --list                    # cases and available Nemotron models

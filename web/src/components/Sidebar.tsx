@@ -1,4 +1,4 @@
-import { Activity, Bot, Building2, Compass, GitCompareArrows, Globe, LogOut, MessagesSquare, Radar, ScanSearch, SlidersHorizontal, Users, X } from 'lucide-react'
+import { Activity, Bot, Building2, Compass, Target, GitCompareArrows, Globe, LogOut, MessagesSquare, Radar, ScanSearch, SlidersHorizontal, Users, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { post } from '../lib/api'
 import { LEVEL } from '../lib/chart'
@@ -7,7 +7,8 @@ import type { SupplierRow } from '../lib/types'
 import { clsx, Select } from './ui'
 
 const NAV: { page: Page; label: string; icon: React.ReactNode; hint: string }[] = [
-  { page: 'explore', label: 'Find suppliers', icon: <Compass className="size-[18px]" />, hint: 'Filter & rank 10,000' },
+  { page: 'source', label: 'Find suppliers', icon: <Target className="size-[18px]" />, hint: 'Agents pick your top 3' },
+  { page: 'explore', label: 'Explore suppliers', icon: <Compass className="size-[18px]" />, hint: 'Filter & rank 10,000' },
   { page: 'compare', label: 'Compare shortlist', icon: <GitCompareArrows className="size-[18px]" />, hint: 'Up to 20 side by side' },
   { page: 'team', label: 'Agent team', icon: <Users className="size-[18px]" />, hint: 'Multi-agent decision' },
   { page: 'profile', label: 'Supplier profile', icon: <ScanSearch className="size-[18px]" />, hint: 'Why is the TRI high?' },
@@ -66,7 +67,7 @@ export function Sidebar({ user, onLogout }: { user: string | null; onLogout: () 
           {topWeights.map(([k, v]) => `${k.replace('_Score', '').replace(/_/g, ' ')} ${Math.round(v * 100)}%`).join(' · ')}
         </div>
         {lensName === 'Custom' && page !== 'explore' && (
-          <button onClick={() => go('explore')} className="mt-1.5 text-[11px] font-semibold text-accent hover:underline">Edit weights in Find suppliers</button>
+          <button onClick={() => go('explore')} className="mt-1.5 text-[11px] font-semibold text-accent hover:underline">Edit weights in Explore suppliers</button>
         )}
       </div>
 

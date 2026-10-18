@@ -1,5 +1,5 @@
 // compare page. Owned by the compare slice. Side-by-side comparison of the shortlist (up to 20 suppliers).
-import { ArrowRight, Layers, Scale, Sparkles, Trophy, Users, X } from 'lucide-react'
+import { ArrowRight, Layers, Coins, Scale, Sparkles, Trophy, Users, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { SupplierPicker } from '../components/SupplierPicker'
 import { Button, Card, CardHeader, Empty, LevelBadge, PageHeader, Skeleton, Tag } from '../components/ui'
@@ -10,6 +10,7 @@ import { Heatmap } from './compare/Heatmap'
 import { HeadToHead } from './compare/HeadToHead'
 import { ProfileOverlay } from './compare/ProfileOverlay'
 import { TriComposition } from './compare/TriComposition'
+import { Value } from './compare/Value'
 import type { CompareResp } from './compare/types'
 
 export default function Page() {
@@ -74,6 +75,12 @@ export default function Page() {
           {data && data.ranking.length > 0 && (
             <>
               <Winner data={data} onOpen={openProfile} />
+
+              <Card>
+                <CardHeader title="Price vs risk" icon={<Coins className="size-4" />}
+                  subtitle="Enter the quotes you received and see which supplier gives the best value for this kind of component" />
+                <Value ids={data.ids} onOpen={openProfile} />
+              </Card>
 
               <Card>
                 <CardHeader title="Ranking" subtitle={`Sorted by ${data.lens_label === 'TRI' ? 'Total Risk Index' : lens.name}, lowest risk first`} icon={<Trophy className="size-4" />} />

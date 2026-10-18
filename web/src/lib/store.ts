@@ -1,8 +1,8 @@
 // Global app state: current page, shortlist (max 20, persisted per browser), risk lens, selected profile.
 import { create } from 'zustand'
-import type { Meta } from './types'
+import type { Meta, PartType } from './types'
 
-export type Page = 'explore' | 'compare' | 'team' | 'profile' | 'chat' | 'research' | 'tracking'
+export type Page = 'source' | 'explore' | 'compare' | 'team' | 'profile' | 'chat' | 'research' | 'tracking'
 export const MAX_SHORTLIST = 20
 export const OFFICIAL_LENS = 'Dataset TRI (official)'
 /** The jury's example shortlist (same as views/compare.py). */
@@ -15,7 +15,7 @@ const save = (k: string, v: unknown) => { try { localStorage.setItem(k, JSON.str
 
 const initialPage = (): Page => {
   const h = window.location.hash.replace('#/', '').split('/')[0] as Page
-  return ['explore', 'compare', 'team', 'profile', 'chat', 'research', 'tracking'].includes(h) ? h : 'explore'
+  return ['source', 'explore', 'compare', 'team', 'profile', 'chat', 'research', 'tracking'].includes(h) ? h : 'source'
 }
 
 interface State {
@@ -35,6 +35,13 @@ interface State {
   customWeights: Record<string, number> | null
   setLens: (name: string) => void
   setCustomWeights: (w: Record<string, number>) => void
+
+  /** What the buyer is sourcing: sets the risk gate in Find suppliers and the risk/price balance in Compare. */
+  partType: PartType
+  setPartType: (p: PartType) => void
+  /** Buyer-entered quoted prices (EUR per unit) by supplier id; the dataset has no prices. */
+  quotes: Record<string, number>
+  setQuote: (id: string, price: number | null) => void
 
   profileId: string | null
   openProfile: (id: string) => void
@@ -78,6 +85,19 @@ export const useApp = create<State>((set, get) => ({
   customWeights: load<Record<string, number> | null>('rr.customWeights', null),
   setLens: lensName => { save('rr.lens', lensName); set({ lensName }) },
   setCustomWeights: w => { save('rr.customWeights', w); set({ customWeights: w }) },
+
+  partType: load<PartType>('rr.partType', 'standard'),
+  setPartType: partType => {
+    save('rr.partType', partType); set({ partType })
+    const lens = get().meta?.part_types[partType]?.lens
+    if (lens) get().setLens(lens)  // the part type picks its matching risk lens; the buyer can still change it
+  },
+  quotes: load<Record<string, number>>('rr.quotes', {}),
+  setQuote: (id, price) => {
+    const q = { ...get().quotes }
+    if (price == null || !(price > 0)) delete q[id]; else q[id] = price
+    save('rr.quotes', q); set({ quotes: q })
+  },
 
   profileId: load<string | null>('rr.profile', null),
   openProfile: id => { save('rr.profile', id); set({ profileId: id }); get().go('profile') },
