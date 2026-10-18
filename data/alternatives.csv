@@ -1,0 +1,16 @@
+component,alternative,country,status,qualification_months,price_delta_pct,note
+Bogie frame,Moravia Foundry s.r.o.,CZ,In qualification,9,6,First article inspection passed in August
+Bogie frame,Saxon Welded Structures GmbH,DE,Not qualified,16,14,"Has EN 15085-2 CL1, no rail bogie references"
+Brake control unit,Nordic Brake Systems AB,SE,Qualified,0,9,"Qualified for Vectron, capacity 40 units/month"
+HVAC unit,Iberclima Rail S.A.,ES,Qualified,0,11,Holds valid EN 45545-2
+HVAC unit,Thermo Rail Polska,PL,In qualification,6,4,Prototype test passed
+Cable harness,Danube Wiring d.o.o.,RS,Qualified,0,3,"Already supplies 30%, can ramp to 60% in 8 weeks"
+Cable harness,Morava Kabel s.r.o.,CZ,In qualification,5,7,
+IGBT power modules,Bavarian Power Devices GmbH,DE,In qualification,10,18,Converter redesign of the gate driver needed
+IGBT power modules,Kyushu Semicon Ltd.,JP,Not qualified,14,12,
+Fuel cell module,Rhein Hydrogen Power GmbH,DE,Not qualified,18,22,Prototype stage
+Composite front-end mask,Adria Composites d.o.o.,HR,Qualified,0,8,
+Traction battery pack,Silesia Battery Systems,PL,In qualification,8,15,Uses EU-made cells
+NdFeB permanent magnets,Estonia Magnet Works,EE,In qualification,12,35,"EU rare earth processing, limited volume"
+Main transformer,Adriatic Transformers d.d.,HR,Qualified,0,5,Lead time 44 weeks
+Traction motor,Asynchronous motor variant (Vltava),CZ,Qualified,0,-3,"Induction motor, no rare earth magnets, 4% lower efficiency"

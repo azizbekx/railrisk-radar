@@ -1,0 +1,46 @@
+[
+  {
+    "id": "P1",
+    "name": "Velaro Novo",
+    "customer": "Iberia HighSpeed (fictional)",
+    "type": "High-speed train",
+    "units": 10,
+    "delivery": "2027-05-31",
+    "penalty_per_day_eur": 90000,
+    "contract_value_meur": 320,
+    "slack_days": 21
+  },
+  {
+    "id": "P2",
+    "name": "Mireo Plus H",
+    "customer": "Nordbahn Regional (fictional)",
+    "type": "Hydrogen regional train",
+    "units": 20,
+    "delivery": "2027-03-15",
+    "penalty_per_day_eur": 35000,
+    "contract_value_meur": 240,
+    "slack_days": 14
+  },
+  {
+    "id": "P3",
+    "name": "Vectron MS",
+    "customer": "CargoLink Europe (fictional)",
+    "type": "Multi-system locomotive",
+    "units": 25,
+    "delivery": "2027-01-31",
+    "penalty_per_day_eur": 20000,
+    "contract_value_meur": 100,
+    "slack_days": 10
+  },
+  {
+    "id": "P4",
+    "name": "Inspiro Metro",
+    "customer": "Capital Metro Authority (fictional)",
+    "type": "Metro train",
+    "units": 16,
+    "delivery": "2027-08-30",
+    "penalty_per_day_eur": 45000,
+    "contract_value_meur": 210,
+    "slack_days": 30
+  }
+]
