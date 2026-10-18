@@ -74,8 +74,11 @@ def render():
     left, right = st.columns([3, 2])
     with left:
         sort = st.radio("Rank by", [rank_col, "Supplier Delivery Rating", "Order Confirmation Rate", ds.PO],
-                        horizontal=True, format_func=lambda c: {"Total_Risk_Index": "TRI (lowest risk first)",
-                                                                  "Lens index": f"{lens_name} (lowest first)"}.get(c, ds.label(c)),
+                        horizontal=True, format_func=lambda c: {"Total_Risk_Index": "TRI (lowest first)",
+                                                                  "Lens index": f"{lens_name} (lowest first)",
+                                                                  "Supplier Delivery Rating": "Delivery rating",
+                                                                  "Order Confirmation Rate": "Confirmation rate",
+                                                                  ds.PO: "PO volume"}.get(c, ds.label(c)),
                         key="f_sort")
         d = d.sort_values(sort, ascending=sort in ("Total_Risk_Index", "Lens index"))
         worst = d[ds.SCORES].idxmax(axis=1)
@@ -93,6 +96,7 @@ def render():
             selection_mode="multi-row", key="explore_table",
             column_config={"TRI": st.column_config.ProgressColumn("TRI", min_value=0, max_value=100, format="%d"),
                            "Lens": st.column_config.NumberColumn("Lens", format="%.1f"),
+                           "Worst score": st.column_config.TextColumn(width="medium"),
                            "Delivery %": st.column_config.NumberColumn(format="%.1f"),
                            "Confirm %": st.column_config.NumberColumn(format="%.1f"),
                            "Change %": st.column_config.NumberColumn(format="%.1f"),
@@ -100,10 +104,11 @@ def render():
                            "★": st.column_config.TextColumn("★", width="small", help="on shortlist")})
         picked = [view.iloc[i]["ID"] for i in sel.selection.rows] if sel and sel.selection else []
         b = st.columns([2, 2, 3])
-        if b[0].button(f"➕ Add {len(picked)} selected to shortlist", disabled=not picked, type="primary", width="stretch"):
+        if b[0].button(f"➕ Add selected ({len(picked)})", disabled=not picked, type="primary", width="stretch",
+                       help="Add the ticked rows to the shortlist"):
             notify_added(*add_to_shortlist(picked))
             st.rerun()
-        if b[1].button("➕ Add top 5 of this ranking", width="stretch"):
+        if b[1].button("➕ Add top 5", width="stretch", help="Add the top 5 of this ranking to the shortlist"):
             notify_added(*add_to_shortlist(list(d.index[:5])))
             st.rerun()
         b[2].caption(f"Showing {min(len(view), 1000):,} of {len(view):,}. Tick rows to select. "

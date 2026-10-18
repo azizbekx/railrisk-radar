@@ -7,3 +7,6 @@ textColor = "#1b2420"
 
 [server]
 headless = true
+
+[client]
+toolbarMode = "minimal"

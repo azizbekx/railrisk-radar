@@ -6,12 +6,13 @@ from core.fmt import trace_line
 from views import charts
 from views.common import add_to_shortlist, notify_added, shortlist
 
-PRESETS = [
-    "Which of SUPP_00012, SUPP_00450 and SUPP_00731 has the lowest financial risk?",
-    "Why is the Total Risk Index of SUPP_00018 so high?",
-    "Find 5 easy-to-replace suppliers with delivery rating above 97% and no Critical scores, and shortlist them",
-    "How does my shortlist compare on compliance and cyber risk?",
-]
+PRESETS = {  # short button label -> full question
+    "Lowest financial risk of 3?": "Which of SUPP_00012, SUPP_00450 and SUPP_00731 has the lowest financial risk?",
+    "Why is SUPP_00018 so risky?": "Why is the Total Risk Index of SUPP_00018 so high?",
+    "Shortlist 5 reliable, easy swaps": "Find 5 easy-to-replace suppliers with delivery rating above 97% and no Critical "
+                                        "scores, and shortlist them",
+    "Shortlist: compliance & cyber": "How does my shortlist compare on compliance and cyber risk?",
+}
 
 
 def show(msg: dict, idx: int):
@@ -35,8 +36,8 @@ def render():
     chat = st.session_state.setdefault("data_chat", [])
     qc = st.columns(len(PRESETS))
     preset = None
-    for col, q in zip(qc, PRESETS):
-        if col.button(q, width="stretch", key=f"preset_{q[:20]}"):
+    for col, (short, q) in zip(qc, PRESETS.items()):
+        if col.button(short, width="stretch", key=f"preset_{q[:20]}", help=q):
             preset = q
     for i, msg in enumerate(chat):
         with st.chat_message(msg["role"]):

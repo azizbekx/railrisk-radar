@@ -2,9 +2,9 @@
 import pandas as pd
 import streamlit as st
 
-from core import dataset as ds, llm, workflows as wf
-from views import charts
-from views.common import MAX_SHORTLIST, lens, lens_label, remember, set_shortlist, shortlist
+from core import dataset as ds
+from views import charts, team
+from views.common import MAX_SHORTLIST, lens, lens_label, set_shortlist, shortlist
 
 JURY_EXAMPLE = ["SUPP_00012", "SUPP_00450", "SUPP_00731", "SUPP_00018"]
 
@@ -89,28 +89,4 @@ def render():
     if x != y:
         st.plotly_chart(charts.head_to_head(x, y), width="stretch")
 
-    decision(order, weights, lens_name)
-
-
-def decision(order: list[str], weights: dict, lens_name: str):
-    st.markdown("#### 📝 Justify the choice")
-    c = st.columns([2, 3, 2])
-    pick = c[0].selectbox("Final choice", order, index=0, key="memo_pick")
-    context = c[1].text_input("Buying context (optional)", key="memo_ctx",
-                              placeholder="e.g. brake control units for a regional train, 5-year frame contract")
-    c[2].markdown("&nbsp;")
-    if c[2].button("Write decision memo", type="primary", width="stretch", disabled=not llm.keys_status()["llm"]):
-        with st.spinner("Drafting the memo from the comparison data..."):
-            try:
-                memo = wf.shortlist_memo(pick, order, weights, lens_name, context)
-                remember("memo", {"text": memo, "pick": pick, "ids": order})
-            except Exception as e:
-                st.error(f"Memo failed: {e}")
-    memo = st.session_state.get("memo")
-    if memo and set(memo["ids"]) == set(order):
-        with st.container(border=True):
-            st.markdown(memo["text"])
-        st.download_button("⬇ Download memo (.md)", memo["text"], file_name=f"selection_memo_{memo['pick']}.md",
-                           mime="text/markdown")
-    elif memo:
-        st.caption("The shortlist changed since the last memo. Write a new one.")
+    team.render(order, weights, lens_name)

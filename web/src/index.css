@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+/* Design tokens. Soft, rounded, calm: one blue accent, neutral surfaces, risk colours only for risk. */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  --color-bg: #f3f4f6;
+  --color-surface: #ffffff;
+  --color-sunken: #f7f8fa;
+  --color-line: #e7e9ee;
+  --color-line-strong: #d5d9e0;
+  --color-ink: #111827;
+  --color-ink-2: #4b5563;
+  --color-muted: #8b93a1;
+
+  --color-accent: #2563eb;
+  --color-accent-strong: #1d4ed8;
+  --color-accent-soft: #e8f0fe;
+
+  /* risk levels: soft chip background + readable ink + a dot */
+  --color-low: #e6f5eb;      --color-low-ink: #1c6b3a;      --color-low-dot: #22a447;
+  --color-medium: #fdf3d6;   --color-medium-ink: #87600a;   --color-medium-dot: #e9a514;
+  --color-high: #fde8dd;     --color-high-ink: #a4461b;     --color-high-dot: #ec835a;
+  --color-critical: #fbe2e2; --color-critical-ink: #a42828; --color-critical-dot: #d03b3b;
+
+  --radius-card: 1.25rem;
+  --shadow-soft: 0 1px 2px rgb(16 24 40 / 0.04), 0 4px 16px -4px rgb(16 24 40 / 0.06);
+  --shadow-pop: 0 2px 4px rgb(16 24 40 / 0.05), 0 16px 40px -8px rgb(16 24 40 / 0.14);
+}
+
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "tnum" 1;  /* tabular numbers everywhere: scores line up */
+}
+::selection { background: var(--color-accent-soft); }
+
+/* thin, rounded scrollbars */
+* { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+
+/* markdown inside answers, memos and reports */
+.prose-rr { font-size: 0.92rem; line-height: 1.65; color: var(--color-ink-2); }
+.prose-rr h1, .prose-rr h2, .prose-rr h3 { color: var(--color-ink); font-weight: 700; line-height: 1.3; margin: 1.1em 0 0.45em; }
+.prose-rr h1 { font-size: 1.25rem; } .prose-rr h2 { font-size: 1.08rem; } .prose-rr h3 { font-size: 0.98rem; }
+.prose-rr p { margin: 0.55em 0; }
+.prose-rr strong { color: var(--color-ink); font-weight: 650; }
+.prose-rr ul, .prose-rr ol { padding-left: 1.2em; margin: 0.5em 0; }
+.prose-rr ul { list-style: disc; } .prose-rr ol { list-style: decimal; }
+.prose-rr li { margin: 0.2em 0; }
+.prose-rr a { color: var(--color-accent); text-decoration: underline; text-underline-offset: 2px; }
+.prose-rr code { font-family: var(--font-mono); font-size: 0.82em; background: var(--color-sunken); border: 1px solid var(--color-line); padding: 0.05em 0.4em; border-radius: 0.4rem; }
+.prose-rr table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 0.8em 0; font-size: 0.85rem; border: 1px solid var(--color-line); border-radius: 0.8rem; overflow: hidden; }
+.prose-rr th { background: var(--color-sunken); color: var(--color-ink); font-weight: 600; text-align: left; }
+.prose-rr th, .prose-rr td { padding: 0.45em 0.75em; border-bottom: 1px solid var(--color-line); }
+.prose-rr tr:last-child td { border-bottom: 0; }
+.prose-rr blockquote { border-left: 3px solid var(--color-accent); background: var(--color-accent-soft); margin: 0.7em 0; padding: 0.4em 0.9em; border-radius: 0 0.7rem 0.7rem 0; }
+.prose-rr > :first-child { margin-top: 0; }
+
+@keyframes rr-pulse { 0%, 100% { opacity: 1 } 50% { opacity: 0.35 } }
+.rr-pulse { animation: rr-pulse 1.4s ease-in-out infinite; }
+@keyframes rr-in { from { opacity: 0; transform: translateY(4px) } to { opacity: 1; transform: none } }
+.rr-in { animation: rr-in 0.25s ease-out both; }

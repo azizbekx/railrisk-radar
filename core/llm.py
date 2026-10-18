@@ -9,7 +9,7 @@ from openai import OpenAI
 
 load_dotenv()
 
-# "nebius" (Nemotron on Token Factory) or "claude" (stand-in until Nebius keys are ready)
+# "nebius" (Nemotron on Token Factory, used in production) or "claude" (Anthropic, local dev)
 PROVIDER = os.getenv("LLM_PROVIDER", "nebius").lower()
 BASE_URL = os.getenv("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/")
 # Preference order when NEMOTRON_MODEL is not set: biggest Nemotron available wins

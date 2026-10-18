@@ -19,7 +19,8 @@ def dimension_chart(rep: dict):
         y=[f"{l} · {w:.0%}" for l, _, w in rows], x=[v if v is not None else 50 for _, v, _ in rows], orientation="h",
         marker_color=[ds.LEVEL_COLOR[ds.level(v)] if v is not None else "rgba(160,170,165,0.25)" for _, v, _ in rows],
         marker_line=dict(color=["rgba(0,0,0,0)" if v is not None else "#a0aaa5" for _, v, _ in rows], width=1),
-        text=[str(v) if v is not None else "no evidence" for _, v, _ in rows], textposition="auto"))
+        text=[str(v) if v is not None else "no evidence" for _, v, _ in rows], textposition="outside", textangle=0,
+        cliponaxis=False))
     for v in (25, 50, 75):
         fig.add_vline(x=v, line_dash="dot", line_color="#b8c2bc")
     fig.update_layout(height=520, margin=dict(l=0, r=0, t=40, b=0), xaxis=dict(range=[0, 100]),

@@ -31,11 +31,11 @@ def render():
             st.rerun()
     with gauge:
         g = go.Figure(go.Indicator(
-            mode="gauge+number", value=e["total_risk_index"], number=dict(suffix="/100"),
+            mode="gauge+number", value=e["total_risk_index"], number=dict(suffix="/100", font=dict(color="#1b2420")),
             gauge=dict(axis=dict(range=[0, 100], tickvals=[0, 25, 50, 75, 100]), bar=dict(color="#1b2420", thickness=0.25),
                        steps=[dict(range=[a, b], color=ds.LEVEL_COLOR[l]) for (a, b), l in
                               zip([(0, 25), (25, 50), (50, 75), (75, 100)], ds.LEVELS)])))
-        g.update_layout(height=180, margin=dict(l=15, r=15, t=10, b=0))
+        g.update_layout(height=180, margin=dict(l=30, r=30, t=10, b=0))
         st.plotly_chart(g, width="stretch")
         st.caption(f"Riskier than {e['riskier_than_pct']:.0f}% of suppliers")
 
@@ -68,7 +68,7 @@ def render():
     view = alt[["Supplier Name", "Total_Risk_Index", "Total_Risk_Index_Level", "Supplier Delivery Rating",
                 "Order Confirmation Rate", ds.PO]].rename(columns={"Total_Risk_Index": "TRI", "Total_Risk_Index_Level": "Level",
                                                                    "Supplier Delivery Rating": "Delivery %",
-                                                                   "Order Confirmation Rate": "Confirm %", ds.PO: "PO €"})
+                                                                   "Order Confirmation Rate": "Confirm %", ds.PO: "PO €"}).rename_axis("ID")
     st.dataframe(view, width="stretch", column_config={
         "TRI": st.column_config.ProgressColumn("TRI", min_value=0, max_value=100, format="%d"),
         "PO €": st.column_config.NumberColumn(format="€%,.0f")})

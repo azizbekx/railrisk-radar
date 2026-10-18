@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: railrisk-radar
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/me
+    envVars:
+      - key: LLM_PROVIDER
+        value: nebius
+      - key: NEBIUS_API_KEY
+        sync: false
+      - key: TAVILY_API_KEY
+        sync: false
+      - key: APP_USERS
+        sync: false
+      - key: APP_SECRET
+        generateValue: true

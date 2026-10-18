@@ -53,7 +53,7 @@ def login_gate():
 
 
 login_gate()
-restore(["research", "memo", "threats", "scenario", "response"])
+restore(["research", "team", "threats", "scenario", "response"])
 
 # ---------- sidebar ----------
 
@@ -62,7 +62,7 @@ with st.sidebar:
     st.caption("Supplier selection for rail procurement")
     keys = llm.keys_status()
     llm_name = "Claude" if keys["provider"] == "claude" else "Nemotron (Token Factory)"
-    st.markdown(f"{llm_name}: {'🟢' if keys['llm'] else '🔴 no key'} · Web search: {'🟢' if keys['tavily'] else '🔴'}")
+    st.markdown(f"{llm_name}: {'🟢' if keys['llm'] else '🔴 no key'}  \nWeb search: {'🟢' if keys['tavily'] else '🔴'}")
     models = llm.nemotron_models() if keys["llm"] and keys["provider"] == "nebius" else []
     if models:
         default = llm.model()
@@ -103,7 +103,7 @@ with st.sidebar:
 
 # ---------- tabs ----------
 
-st.title("Supplier Risk Radar")
+st.title("RailRisk Radar")
 s = ds.summary()
 st.caption(f"{s['suppliers']:,} suppliers · average TRI {s['avg_tri']} · {s['critical']} Critical · "
            f"{s['high']:,} High · {s['po_volume'] / 1e9:.1f} bn € purchase volume")

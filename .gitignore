@@ -3,4 +3,5 @@
 __pycache__/
 *.pyc
 .DS_Store
-cache/last_*.json
+web/node_modules/
+web/dist/

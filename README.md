@@ -6,14 +6,14 @@ A train is built from tens of thousands of parts. A buyer sourcing a critical co
 
 ## What it does
 
-| Tab | What happens |
+| Page | What happens |
 |---|---|
 | **Find suppliers** | Filter 10,000 suppliers by TRI, level, sourcing risk, complexity, delivery and confirmation rates, PO volume, and knock-out rules ("no Critical financial health"). Rank by the official TRI or a **risk lens**, then tick rows to shortlist them |
-| **Compare shortlist** | Up to 20 suppliers side by side: ranking table, 18-score heatmap, TRI composition by risk family, radar overlay and a head-to-head diff. **Write decision memo** drafts a cited selection memo from the comparison data (download as .md) |
+| **Compare shortlist** | Up to 20 suppliers side by side: ranking table, 18-score heatmap, TRI composition by risk family, a risk-profile dot plot and a head-to-head diff |
+| **Agent team** | A leader agent and four specialists decide on the shortlist live (below) and end in a selection memo (download as .md) |
 | **Supplier profile** | Exact explanation of any supplier's TRI (waterfall from the dataset average), percentile per score, operational metrics, and lower-risk alternatives with a similar profile |
 | **Ask the data** | Chat assistant that calls tools over the dataset (filter, compare, explain, statistics). It picks its own charts to show under the answer and can add suppliers to the shortlist. The full tool trace is visible |
 | **Research agent** | Name a real company. The agent plans its research, searches news and the web, reads the company's own site, **digs deeper on red flags**, closes evidence gaps, then scores the company on the dataset's 18 dimensions with a source link behind each finding. It computes a TRI with the dataset's formula, so you can see where a real company would rank among your 10,000 suppliers |
-| **Rail impact lab** | Extension on a separate, fictional 32-supplier rail dataset: supplier → component → train project → € penalty cascade, live news scan, what-if disruption simulation, rail copilot |
 
 ## What we found in the data
 
@@ -25,6 +25,16 @@ A train is built from tens of thousands of parts. A buyer sourcing a critical co
 
 **Risk lenses** re-weight the same 18 scores for a sourcing situation: *Safety-critical component*, *Long-term strategic partner*, *ESG & compliance first*, or *Custom* sliders. The official TRI stays visible everywhere.
 
+## Agent team (multi-agent decision)
+
+In **Compare shortlist**, the buyer describes the purchase and asks the agent team:
+
+1. A **leader agent** starts from the active risk lens and decides how much each risk area counts for this purchase (e.g. safety-critical pushes Operations & Quality up), then briefs four specialists.
+2. Four **specialist agents** analyse the shortlist **in parallel**, each owning a slice of the 18 scores (every score exactly once): *Financial*, *Operations & Quality* (plus delivery, confirmation, order change, sourcing risk, complexity), *Compliance & ESG*, *Geopolitics & Reputation*. Each returns a pick, findings, red flags, and **designs its own chart** (kind + columns), which the app draws from the real dataset values.
+3. The leader weighs the reports against an exactly computed **team score** (weighted area risk), resolves disagreements and writes the selection memo.
+
+The UI streams all five agents live, then shows a flow diagram, team scorecard, score build-up, each agent's report and chart, and Nemotron's own reasoning per agent. Python computes every number; the agents only judge and explain.
+
 ## How it works
 
 ```
@@ -32,24 +42,32 @@ supplier_risk_dataset.csv, risk_criteria_description.md   (challenge inputs)
    │
    ├── core/dataset.py    loading, exact TRI decomposition, filters, comparison, lenses, swap candidates
    ├── core/agent.py      tool-calling agent loop with visible trace; dataset tools + rail tools
-   ├── core/workflows.py  research agent · decision memo · rail news scan, scenarios, mitigation
+   ├── core/team.py       agent team: leader plan → 4 parallel specialists → leader verdict and memo
+   ├── core/workflows.py  research agent · rail news scan, scenarios, mitigation
    ├── core/llm.py        Nemotron on Nebius Token Factory (OpenAI-compatible) + Tavily search/extract
-   │                      (core/llm_claude.py: optional Claude backend via LLM_PROVIDER=claude)
+   │                      (core/llm_claude.py: Claude backend for local dev via LLM_PROVIDER=claude)
    └── core/model.py      rail extension: scoring + networkx supply graph + impact propagation (data/)
-views/                    one module per tab; charts.py holds the Plotly figures
-app.py                    Streamlit shell: login, sidebar (lens, shortlist), tabs
+api/main.py               FastAPI: jury login, shared metadata, serves the React build
+api/routes/               one router per page; agent runs stream to the browser as NDJSON
+web/                      React + TypeScript + Tailwind + Recharts: left sidebar (pages, risk lens, shortlist)
+app.py, views/            previous Streamlit UI, kept as a fallback (includes the rail impact lab)
 ```
 
 ## Run it
 
 ```bash
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -r requirements.txt
-cp .env.example .env   # add NEBIUS_API_KEY and TAVILY_API_KEY; optional APP_USERS=jury:password
-.venv/bin/streamlit run app.py
+cp .env.example .env   # local: LLM_PROVIDER=claude + ANTHROPIC_API_KEY, plus TAVILY_API_KEY; optional APP_USERS=jury:password
+cd web && npm ci && npm run build && cd ..
+.venv/bin/uvicorn api.main:app --port 8000   # open http://localhost:8000
 ```
+
+For frontend work run `.venv/bin/uvicorn api.main:app --reload --port 8000` and `cd web && npm run dev` (Vite on :5173 proxies `/api`).
+
+Deploy: the `Dockerfile` builds the frontend and serves everything from one container; `render.yaml` is a ready Render blueprint (set `NEBIUS_API_KEY`, `TAVILY_API_KEY`, `APP_USERS`).
 
 Filtering, comparison and profiles work without any keys. The chat assistant, memo and research agent need an LLM key, and the research agent also needs Tavily. `python prewarm.py` pre-runs the slow agent workflows into `cache/` so every tab opens populated.
 
 ## Data
 
-The 10,000 suppliers are the challenge's anonymized dataset. The rail impact lab uses separate fictional suppliers, customers and KPIs (`data/`, regenerate with `python data/seed.py`); train product names are used for context only. News and research come from live web search.
+The 10,000 suppliers are the challenge's anonymized dataset. The rail impact lab (Streamlit fallback only) uses separate fictional suppliers, customers and KPIs (`data/`, regenerate with `python data/seed.py`); train product names are used for context only. News and research come from live web search.

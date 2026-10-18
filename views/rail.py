@@ -65,6 +65,7 @@ def render(keys: dict):
     scores = agent.current_scores()
     score_by_id = {r["id"]: r for r in scores}
     summary = m.portfolio_summary(scores)
+    llm_name = "Claude" if keys["provider"] == "claude" else "Nemotron"
 
     st.markdown("### 🚆 Rail impact lab")
     st.caption(f"Siemens Mobility rolling stock · {len(m.projects())} train projects · {summary['suppliers']} suppliers (tier 1 and tier 2) · as of {m.TODAY:%d %b %Y}")
@@ -78,7 +79,8 @@ def render(keys: dict):
         c[1].metric("Act now (≥60)", summary["act"])
         c[2].metric("Watch (40–59)", summary["watch"])
         c[3].metric("Single-source suppliers", summary["single_source"])
-        c[4].metric("€ at risk if act-now suppliers fail 6 wks", eur(summary["exposure_eur"]))
+        c[4].metric("€ at risk (6-week outage)", eur(summary["exposure_eur"]),
+                    help="Contract penalty exposure if every act-now supplier fails for 6 weeks")
 
         left, right = st.columns([3, 2])
         with left:
@@ -109,8 +111,9 @@ def render(keys: dict):
                 fig.add_bar(y=[m.suppliers()[r["id"]]["name"][:26] for r in top], x=[r["factors"][k] * w for r in top],
                             name=m.FACTOR_LABELS[k], orientation="h", marker_color=col)
             fig.update_layout(barmode="stack", height=470, margin=dict(l=0, r=0, t=30, b=0), title="Top 10 risk scores by factor",
-                              yaxis=dict(autorange="reversed"), legend=dict(orientation="h", y=-0.15, font_size=10),
-                              xaxis=dict(range=[0, 100], title="risk score"))
+                              yaxis=dict(autorange="reversed"),
+                              legend=dict(orientation="v", y=-0.08, yanchor="top", x=0, font_size=10),
+                              xaxis=dict(range=[0, 100], tickvals=[0, 25, 50, 75, 100]))
             st.plotly_chart(fig, width="stretch")
 
         st.subheader("Watch list")
@@ -121,10 +124,11 @@ def render(keys: dict):
                          "Tier": s["tier"], "Risk": r["score"], "Band": r["band"],
                          "Agent events": len(agent.events_for(r["id"])), "Why": "; ".join(r["reasons"][:3])})
         st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch", height=330,
-                     column_config={"Risk": st.column_config.ProgressColumn("Risk", min_value=0, max_value=100, format="%.0f")})
+                     column_config={"Risk": st.column_config.ProgressColumn("Risk", min_value=0, max_value=100, format="%.0f"),
+                                    "Why": st.column_config.TextColumn(width="large")})
 
         st.subheader("Agent risk scan")
-        st.caption("Nemotron searches live news per supplier region, industry and raw material, then extracts cited risk events.")
+        st.caption(f"{llm_name} searches live news per supplier region, industry and raw material, then extracts cited risk events.")
         default_ids = [r["id"] for r in scores[:8]]
         pick = st.multiselect("Suppliers to scan", options=list(m.suppliers()), default=default_ids,
                               format_func=lambda i: f"{i} · {m.suppliers()[i]['name']}")
@@ -206,7 +210,7 @@ def render(keys: dict):
         st.dataframe(pd.DataFrame(imp["projects"]).rename(columns={"exposure_eur": "exposure €"}), hide_index=True, width="stretch")
 
         if st.button("🛠 Generate mitigation plan", disabled=not keys["llm"]):
-            with st.spinner("Nemotron is drafting a mitigation plan..."):
+            with st.spinner(f"{llm_name} is drafting a mitigation plan..."):
                 try:
                     st.session_state[f"mit_{sid}"] = wf.mitigation(sid, weeks)
                 except Exception as e:
@@ -227,7 +231,7 @@ def render(keys: dict):
 
     with tab_what:
         st.markdown("Describe any disruption, or let the agent pull **today's headlines** and propose threats to our supplier base. "
-                    "Nemotron maps the event to suppliers, then the supply graph traces it to trains and euros.")
+                    f"{llm_name} maps the event to suppliers, then the supply graph traces it to trains and euros.")
 
         with st.container(border=True):
             h1, h2 = st.columns([3, 1])

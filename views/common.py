@@ -15,7 +15,8 @@ MAX_SHORTLIST = 20
 
 def pill(band: str, text: str | None = None) -> str:
     color = BAND_COLOR.get(band) or ds.LEVEL_COLOR.get(band, "#8a9a92")
-    return f'<span class="pill" style="background:{color}">{text or band.upper()}</span>'
+    ink = "#1b2420" if color in (ds.LEVEL_COLOR["Medium"], BAND_COLOR["watch"]) else "white"  # white on yellow is unreadable
+    return f'<span class="pill" style="background:{color};color:{ink}">{text or band.upper()}</span>'
 
 
 def run_streaming(fn, *args, label="Agent working", keep=14, **kwargs):

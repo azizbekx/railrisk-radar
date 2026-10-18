@@ -1,4 +1,4 @@
-"""Claude backend (Anthropic SDK) used as a stand-in while Nebius is being set up.
+"""Claude backend (Anthropic SDK) used for local development (production runs on Nebius).
 
 Takes the same OpenAI-style messages/tools the agent builds and returns an object with
 .content / .tool_calls / .claude_content, so the rest of the app does not change.
