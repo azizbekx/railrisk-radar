@@ -1,5 +1,13 @@
 # RailRisk Radar
 
+# 👉 [Live demo: railrisk-radar.onrender.com](https://railrisk-radar.onrender.com/)
+
+### Login: username `jury` · password `Test12345`
+
+*The free server sleeps when idle: the first visit can take up to a minute to load.*
+
+---
+
 Supplier selection and risk intelligence for rail procurement. Built for the **Siemens: Supplier Risk Intelligence** challenge at Nebius Build Week (Berlin, 18 Oct 2026).
 
 A train is built from tens of thousands of parts. A buyer sourcing a component has to narrow thousands of candidate suppliers down to a few, compare them side by side and justify the final choice. RailRisk Radar does that over the challenge's 10,000-supplier dataset with a team of AI agents, answers questions in plain language grounded in the data, researches any real company on the web, and monitors real suppliers every day. All agents run on **NVIDIA Nemotron 3 Ultra** on Nebius Token Factory.
