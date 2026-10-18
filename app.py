@@ -143,10 +143,10 @@ tab_over, tab_deep, tab_what, tab_chat, tab_dd = st.tabs(
 with tab_over:
     c = st.columns(5)
     c[0].metric("Suppliers monitored", summary["suppliers"])
-    c[1].metric("Act now (≥70)", summary["act"])
-    c[2].metric("Watch (40–69)", summary["watch"])
+    c[1].metric("Act now (≥60)", summary["act"])
+    c[2].metric("Watch (40–59)", summary["watch"])
     c[3].metric("Single-source suppliers", summary["single_source"])
-    c[4].metric("€ at risk (6-week outage, flagged)", eur(summary["exposure_eur"]))
+    c[4].metric("€ at risk if act-now suppliers fail 6 wks", eur(summary["exposure_eur"]))
 
     left, right = st.columns([3, 2])
     with left:
@@ -220,8 +220,8 @@ with tab_deep:
     with gauge:
         g = go.Figure(go.Indicator(mode="gauge+number", value=r["score"], number=dict(suffix="/100"),
                                    gauge=dict(axis=dict(range=[0, 100]), bar=dict(color=BAND_COLOR[r["band"]]),
-                                              steps=[dict(range=[0, 40], color="#e8f1ea"), dict(range=[40, 70], color="#f7edd8"),
-                                                     dict(range=[70, 100], color="#f6dfd9")])))
+                                              steps=[dict(range=[0, 40], color="#e8f1ea"), dict(range=[40, 60], color="#f7edd8"),
+                                                     dict(range=[60, 100], color="#f6dfd9")])))
         g.update_layout(height=170, margin=dict(l=10, r=10, t=10, b=0))
         st.plotly_chart(g, width="stretch")
 

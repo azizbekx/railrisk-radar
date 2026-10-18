@@ -32,7 +32,7 @@ FACTOR_LABELS = {
 
 
 def band(score: float) -> str:
-    return "act now" if score >= 70 else "watch" if score >= 40 else "low"
+    return "act now" if score >= 60 else "watch" if score >= 40 else "low"
 
 
 @lru_cache
@@ -260,8 +260,8 @@ def find_alternatives(component: str) -> list[dict]:
 
 def portfolio_summary(scores: list[dict]) -> dict:
     at_risk = [r for r in scores if r["score"] >= 40]
-    act = [r for r in scores if r["score"] >= 70]
+    act = [r for r in scores if r["score"] >= 60]
     single = sum(1 for sid in suppliers() if is_single_source(sid))
-    exposure = sum(trace_impact(r["id"], 6)["total_exposure_eur"] for r in at_risk)
+    exposure = sum(trace_impact(r["id"], 6)["total_exposure_eur"] for r in act)
     return {"suppliers": len(scores), "watch": len(at_risk) - len(act), "act": len(act),
             "single_source": single, "exposure_eur": exposure}

@@ -1,0 +1,1555 @@
+{
+  "S01": {
+    "summary": "Bohemia Steel Castings sits in Ostrava, where local steel supply is under strain from the Liberty Ostrava and Nova Hut insolvencies, which creates raw material and supplier-continuity exposure for bogie frame castings; most other news items are unrelated.",
+    "events": [
+      {
+        "title": "Czech court freezes Liberty Gala\u021bi assets over claims from Liberty Ostrava insolvency administrator",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.6,
+        "summary": "Liberty Ostrava, a local Ostrava steelmaker, is in insolvency, and its administrator has pursued over \u20ac40 million owed by Liberty Gala\u021bi. The asset freeze and halted restructuring signal instability among steel groups that operate in the Ostrava region. For S01, this raises the risk of disrupted or more expensive local steel and scrap supply for bogie frame castings. The article's dates are inconsistent (published 13 May 2026, with snippets referencing October 2026), so timing should be verified before acting.",
+        "url": "https://gmk.center/en/news/a-czech-court-has-frozen-liberty-galati-s-assets-and-halted-its-restructuring",
+        "date": "2026-05-13"
+      },
+      {
+        "title": "Nova Hut in bankruptcy explores electric arc furnace in Ostrava amid high energy costs and weak steel demand",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "Nova Hut, an Ostrava steelmaker in bankruptcy since June 2024, is planning an electric arc furnace while operating under high energy costs and weak European demand. Regional steel supply depends on these producers. Possible production cuts or ownership changes could affect the availability and price of steel inputs for S01's castings. The item also notes that Liberty Ostrava declared bankruptcy, which reinforces the regional supply concern.",
+        "url": "https://gmk.center/en/news/nova-hut-explores-possibilities-for-building-an-electric-arc-furnace-at-its-plant-in-ostrava",
+        "date": "2025-11-12"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S08": {
+    "summary": "Anatolia Klima's main external exposure is currency and inflation pressure from the Turkish lira, which raises the cost of imported HVAC components, with refrigerant regulation as a secondary concern.",
+    "events": [
+      {
+        "title": "Lira depreciation inflating imported HVAC component costs",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.8,
+        "summary": "A Bursa HVAC assembler that relies on imported components faces rising input costs as the lira weakens. The lira has lost more than 92% against the dollar since 2018, and the Mordor restraint analysis flags import-heavy assemblers as the most affected. This can squeeze margins on fixed-price rolling stock HVAC supply and may raise the risk of supplier financial strain.",
+        "url": "https://www.congress.gov/crs-product/R44000",
+        "date": "2026-08-03"
+      },
+      {
+        "title": "Persistent high inflation and tight monetary policy in T\u00fcrkiye",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "Official inflation remains above 30%, well above any other OECD country, and tight monetary policy is limiting SME access to credit. For a small HVAC supplier, this constrains working capital for components and raises the risk of delivery delays or financial distress during long rolling stock production schedules.",
+        "url": "https://www.oecd.org/en/publications/financing-smes-and-entrepreneurs-2026_bb7fc5c4-en/turkiye_911fc51e-en.html",
+        "date": "2026-09-21"
+      },
+      {
+        "title": "Refrigerant environmental compliance requirements in Turkey",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.4,
+        "summary": "Environmental compliance rules for refrigerants are described as shaping sourcing strategies for Turkish HVAC makers. Changes to permitted refrigerants could require redesign or requalification of HVAC units for trains, which affects both cost and lead time.",
+        "url": "https://www.marketsandmarkets.com/Market-Reports/geography/refrigerant-market/Turkey",
+        "date": "2026-07-22"
+      },
+      {
+        "title": "HVAC supply chain disruptions and skilled labour shortages in Europe",
+        "type": "logistics",
+        "severity": 2,
+        "confidence": 0.3,
+        "relevance": 0.3,
+        "summary": "Market research notes that supply chain disruptions and skilled labour shortages are affecting the European HVAC market. This is a generic industry signal, but it could affect component availability and production capacity for HVAC units supplied into European rolling stock programmes.",
+        "url": "https://www.marketdataforecast.com/market-reports/europe-hvac-market",
+        "date": "2026-08-27"
+      }
+    ],
+    "sources": 8,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S21": {
+    "summary": "Penang PowerSemi's main external exposures are IGBT wafer and raw-material supply shifts driven by export controls and Peninsular Malaysia grid reliability, with no news directly naming the supplier or S05.",
+    "events": [
+      {
+        "title": "Nexperia export ban disrupts IGBT chip supply chain",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.7,
+        "summary": "Nexperia Netherlands cut off wafer and raw-material shipments to its China unit, which makes IGBT power chips and modules. This tightens the IGBT wafer market and could affect the wafer sourcing and pricing that Penang PowerSemi relies on. A shortage or price spike in IGBT wafers could delay the tier-2 part feeding S05.",
+        "url": "https://sourceability.com/post/export-controls-on-nexperia-fuel-semiconductor-supply-chain-risk",
+        "date": "2026-03-09"
+      },
+      {
+        "title": "Nexperia China moves IGBT wafer supply to local firms",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.75,
+        "relevance": 0.6,
+        "summary": "Nexperia China has locked in local silicon wafer supply to cover its 2026 IGBT production. This signals a shift toward China-based wafer sources and more competition for IGBT capacity. Penang PowerSemi should check its own wafer origin and whether export-control exposure applies to its supply chain.",
+        "url": "https://www.reuters.com/world/china/nexperias-china-unit-switches-local-firms-wafer-supplies-document-shows-2025-12-19",
+        "date": "2025-12-19"
+      },
+      {
+        "title": "Peninsular Malaysia power supply tightness and outage risk",
+        "type": "operational",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "The AMRO report notes rising electricity demand on Peninsular Malaysia and isolated outages in Klang Valley, with grid strain in Johor. Penang is not named, but a power interruption at a power-module fab could halt production and affect S05 deliveries. Backup power and outage-response plans should be confirmed.",
+        "url": "https://www.amro-asia.org/wp-content/uploads/2026/05/Malaysia-ACR-2026_for-Publication.pdf",
+        "date": "2026-05-19"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S02": {
+    "summary": "The main external exposure for this Duisburg wheelset maker is logistics: record-low Rhine water levels threaten inbound steel and outbound freight at its inland-port location, with steel supply cost and availability as a secondary concern.",
+    "events": [
+      {
+        "title": "Low Water Levels On The Rhine Disrupt German Industry",
+        "type": "logistics",
+        "severity": 4,
+        "confidence": 0.7,
+        "relevance": 0.9,
+        "summary": "Record-low Rhine levels are raising freight costs and forcing rail substitution. Duisburg sits on the Rhine-Ruhr inland port network, so this could delay inbound steel and coal and outbound wheelset shipments. Salzgitter already shifted coal from Rotterdam to rail, which suggests similar workarounds would be needed for a wheelset maker.",
+        "url": "https://www.marinelink.com/news/low-water-levels-rhine-disrupt-german-541996",
+        "date": "2026-08-11"
+      },
+      {
+        "title": "Net Zero and the Green Steel Dream Is Fading",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "ArcelorMittal cancelled planned hydrogen-ready DRI/EAF conversions at German sites, including Bremen. German domestic high-grade steel capacity may stay carbon-intensive and costly, which could raise input prices for axle and wheel steel and limit supplier options for quality-grade material.",
+        "url": "https://energynewsbeat.co/net-zero/net-zero-and-the-green-steel-dream-is-fading/",
+        "date": "2026-09-09"
+      },
+      {
+        "title": "Russian strikes knock out three of Ukraine's largest steel plants",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.8,
+        "relevance": 0.4,
+        "summary": "Strikes on Ukrainian mills, which Metinvest and ArcelorMittal say produce about 90% of Ukraine's steel, tighten global steel markets and may push up European steel prices. Rheinland Radsatz does not appear to source directly from Ukraine, so the effect is indirect through pricing and availability.",
+        "url": "https://meduza.io/en/news/2026/09/21/russian-strikes-knock-out-three-of-ukraine-s-largest-steel-plants",
+        "date": "2026-09-21"
+      },
+      {
+        "title": "Ballistic Strikes Paralyze 90% of Ukraine Steel Production",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.8,
+        "relevance": 0.35,
+        "summary": "Same Ukrainian steel outage reported by a second outlet, which reinforces the global steel supply tightness and price pressure relevant to wheelset raw material costs. No direct supply link to this supplier is evident.",
+        "url": "https://www.kyivpost.com/post/84964",
+        "date": "2026-09-20"
+      },
+      {
+        "title": "Wheelsets: The Risk That Could Derail India's Rail Boom",
+        "type": "operational",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Wheelset availability is described as a bottleneck for rail manufacturers in India, which signals a tight global wheelset market. Competition for capacity and forgings could affect lead times and pricing for Siemens Mobility's European wheelset sourcing.",
+        "url": "https://www.thecore.in/opinion/the-plinth/indian-railways-metro-budget-wheelset-manufacturing-859100",
+        "date": "2026-02-26"
+      },
+      {
+        "title": "IW K\u00f6ln: Germany should preserve domestic steel production during green transition",
+        "type": "regulatory",
+        "severity": 1,
+        "confidence": 0.6,
+        "relevance": 0.3,
+        "summary": "Policy analysis urging Germany to keep competitive domestic steel production while energy-intensive industries face weak demand and overcapacity. It points to ongoing policy attention on domestic steel supply, which is a mildly favourable signal for German steel availability, though not a direct risk.",
+        "url": "https://eurometal.net/iw-koln-germany-should-preserve-domestic-steel-production-during-green-transition/",
+        "date": "2026-08-26"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S03": {
+    "summary": "Most of the retrieved news is unrelated to brake control unit production, but a 2026 Danube drought affecting Austrian hydropower and inland waterway logistics is a plausible, moderate-level exposure for a Linz-based manufacturer.",
+    "events": [
+      {
+        "title": "Danube drought reduces Austrian hydropower output and Central European power supply",
+        "type": "natural_disaster",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "Verbund reports Danube water flow down about a third and hydropower generation down about a quarter. Austria gets roughly 60% of its electricity from hydropower, so a second dry year could raise power prices or curtail supply to energy-intensive plants in Upper Austria. Low Danube levels can also restrict barge transport along the river that runs past Linz. For Alpen Bremstechnik this is a possible cost and energy-continuity risk rather than a direct production stop, but it should be monitored for impacts on electricity contracts and inbound logistics.",
+        "url": "https://www.atlanticcouncil.org/dispatches/the-danube-is-running-dry-and-taking-central-europes-power-supply-with-it",
+        "date": "2026-08-13"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S04": {
+    "summary": "Lombardia Freni's main external exposure is regional weather: severe storms in northern Italy, where its Brescia site is located, could disrupt power and logistics, while the other item has no meaningful link to its operations.",
+    "events": [
+      {
+        "title": "Heavy rain, thunderstorms hit parts of Italy amid power outages, evacuations",
+        "type": "natural_disaster",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.6,
+        "summary": "Storms, landslides and flash floods in northern and central Italy, plus widespread power outages, could interrupt production at the Brescia site and disrupt road transport of brake discs and pads to Siemens Mobility plants. The snippet is truncated, so the affected area relative to Brescia is not confirmed.",
+        "url": "https://en.yenisafak.com/world/heavy-rain-thunderstorms-hit-parts-of-italy-amid-power-outages-evacuations-3722167",
+        "date": "2026-08-21"
+      }
+    ],
+    "sources": 2,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S05": {
+    "summary": "No direct disruption to Elektra Traktion's operations appears in these results. The main indirect exposures are power-semiconductor wafer supply tightening later and quality scrutiny of converter failures in adjacent automotive sectors.",
+    "events": [
+      {
+        "title": "Siltronic Q2 2026: wafer supply-demand balance could tighten",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "Siltronic's CEO says wafer supply currently slightly exceeds demand, but a shortage could follow if prices fail to recover and capacity investment stalls. Traction converters depend on power semiconductors built on silicon and SiC wafers, so a future tightening could affect Elektra's component costs and lead times. No immediate impact on train production is indicated.",
+        "url": "https://finance.yahoo.com/markets/stocks/articles/siltronic-ag-ssllf-q2-2026-150132320.html",
+        "date": "2026-07-30"
+      },
+      {
+        "title": "JLR recalls 23,677 SUVs over DC-DC converter malfunction",
+        "type": "quality",
+        "severity": 1,
+        "confidence": 0.6,
+        "relevance": 0.3,
+        "summary": "A power-converter electrical failure in a different OEM's 48V hybrid system triggered a second recall. This does not involve Elektra's products. It is a reminder that converter failure modes draw regulatory and reputational attention, which matters for rolling-stock converter quality assurance.",
+        "url": "https://www.caranddriver.com/news/a73926535/jaguar-land-rover-range-rover-suvs-power-loss-recall/",
+        "date": "2026-09-28"
+      },
+      {
+        "title": "Infineon releases integrated safety and power EV inverter IC",
+        "type": "operational",
+        "severity": 1,
+        "confidence": 0.5,
+        "relevance": 0.3,
+        "summary": "Infineon's new inverter IC combines safety and power functions, which signals ongoing change in the power-electronics component landscape. Elektra may need to assess design and qualification impacts if it sources from or competes with these platforms. No supply risk is stated.",
+        "url": "https://www.automotiveworld.com/news/infineon-integrates-safety-and-power-in-ev-inverter-ic/",
+        "date": "2026-09-08"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S06": {
+    "summary": "Hanse Transformatoren faces its most material exposure through raw-material constraints on grain-oriented electrical steel and copper, which are central to main transformer cores and windings, with secondary exposure from grid-infrastructure sabotage in Germany and transport bottlenecks for heavy electrical equipment.",
+    "events": [
+      {
+        "title": "Grain-oriented electrical steel and copper shortages push transformer lead times to up to four years",
+        "type": "raw_material",
+        "severity": 4,
+        "confidence": 0.8,
+        "relevance": 0.9,
+        "summary": "GOES and copper are core inputs for transformer cores and windings. Constrained availability and volatile prices could delay Hanse's main transformer deliveries, raise costs, and push back Siemens Mobility train assembly schedules if material cannot be sourced on time.",
+        "url": "https://pv-magazine-usa.com/2026/05/11/u-s-transformer-market-faces-severe-supply-constraints-as-lead-times-extend-to-four-years",
+        "date": "2026-05-11"
+      },
+      {
+        "title": "GOES supply concentrated in few producers; European and global imports under strain",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "GOES is produced by very few suppliers and most transformer supply chains depend on imports. Hanse, as a European manufacturer, is exposed to similar concentration and to the risk that steel allocation tightens as global demand rises. Lack of a second qualified GOES source could extend any shortage.",
+        "url": "https://theconversation.com/supply-chain-delays-rising-equipment-prices-threaten-electricity-grid-269448",
+        "date": "2025-11-14"
+      },
+      {
+        "title": "Suspected sabotage on German grid, including transformer station near Dormagen",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.45,
+        "summary": "Sabotage attempts on German high-voltage infrastructure raise security alert levels and could increase scrutiny and site-security requirements for critical electrical equipment. Direct production impact on Hanse is unlikely, but it may affect logistics security, grid-related customer demand timing and insurance costs.",
+        "url": "https://sg.news.yahoo.com/german-police-investigate-grid-sabotage-103239399.html",
+        "date": "2026-09-04"
+      },
+      {
+        "title": "Two suspected sabotage incidents shut down RWE lignite units in Germany",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.4,
+        "summary": "Two coordinated grid incidents in one day show that German electrical infrastructure is a deliberate target. This increases the likelihood of heightened security measures and possible regulatory tightening for transformer manufacturers and their supply chains.",
+        "url": "https://www.insurancejournal.com/news/international/2026/09/02/883661.htm",
+        "date": "2026-09-02"
+      },
+      {
+        "title": "Shortage of specialised railcars for heavy power equipment",
+        "type": "logistics",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Specialised railcars for moving large transformers are in short supply. The reporting is US-focused, but the same heavy-transport constraint could affect outbound shipments of large main transformers if Siemens Mobility or Hanse uses rail transport in Europe.",
+        "url": "https://www.politico.com/newsletters/politico-surge/2026/09/28/how-ai-could-go-off-the-rails-01094536",
+        "date": "2026-09-28"
+      },
+      {
+        "title": "Large power transformer lead times reach 30\u201336 months, with import dependence and limited capacity",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.3,
+        "summary": "Long lead times and capacity limits across the transformer market indicate competition for skilled capacity and materials. The effect on Hanse is indirect, but it may increase pressure on component sub-suppliers and on Hanse's own delivery commitments.",
+        "url": "https://transformer-magazine.com/news/transformer-shortages-challenge-us-hydropower/",
+        "date": "2026-08-12"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S07": {
+    "summary": "Vltava Motors' main external exposure is rare earth permanent magnet supply for NdFeB traction motors, with a secondary risk from energy-cost pressure in the Czech and EU economy.",
+    "events": [
+      {
+        "title": "Macroeconomic Effects of Rare Earths Supply Chain Disruptions (IMF Working Paper 2026/073)",
+        "type": "raw_material",
+        "severity": 4,
+        "confidence": 0.6,
+        "relevance": 0.9,
+        "summary": "Models how disruption to rare earth magnet supply propagates through the economy. For a traction motor maker, NdFeB magnets are a core input, and the paper notes that no substitute currently exists for some permanent magnet uses. Vltava's production could be constrained if magnet deliveries are interrupted. Induction-motor alternatives exist but take time to develop and cost efficiency.",
+        "url": "https://www.elibrary.imf.org/view/journals/001/2026/073/article-A001-en.xml",
+        "date": "2026-07-17"
+      },
+      {
+        "title": "Rare Earth Elements: Pathways to secure and diversified supply chains (IEA)",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.75,
+        "summary": "IEA analysis of magnet rare earth demand from EV traction motors, which need roughly 2 kg of rare earth material per vehicle. Concentrated supply makes motor makers exposed to single-source risk, and Vltava should confirm its magnet sourcing diversification and buffer stock.",
+        "url": "https://iea.blob.core.windows.net/assets/88d2b060-4c5b-46cc-8727-c60576cb937d/RareearthelementsPathwaystosecureanddiversifiedsupplychains.pdf",
+        "date": "2026-05-06"
+      },
+      {
+        "title": "China's Hold Is the Plant. Not the Alert.",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.35,
+        "relevance": 0.5,
+        "summary": "Reports that Neo Performance Materials started commercial sintered NdFeB magnet shipments from its Narva, Estonia plant in September 2026, to an unnamed EV traction motor Tier 1. This is a possible non-Chinese magnet source for European motor makers, but the article states it is a first shipment, not a run-rate, and volumes are undisclosed. It reduces long-term dependence on China but does not solve near-term supply for Vltava. The article text is partly garbled, so confidence is low.",
+        "url": "https://www.canadianminingreport.com/blog/china-s-rare-earth-dominance-keeps-investors-on-alert-3-rare-earth-stocks-to-watch",
+        "date": "2026-10-15"
+      },
+      {
+        "title": "Spring 2026 Economic Forecast: Slowdown in growth as energy shock drives up inflation",
+        "type": "financial",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.35,
+        "summary": "The European Commission forecasts slower EU growth from an energy shock and higher inflation, with cutbacks in energy-intensive activity noted. For a small Czech manufacturer, this could raise energy and input costs and pressure margins, and may slow customer orders. It is an indirect risk that Vltava should monitor.",
+        "url": "https://economy-finance.ec.europa.eu/economic-forecast-and-surveys/economic-forecasts/spring-2026-economic-forecast-slowdown-growth-energy-shock-drives-inflation_en",
+        "date": "2026-05-21"
+      }
+    ],
+    "sources": 9,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S09": {
+    "summary": "Silesia Doors faces a mainly structural external risk picture: local labour-market churn in Wroc\u0142aw and tight electronics supply are the only items with a plausible link to its passenger door systems, and neither points to an immediate production threat.",
+    "events": [
+      {
+        "title": "Beko Europe layoffs and closures affect Wroc\u0142aw plant and local parts manufacturer",
+        "type": "labour",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.4,
+        "summary": "Beko/Whirlpool is cutting about 700 jobs at its Wroc\u0142aw plant and a parts manufacturer with about 250 employees is affected. For a Wroc\u0142aw door-system supplier this could release skilled manufacturing labour into the local market, which may ease hiring, and it signals weak regional industrial demand. It does not directly threaten Silesia Doors' production or supply chain.",
+        "url": "https://xyz.pl/poland-unpacked/layoffs-closures-and-investment-the-rebalancing-of-beko-europe-8929",
+        "date": "2026-04-30"
+      },
+      {
+        "title": "Semiconductor and memory shortage raising electronics costs",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.35,
+        "summary": "Reuters-reported shortages of high-bandwidth memory and rising memory and storage prices are driven mainly by AI data-centre demand. Door control units rely on microcontrollers and memory, so Silesia Doors could see cost increases or longer lead times for electronic components. The article does not address automotive or rail-grade parts specifically, so the direct exposure is uncertain.",
+        "url": "https://maintenanceworld.com/2026/09/23/the-new-semiconductor-shortage-how-ai-is-reshaping-chip-supply-prices-and-manufacturing",
+        "date": "2026-09-23"
+      },
+      {
+        "title": "Skilled labour shortage in Poland and Wroc\u0142aw hiring market",
+        "type": "labour",
+        "severity": 2,
+        "confidence": 0.3,
+        "relevance": 0.3,
+        "summary": "The source reports a broad skilled-labour shortage in Poland, with Wroc\u0142aw described as a strong engineering hub. This points to ongoing competition for qualified assembly and engineering staff for passenger door systems, which could affect ramp-up capacity. The source is promotional and general, so the weight given to it is low.",
+        "url": "https://www.y-axis.com/visa/work/poland",
+        "date": "2026-05-06"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S10": {
+    "summary": "No news item in this batch creates direct exposure for Catalunya Interiors S.L. (seats and interior panels, Barcelona); the results are about aviation cabin markets, student housing, trade fairs, renewable-energy jobs, and a public-sector teachers' strike that does not touch the supplier's workforce, materials, or logistics.",
+    "events": [],
+    "sources": 6,
+    "scanned_at": "2026-10-18 11:54"
+  },
+  "S11": {
+    "summary": "Lviv Cable Systems is exposed mainly to recurring Russian strikes on Ukraine's power grid, which cause nationwide rolling blackouts that can interrupt production at a Lviv harness plant. Secondary exposure comes from EU-Ukraine logistics for exports.",
+    "events": [
+      {
+        "title": "Russian strikes on Ukraine's energy grid cause outages in all regions",
+        "type": "operational",
+        "severity": 4,
+        "confidence": 0.8,
+        "relevance": 0.85,
+        "summary": "A sustained campaign of drone and missile attacks on energy infrastructure led to power outages and restrictions in every Ukrainian region. Without reliable grid power or backup generation, Lviv Cable Systems could lose production shifts and miss harness delivery dates for Siemens Mobility trains.",
+        "url": "https://www.pbs.org/newshour/world/russia-blasts-ukraines-power-grid-again-causing-outages-across-the-country-and-killing-6",
+        "date": "2025-10-30"
+      },
+      {
+        "title": "Rolling blackouts across Ukraine amid bitter cold",
+        "type": "operational",
+        "severity": 4,
+        "confidence": 0.75,
+        "relevance": 0.8,
+        "summary": "Rolling blackouts became the norm across the country during winter 2025/26 as energy infrastructure was repeatedly hit. Scheduled outages and grid instability would constrain shift planning and possibly electrical testing of cable assemblies at the Lviv site, and could raise backup-power costs.",
+        "url": "https://abcnews.com/International/normal-life-disappeared-russias-energy-offensive-plunges-ukraine/story?id=129557876",
+        "date": "2026-02-01"
+      },
+      {
+        "title": "Tit-for-tat energy attacks knock out power for over half a million",
+        "type": "operational",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "Russia and Ukraine continue to target each other's energy facilities, and repair work is often delayed by security conditions. This points to a persistent, not one-off, grid risk for western Ukrainian manufacturing sites that depend on the national grid.",
+        "url": "https://www.aljazeera.com/news/2026/3/25/russia-ukraine-tit-for-tat-attacks-knock-out-power-for-over-half-a-million",
+        "date": "2026-03-25"
+      },
+      {
+        "title": "Massive strikes leave 600,000 without power in Kyiv region",
+        "type": "operational",
+        "severity": 3,
+        "confidence": 0.75,
+        "relevance": 0.5,
+        "summary": "An overnight attack on energy infrastructure in the Kyiv region shows how grid strikes reach beyond the frontline. Lviv is far from the main impact zone, but the event confirms the national grid is repeatedly targeted, which supports the outage risk assumption for the Lviv plant.",
+        "url": "https://www.bbc.com/news/articles/cx2gylngx7go",
+        "date": "2025-11-29"
+      },
+      {
+        "title": "EU-Ukraine logistics becoming the new business reality",
+        "type": "logistics",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "The article describes evolving rail and road freight between the EU and Ukraine. It is a general business piece, but it is relevant to the transport lanes Lviv Cable Systems uses to ship harnesses into the EU supply chain, and it points to lane congestion and border-crossing dependency.",
+        "url": "https://railmarket.com/news/business/59933-michaela-macharik-eu-ukraine-logistics-has-become-the-new-business-reality",
+        "date": "2026-07-16"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S12": {
+    "summary": "Danube Wiring's main external exposure is domestic political unrest in Novi Sad and Serbia, including a contested October 2026 election, with secondary energy-cost and metals-trade pressures; none of the items point to a direct production stoppage.",
+    "events": [
+      {
+        "title": "Serbian election (25 Oct 2026) amid student-led protest movement",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "The student list is polling strongly ahead of the 25 October election. Protests centred in Novi Sad, where the supplier operates, could bring rallies, road closures and political uncertainty that disrupt staff attendance and local logistics. Election-related instability is a plausible short-term risk for a small local manufacturer, though a stoppage at a cable harness plant is unlikely.",
+        "url": "https://jacobin.com/2026/10/elections-serbia-student-list-vucic",
+        "date": "2026-10-14"
+      },
+      {
+        "title": "Ongoing anti-corruption protests in Serbia since the Novi Sad station collapse",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.8,
+        "relevance": 0.4,
+        "summary": "Protests have run continuously since November 2024, when a Novi Sad railway station canopy collapsed. They are sustained and focused on state infrastructure and corruption, which raises the chance of further demonstrations, public-sector disruption and tighter scrutiny of infrastructure and rail projects in the region. Direct impact on a cable harness supplier is indirect.",
+        "url": "https://www.cfr.org/articles/how-global-gen-z-protests-have-shocked-and-transformed-governments",
+        "date": "2025-11-20"
+      },
+      {
+        "title": "Large student rallies continue in Novi Sad and Belgrade",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.75,
+        "relevance": 0.4,
+        "summary": "Rallies in Novi Sad in January 2026 and planned Belgrade protests show the movement is still mobilising large crowds. Recurring mass events in the supplier's home city could cause localised traffic and workforce disruption, mainly on protest dates.",
+        "url": "https://www.aljazeera.com/news/2026/1/18/thousands-rally-in-serbia-as-students-continue-fight-against-corruption",
+        "date": "2026-01-18"
+      },
+      {
+        "title": "Western Balkans outlook: political transition and EU alignment pressures",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "The outlook highlights Serbia's political transition and the push for EU standards alignment. Over time this could bring new regulatory or compliance requirements for Serbian suppliers serving EU-linked rail customers, and may affect investment and contract terms.",
+        "url": "https://www.atlanticcouncil.org/blogs/2026-will-be-a-big-year-in-the-western-balkans-heres-what-to-watch",
+        "date": "2026-01-23"
+      },
+      {
+        "title": "Ongoing energy crisis and regional energy security concerns in Western Balkans",
+        "type": "operational",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.45,
+        "summary": "Western Balkan energy ministers describe an ongoing and likely deepening energy crisis. For a manufacturer in Serbia this could mean higher electricity costs and some supply-security risk, which would hit energy-intensive production such as cable and harness assembly with testing and curing processes.",
+        "url": "https://balkangreenenergynews.com/western-balkan-energy-ministers-alternative-supply-routes-regional-cooperation-are-key-to-energy-security",
+        "date": "2026-05-15"
+      },
+      {
+        "title": "Global steel trade measures tighten as overcapacity grows",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.3,
+        "summary": "The OECD reports growing trade measures against steel imports. Cable harnesses depend mainly on copper and polymers, but steel-based connectors, brackets and enclosures could see cost increases or supply tightening if the measures affect Serbian sourcing routes.",
+        "url": "https://www.oecd.org/en/publications/2026/06/oecd-steel-outlook-2026_a79fb861/full-report/trade-actions-increase-as-the-steel-crisis-worsens_2ca8f20b.html",
+        "date": "2026-06-04"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S13": {
+    "summary": "Nordic Aluminium Profiles' main external exposure is raw-material cost and availability: European billet premiums have roughly doubled since the Middle East conflict, though easing Hormuz supply concerns and falling aluminium prices in Q2-Q3 2026 partly offset this.",
+    "events": [
+      {
+        "title": "European aluminium billet premiums roughly doubled amid energy-driven smelter curtailments",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.85,
+        "summary": "As a car body extruder that buys billet, Nordic Aluminium faces higher input costs and possible tightness in billet supply. Fastmarkets estimates affected smelter output could fall to about 3.45 Mt in 2026 from 6.15 Mt a year earlier. Sustained premiums would squeeze margins on fixed-price automotive contracts and could delay deliveries of car body extrusions to train production if billet allocation tightens.",
+        "url": "https://www.alcircle.com/news/how-high-aluminium-prices-and-energy-costs-are-reshaping-europe-s-aluminium-market-119837",
+        "date": "2026-07-15"
+      },
+      {
+        "title": "Norsk Hydro Q2 2026: aluminium price fell and Hormuz-related supply concerns eased",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "The three-month aluminium price fell from USD 3,532/mt to USD 3,086/mt by the end of Q2, and the US-Iran ceasefire and partial reopening of the Strait of Hormuz are easing global supply concerns as Middle East metal ships out and smelters recover. This lowers near-term billet cost pressure for a Norwegian extruder, although price volatility remains high.",
+        "url": "https://www.stocktitan.net/news/NHYDY/norsk-hydro-operational-strength-delivering-solid-5ts0egcn3uev.html",
+        "date": "2026-07-22"
+      },
+      {
+        "title": "Energy shortages and Hormuz uncertainty pressuring aluminium supply and energy costs",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.5,
+        "relevance": 0.5,
+        "summary": "Fastmarkets reports that Middle East energy disruption is tightening aluminium supply and raising energy costs across the sector, including Qatalum running at about 60% capacity. Energy price spikes affect Norwegian extruders indirectly through billet and power costs, and renewed disruption would reverse the easing seen in Q2-Q3. The source is a summary page with limited detail, so confidence is moderate.",
+        "url": "https://www.fastmarkets.com/insights/aluminium-in-energy-crossfire-as-hormuz-uncertainty-drags-on",
+        "date": "2026-04-01"
+      },
+      {
+        "title": "Low-carbon billet demand driving premium long-term supply contracts for extruders",
+        "type": "esg",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "Market analysis indicates that extruders able to supply low-carbon billet are securing long-term contracts with premium pricing clauses. Nordic Aluminium may need to show low-carbon billet sourcing to keep automotive customers, which could raise procurement costs or favour suppliers with renewable-powered smelting such as Hydro. The source is a market-research summary, so the assessment is indicative.",
+        "url": "https://www.mordorintelligence.com/industry-reports/aluminum-market",
+        "date": "2026-05-26"
+      },
+      {
+        "title": "US trade measures on Norwegian aluminium products (Section 232 history)",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.3,
+        "relevance": 0.3,
+        "summary": "The USTR trade agenda document recalls Norway's WTO dispute over US Section 232 duties on steel and aluminium. It does not confirm current tariff levels on Norwegian extrusions. Relevance to Nordic Aluminium depends on whether it exports car body parts to the US, which the profile does not state. Worth verifying if US exports exist.",
+        "url": "https://ustr.gov/sites/default/files/files/Press/Releases/2026/2026%20Trade%20Policy%20Agenda%202025%20Annual%20Report.pdf",
+        "date": "2026-02-16"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S14": {
+    "summary": "Helvetia Pantograph AG faces mainly raw-material price pressure on copper and possibly silver, plus indirect cyber exposure through its rolling stock OEM customers, with limited direct operational risk from local Winterthur infrastructure works.",
+    "events": [
+      {
+        "title": "Stadler refuses Everest $12 million ransomware demand",
+        "type": "cyber",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.6,
+        "summary": "Cybercriminals stole technical data from a supplier's file-sharing platform used by Stadler, a rolling stock OEM. A pantograph maker in the same supply chain may hold shared technical drawings or specifications, so it should review its own file-sharing and access controls and confirm whether any shared data is exposed.",
+        "url": "https://therecord.media/stadler-refuses-everest-ransom-demand",
+        "date": "2026-07-22"
+      },
+      {
+        "title": "Copper hits record $6.83 a pound as mine disasters choke supply",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.7,
+        "summary": "Copper is a key input for pantograph current-collection components and electrical connections. Record prices after mine disasters at Grasberg and Kamoa-Kakula raise material cost and may tighten supply for Helvetia Pantograph, which could squeeze margins or delay orders if it cannot pass costs on or secure stock.",
+        "url": "https://startupfortune.com/copper-hits-a-record-683-a-pound-as-mine-disasters-choke-supply/",
+        "date": "2026-09-25"
+      },
+      {
+        "title": "Deutsche Bank sees silver prices at $70 an ounce in 2027 as market shifts to surplus",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Silver is used in electrical contacts, and some pantograph contact components may depend on it. The forecast points to a shift from shortage to surplus in 2027, which should ease supply pressure. Price volatility after the 2026 rally still matters for cost planning.",
+        "url": "https://carboncredits.com/deutsche-bank-sees-silver-prices-at-70-an-ounce-in-2027-as-market-shifts-from-shortage-to-surplus/",
+        "date": "2026-10-07"
+      },
+      {
+        "title": "Work starts on second route between Z\u00fcrich and Winterthur (MehrSpur)",
+        "type": "logistics",
+        "severity": 1,
+        "confidence": 0.7,
+        "relevance": 0.3,
+        "summary": "The 9 km tunnel and junction works in the Z\u00fcrich\u2013Winterthur corridor may bring construction traffic and rail possession changes near the supplier's Winterthur site. This is a minor, local logistics risk that could affect inbound and outbound freight timing during the works. It may also create demand for rail infrastructure that benefits Swiss suppliers.",
+        "url": "https://www.railwaygazette.com/switzerland/2026/08/05/work-starts-to-deliver-a-second-route-between-zurich-and-winterthur",
+        "date": "2026-08-05"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S15": {
+    "summary": "The supplier's main external exposure is energy-cost pressure on German glass production, which the news shows hitting energy-intensive glass manufacturing hardest, with secondary pressure from glass price movements and energy-market volatility.",
+    "events": [
+      {
+        "title": "Glass manufacturing shows the steepest production decline among German energy-intensive industries since 2022",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.8,
+        "summary": "Destatis data reported by Clean Energy Wire show German glass manufacturing had the strongest output decline in energy-intensive sectors from February 2022 to March 2026. This indicates sustained energy-cost pressure on the sector the supplier belongs to. For Glaswerk Thueringen, higher energy costs could squeeze margins, and upstream flat-glass capacity could tighten, affecting lead times and pricing for windscreen and window production.",
+        "url": "https://www.cleanenergywire.org/news/energy-intensive-industries-germany-see-15-percent-production-fall-start-ukraine-war",
+        "date": "2026-05-15"
+      },
+      {
+        "title": "German producer prices for shaped and processed flat glass rose 4.7% year on year in December 2025",
+        "type": "financial",
+        "severity": 2,
+        "confidence": 0.85,
+        "relevance": 0.6,
+        "summary": "Destatis reports that shaped and processed flat glass, the category closest to the supplier's windscreen and side-window output, became more expensive in late 2025 while hollow glass fell. Rising input and processed-glass prices could increase the supplier's material and purchasing costs, and may pressure fixed-price contracts with Siemens Mobility.",
+        "url": "https://www.destatis.de/EN/Press/2026/01/PE26_020_61241.html",
+        "date": "2026-01-20"
+      },
+      {
+        "title": "Glass producers face fossil-fuel dependence and furnace-switching pressure",
+        "type": "esg",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "Ardagh Group notes that glass manufacturing is highly energy intensive and largely reliant on fossil fuels, and that its strategy covers switching furnaces. Decarbonisation of glass furnaces could require capital investment or temporary capacity disruption across the sector, which may affect upstream glass supply to the supplier. The source is container-glass focused, so the direct impact on windscreen production is uncertain.",
+        "url": "https://www.facebook.com/ardaghgroup/posts/last-week-we-welcomed-officials-from-germanys-bundesnetzagentur-federal-network-/1575618047899429",
+        "date": ""
+      },
+      {
+        "title": "Record fuel prices in Germany raise questions about Europe's readiness for another energy shock",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.3,
+        "summary": "DW reports record consumer fuel prices in Germany and asks whether Europe is prepared for its next major energy shock. The article is mainly about road fuel, not industrial gas, so the link to the supplier is indirect. A broader energy price spike could still raise furnace and logistics costs for glass producers and transporters.",
+        "url": "https://www.dw.com/en/germany-news-call-to-scrap-once-a-day-gas-price-rises/live-79382523",
+        "date": "2026-09-23"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S16": {
+    "summary": "Kanto Rail Electronics faces moderate external risk mainly through semiconductor supply tightness driven by AI-chip demand, with a secondary exposure to Japan-linked chemical and materials chokepoints that could affect its component supply.",
+    "events": [
+      {
+        "title": "Samsung spreads semiconductor bases amid AI-driven supply crunch",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.5,
+        "relevance": 0.5,
+        "summary": "An AI-chip demand surge is tightening semiconductor supply, and Samsung is moving production across Japan, Vietnam and the US to compete for orders. For Kanto Rail, which builds train control computers that depend on microcontrollers, FPGAs and other chips, tighter allocation could lengthen lead times or raise prices for components. The news does not show a direct shortage, so the impact on train production is uncertain.",
+        "url": "https://www.digitaltoday.co.kr/en/view/113495/samsung-electronics-spreads-semiconductor-bases-to-prepare-for-order-battles-after-supply-crunch",
+        "date": "2026-10-13"
+      },
+      {
+        "title": "AI race exposes chokepoints in Japanese chemicals and materials for chipmaking",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.35,
+        "summary": "The article notes that chip production relies on specialised Japanese chemicals and materials, and that the 2019 Japan-South Korea trade dispute disrupted chipmaking supplies. This is a background risk for a Japan-based electronics maker that sources semiconductors through global chains. It is a general geopolitical signal rather than a specific disruption to Kanto Rail's supply.",
+        "url": "https://www.abc.net.au/news/2026-09-24/ai-race-chips-data-energy-cake-stack-us-china-asia-pacific/107071946",
+        "date": "2026-09-23"
+      }
+    ],
+    "sources": 2,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S17": {
+    "summary": "As a Shenzhen-based traction battery pack maker, S17 faces high exposure to Chinese battery export controls and their possible reimposition after the Trump-Xi pause, plus lithium price pressure. The main risk is that controls on battery materials or pack exports could disrupt its inputs or its deliveries to European customers.",
+    "events": [
+      {
+        "title": "China export controls on lithium-ion battery supply chain effective 8 Nov 2025",
+        "type": "raw_material",
+        "severity": 4,
+        "confidence": 0.9,
+        "relevance": 0.9,
+        "summary": "China announced on 9 Oct 2025 broad export controls on lithium-ion battery materials and technology, covering graphite anode and cathode precursors where supply outside China is very limited. For S17, which is based in China, this could restrict its access to key cell and pack inputs or require export licences, delaying traction pack deliveries for Siemens Mobility.",
+        "url": "https://www.iea.org/commentaries/with-new-export-controls-on-critical-minerals-supply-concentration-risks-become-reality",
+        "date": "2025-10-23"
+      },
+      {
+        "title": "US-China agreement issues general licences for graphite and rare earths",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "Following the Trump-Xi meeting, China agreed to issue general export licences for graphite and rare earths, which de facto removes some earlier controls. This reduces near-term input risk for S17, but the concessions depend on the wider d\u00e9tente.",
+        "url": "https://www.china-briefing.com/news/trump-xi-meeting-outcomes-and-implications",
+        "date": "2025-11-10"
+      },
+      {
+        "title": "China's one-year pause on second-round export controls may expire",
+        "type": "geopolitical",
+        "severity": 4,
+        "confidence": 0.8,
+        "relevance": 0.85,
+        "summary": "China announced a one-year pause on its second round of export control measures at the 30 Oct 2025 summit. If the pause lapses without extension, battery-related controls could return and disrupt S17's exports and input supply during the period when Siemens traction pack orders are in production.",
+        "url": "https://ecfr.eu/publication/beijing-holdem-european-cards-against-chinese-coercion",
+        "date": "2026-03-31"
+      },
+      {
+        "title": "Battery export controls could return without extension of US-China d\u00e9tente",
+        "type": "geopolitical",
+        "severity": 4,
+        "confidence": 0.7,
+        "relevance": 0.9,
+        "summary": "The CFR warns that without a Trump-Xi extension, Beijing's export controls on batteries, battery components and related inputs could be reinstated. For a Chinese traction pack supplier, this is a direct risk of export-licence delays or stoppages affecting European rolling stock programmes.",
+        "url": "https://www.cfr.org/reports/dismantling-chinas-supply-chain-weapon",
+        "date": "2026-09-21"
+      },
+      {
+        "title": "Lithium market may swing to deficit in 2026",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.6,
+        "summary": "Fastmarkets projects the lithium market moving from a 10,000-tonne oversupply in 2025 to a 1,500-tonne deficit in 2026. This could raise cell and pack costs for S17 and put pressure on margins or delivery terms for fixed-price rail contracts.",
+        "url": "https://www.rdworldonline.com/the-post-lithium-materials-race-is-no-longer-theoretical",
+        "date": "2026-03-19"
+      },
+      {
+        "title": "EU-China dependence and retaliation cycle on EV and battery trade",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.6,
+        "summary": "The analysis describes a cycle in which Beijing slows export approvals and Brussels raises barriers on Chinese products. Tariffs or trade barriers on Chinese batteries could increase costs or block S17's pack exports to European customers, including Siemens Mobility.",
+        "url": "https://www.gisreportsonline.com/r/europe-dependence-on-china",
+        "date": "2025-12-10"
+      },
+      {
+        "title": "China's GB 38031-2025 traction battery safety standard takes effect July 2026",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.45,
+        "summary": "China's new traction battery safety standard takes effect in July 2026. S17 will need to show compliance for domestic and possibly export packs, which could require design or testing changes and affects qualification timelines for rail traction applications.",
+        "url": "https://www.rdworldonline.com/the-post-lithium-materials-race-is-no-longer-theoretical",
+        "date": "2026-03-19"
+      },
+      {
+        "title": "EU midstream gap and reliance on non-EU battery suppliers",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Carnegie reports a shortage of cathode active materials in the EU and heavy reliance on non-EU battery cell suppliers, including Chinese ones. This may lead European customers to push for local sourcing or stricter supplier rules that affect S17's market position.",
+        "url": "https://carnegieendowment.org/research/2026/09/battery-ecosystems-a-comparative-analysis-of-lithium-ion-tech-policy",
+        "date": "2026-09-29"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S18": {
+    "summary": "Maple Hydrogen's external risk is mainly demand-side: the hydrogen mobility sector is contracting through layoffs and funding strain, and a major Canadian automaker has ended its fuel cell program, which weakens the market for fuel cell modules.",
+    "events": [
+      {
+        "title": "ZeroAvia rejigs ZA600 certification plan after funding constraints force sweeping layoffs",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "A hydrogen powertrain developer, a likely customer segment for fuel cell modules, has cut staff and re-planned certification because of funding limits. Slower programmes mean delayed or reduced module orders and added pressure on Maple's pricing and volume forecasts.",
+        "url": "https://www.flightglobal.com/engines/2026/01/zeroavia-rejigs-za600-certification-plan-after-funding-constraints-force-sweeping-layoffs",
+        "date": "2026-01-26"
+      },
+      {
+        "title": "Bill Gates-Backed Modern Hydrogen Lays Off Most Employees",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.6,
+        "summary": "A well-funded hydrogen company cutting most of its staff signals weak commercial traction for hydrogen hardware across the sector. This raises counterparty and demand risk for a small fuel cell module maker that depends on sector growth.",
+        "url": "https://fuelcellsworks.com/2025/12/03/green-investment/bill-gates-backed-modern-hydrogen-lays-off-most-of-its-employees-after-decade-long-pursuit-of-clean-energy",
+        "date": "2025-12-03"
+      },
+      {
+        "title": "GM cancels electric van production and ends hydrogen fuel cell development, Canadian auto footprint hit",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.75,
+        "relevance": 0.55,
+        "summary": "GM ended its hydrogen fuel cell technology development as part of $1.6B in EV charges, and it halted the Ingersoll, Ontario line. This removes a large potential Canadian fuel cell buyer and reduces demand for Maple's modules in the region, though it does not directly affect rail production.",
+        "url": "https://www.detroitnews.com/story/business/autos/general-motors/2025/10/21/gm-ends-electric-van-output-in-latest-setback-for-canadian-autos/86817539007",
+        "date": "2025-10-21"
+      },
+      {
+        "title": "ZeroAvia founder steps aside amid certification and funding challenges",
+        "type": "financial",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.45,
+        "summary": "Leadership change at a hydrogen aviation firm facing certification and funding problems adds to uncertainty about the segment's near-term demand. The direct impact on Maple is limited, but it reinforces the sector-wide funding risk.",
+        "url": "https://fuelcellsworks.com/2026/06/01/h2/zeroavia-founder-steps-aside-as-hydrogen-aviation-pioneer-faces-certification-and-funding-challenges",
+        "date": "2026-06-01"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S19": {
+    "summary": "Gaul Couplers' external risk is mainly indirect: a national protest and public-sector strike wave touching Lille, plus consolidation among coupler competitors that could shift market position over time.",
+    "events": [
+      {
+        "title": "Nationwide school and public-sector protests reach Lille",
+        "type": "labour",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Protests over budget cuts, spreading from Paris to Lille and other cities and coinciding with a public-sector strike, could cause short-term disruption to local transport, road access and administrative services in Lille. Direct production impact on a small coupler and gangway maker is likely limited, but a prolonged strike could delay permits, customs or inspections.",
+        "url": "https://www.ynetnews.com/article/sk8qx4wsfg",
+        "date": "2026-10-05"
+      },
+      {
+        "title": "Wabtec acquires Dellner Couplers (February 2026)",
+        "type": "financial",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.6,
+        "summary": "Consolidation of a major coupler competitor under Wabtec could strengthen a rival's pricing power and product range in the coupler market. This may increase competitive pressure on Gaul Couplers in tenders and could also affect the availability or terms of shared sub-components.",
+        "url": "https://www.mordorintelligence.com/industry-reports/rolling-stock-market",
+        "date": "2026-03-31"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S20": {
+    "summary": "Baltic Fire Safety's external risk is mainly indirect: Lithuania's rising defence-industrial activity and drone-related security alerts in the region could affect local labour markets and security posture, but none of the items point to a direct disruption of its fire detection production.",
+    "events": [
+      {
+        "title": "Residents of Lithuania's capital told to shelter as drone alarm underlines NATO's eastern jitters",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.45,
+        "summary": "A drone alarm in Vilnius prompted public shelter orders and relocation of national leaders. For a Kaunas-based supplier this signals heightened regional security tension that could affect staff, logistics, and business continuity planning, though no production impact is reported.",
+        "url": "https://www.thehindu.com/news/international/residents-of-lithuanias-capital-told-to-shelter-as-drone-alarm-underlines-natos-eastern-jitters/article71002027.ece",
+        "date": "2026-05-20"
+      },
+      {
+        "title": "Newsletter: Drone crisis talks in Lithuania as Russia steps up Kyiv threats",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.4,
+        "summary": "Lithuania is holding drone crisis talks amid escalating regional threats. This points to a prolonged period of elevated security alerts in Lithuania, a possible source of disruption to logistics and staffing for a local manufacturer, but it is not a direct supply threat.",
+        "url": "https://www.euronews.com/2026/05/26/newsletter-drone-crisis-talks-in-lithuania-as-russia-steps-up-kyiv-threats",
+        "date": "2026-05-26"
+      },
+      {
+        "title": "NATO's Eastern Flank Gets Industrial Boost with Local Leopard 2 Assembly",
+        "type": "labour",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "KNDS is opening a Leopard 2 tank assembly plant in Kaunas, with Lithuania Defense Services as subcontractor. The project could draw skilled engineering and assembly labour away from local manufacturers, potentially raising wage pressure or hiring difficulty for Baltic Fire Safety in Kaunas.",
+        "url": "https://dsm.forecastinternational.com/2025/12/12/natos-eastern-flank-gets-industrial-boost-with-local-leopard-2-assembly",
+        "date": "2025-12-12"
+      },
+      {
+        "title": "JetMS Moves Interiors Production from UK to Lithuania",
+        "type": "labour",
+        "severity": 1,
+        "confidence": 0.5,
+        "relevance": 0.3,
+        "summary": "JetMS has centralised cabin interior production in a 65,000 sq ft Kaunas facility. This adds to competition for skilled technical labour in Kaunas's advanced manufacturing sector, a minor recruitment risk for a local electronics-focused supplier.",
+        "url": "https://www.ainonline.com/aviation-news/business-aviation/2025-12-12/jetms-moves-interiors-production-uk-lithuania",
+        "date": "2025-12-29"
+      }
+    ],
+    "sources": 8,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S22": {
+    "summary": "The supplier's external risk picture is modest: the main exposures are energy and logistics cost pressure from the Middle East supply shock and a rail-infrastructure funding backlog that drives demand for passenger information systems, and the news contains no direct disruption to its production or suppliers.",
+    "events": [
+      {
+        "title": "Jet fuel and energy cost shock from Iran war and Strait of Hormuz disruption",
+        "type": "logistics",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Higher kerosene and energy prices raise freight and energy costs for a small display assembler that relies on air and road shipments of electronic components. Shortages are reported for airlines rather than for component or logistics supply, so direct impact on Bavaria Info Displays' production is unlikely, but cost pressure on its inbound and outbound logistics is plausible.",
+        "url": "https://gulfnews.com/business/aviation/jet-fuel-supplies-are-lagging-what-it-means-for-airlines-and-travellers-1.500509712",
+        "date": "2026-04-17"
+      },
+      {
+        "title": "DB InfraGO 2025 report: station and network renewal backlog of about EUR 124.5bn",
+        "type": "financial",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.5,
+        "summary": "The report names passenger information systems among the assets under renewal, and the station backlog fell from EUR 20.3bn to EUR 18.6bn. This signals sustained demand for passenger information systems in German stations, which benefits the supplier. The risk is that funding constraints or a shift in renewal priorities could delay or reduce orders, and the report's call for a 'different approach' suggests possible changes in procurement.",
+        "url": "https://www.railwaygazette.com/infrastructure/2026/05/08/db-ceo-worst-of-german-rail-decline-may-be-over-but-path-to-modern-network-still-long",
+        "date": "2026-05-08"
+      },
+      {
+        "title": "Germany and EU remain heavily dependent on imported fossil fuels",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.3,
+        "summary": "Continued reliance on imported oil and gas keeps German energy prices exposed to geopolitical shocks, which affects the supplier's manufacturing energy costs. The effect on electronics components is indirect, so the impact on train-related deliveries is limited.",
+        "url": "https://www.cleanenergywire.org/factsheets/germany-eu-remain-heavily-dependent-imported-fossil-fuels",
+        "date": "2026-04-13"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S23": {
+    "summary": "The supplier's main external exposure is Taiwan-wide: Hsinchu's seismic risk and Taiwan Strait tensions could disrupt fab operations and logistics, while display-substrate lead-time pressure adds material risk.",
+    "events": [
+      {
+        "title": "Earthquake shutdowns of Taiwan fabs (2024 Tainan precedent)",
+        "type": "natural_disaster",
+        "severity": 4,
+        "confidence": 0.6,
+        "relevance": 0.6,
+        "summary": "The article cites a 2024 eastern Taiwan earthquake that temporarily shut TSMC fabs in Tainan, because fabs automatically halt production on tremors. Hsinchu is in the same seismic zone, so a comparable event could halt TFT panel output and delay deliveries to S22.",
+        "url": "https://globaltaiwan.org/2026/10/a-taiwanese-youths-perspective-tsmcs-us-expansion-and-the-american-dream",
+        "date": "2026-10-14"
+      },
+      {
+        "title": "Taiwan Strait tensions threaten fab operations and supply chains",
+        "type": "geopolitical",
+        "severity": 4,
+        "confidence": 0.5,
+        "relevance": 0.6,
+        "summary": "The article warns that cross-strait tensions create significant uncertainty and that a conflict could damage Taiwan's fabs, with rebuilding taking years. This is a tail risk for a Hsinchu-based panel maker, though the article is general analysis rather than a specific trigger event.",
+        "url": "https://globaltaiwan.org/2026/10/a-taiwanese-youths-perspective-tsmcs-us-expansion-and-the-american-dream",
+        "date": "2026-10-14"
+      },
+      {
+        "title": "Blockade or quarantine scenarios could disrupt Taiwan logistics",
+        "type": "logistics",
+        "severity": 4,
+        "confidence": 0.45,
+        "relevance": 0.5,
+        "summary": "The article states that blockade or quarantine scenarios, even short of war, could pressure logistics and shipping out of Taiwan. Exports of TFT panels to S22 could be delayed or rerouted in such a case.",
+        "url": "https://www.economyinsights.com/p/taiwans-chip-leadership",
+        "date": "2026-01-10"
+      },
+      {
+        "title": "Taiwan's rising geopolitical tensions and energy-mix dependence",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.4,
+        "relevance": 0.4,
+        "summary": "The analysis describes escalating Taiwan Strait tensions since 2016 and discusses Taiwan's energy model. Energy supply stress and political risk could affect manufacturing continuity at Hsinchu, and this is a general, medium-term risk.",
+        "url": "https://www.nbr.org/wp-content/uploads/pdfs/publications/asiapolicy21-1_taiwan_rt_jan2026.pdf",
+        "date": "2026-04-03"
+      },
+      {
+        "title": "OLED substrate lead-times stretched to 16\u201320 weeks",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.5,
+        "relevance": 0.5,
+        "summary": "Specialized display substrates had lead-times of 16\u201320 weeks in 2025, with only three qualified global vendors. Although the report focuses on OLED, similar material constraints could affect the glass and substrate inputs for TFT panels and slow production ramp-ups.",
+        "url": "https://www.mordorintelligence.com/industry-reports/display-panel-market",
+        "date": "2026-09-11"
+      },
+      {
+        "title": "Display driver IC capacity expansion and competition",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.35,
+        "relevance": 0.3,
+        "summary": "New display driver IC capacity is coming online (e.g., Tata's fab), and global semiconductor demand is growing. Increased demand for driver ICs used in panel modules could tighten component availability for TFT panel producers, but the direct impact is limited.",
+        "url": "https://www.roc-taiwan.org/uploads/sites/86/2025/12/2025-Decembers-Report-20251128.pdf",
+        "date": "2025-12-02"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S24": {
+    "summary": "Pune Precision Bearings' external risk is mainly monsoon-driven flooding and logistics disruption across western India; the news reports no direct disruption at its Pune site, and most items are only weakly relevant.",
+    "events": [
+      {
+        "title": "Western India monsoon flooding disrupts industrial estates and logistics",
+        "type": "natural_disaster",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Gujarat floods halted units in Surat and Ahmedabad and disrupted logistics and power. Pune is in a different state, but the same monsoon pattern can disrupt inbound steel and outbound bearing shipments and local power supply. This is a moderate, indirect risk to axle bearing deliveries, not a direct threat to the Pune plant.",
+        "url": "https://timesofindia.indiatimes.com/city/ahmedabad/times-dhandho-rain-battered-industries-left-assessing-their-losses/articleshow/133132483.cms",
+        "date": "2026-08-11"
+      },
+      {
+        "title": "Monsoon flooding on Gujarat and Maharashtra highways affects heavy equipment transport",
+        "type": "logistics",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "Highway flooding in Maharashtra can delay or reroute road freight. Axle bearing shipments from Pune to rolling stock assembly sites could see transit delays during monsoon periods, so buffer stock and alternative routing should be considered.",
+        "url": "https://www.linkedin.com/posts/ag-transport-india_logistics-supplychain-monsoonready-activity-7470352671129022464-8aUq",
+        "date": ""
+      },
+      {
+        "title": "Pune flood and waterlogging risk rated low in climate assessment",
+        "type": "natural_disaster",
+        "severity": 1,
+        "confidence": 0.5,
+        "relevance": 0.3,
+        "summary": "A climate risk assessment of Pune rates river flood risk as low, with waterlogging described as short-lived during intense rain. This suggests a low direct flood risk for the Pune site, though the assessment was prepared for a different company and covers only a single facility.",
+        "url": "https://www.birlasoft.com/sites/default/files/resources/downloads/birlasoft-cra-report.pdf",
+        "date": "2026-08-25"
+      }
+    ],
+    "sources": 6,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S25": {
+    "summary": "Goeteborg Lager AB's main external exposure is raw-material cost and availability for bearing steel alloys (chromium, molybdenum, and related critical minerals), with no direct disruption reported in the news set.",
+    "events": [
+      {
+        "title": "Why Cutting Tool Material Costs Are Rising in 2026",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "Reports tightening supply of chromium, molybdenum and vanadium, which are key alloying elements in high-grade steels. Axle bearing steels such as chromium-alloyed grades could see rising costs and longer lead times, which could affect production planning for axle bearings. The article is about cutting tools, so the link to bearing steel is indirect.",
+        "url": "https://jptonline.com/cutting-tool-material-costs-2026",
+        "date": "2026-04-15"
+      },
+      {
+        "title": "Volvo Group Annual Report 2025",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.3,
+        "summary": "Notes that parts and components rely on critical minerals (tin, tantalum, tungsten, gold, cobalt, mica) and that the group monitors sourcing risks. This points to a sector-wide critical-minerals sourcing concern that could reach bearing suppliers through their own sub-tier supply chains. The exposure for this supplier is generic and not specific.",
+        "url": "https://www.volvogroup.com/content/dam/volvo-group/markets/master/news/2026/feb/Volvo-Group-Annual-Report-2025.pdf",
+        "date": "2026-03-06"
+      }
+    ],
+    "sources": 6,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S26": {
+    "summary": "Monterrey Forge's main external exposure is steel input cost and availability, driven by US Section 232 steel tariffs, Mexico's new import duties on non-FTA steel and components, and unresolved USMCA trade talks, with minor energy-regulation exposure.",
+    "events": [
+      {
+        "title": "US Section 232 tariffs at 50% on steel, with spillover into steel-containing products",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.75,
+        "relevance": 0.7,
+        "summary": "Forged axles are steel-intensive. US tariffs on Mexican steel and steel-containing products, reported as 50% and hitting Nuevo Leon's metal sector, can squeeze the forge's input costs and reduce demand from downstream rail and automotive customers. A sustained cost squeeze could strain margins and delivery planning for axle supply to Siemens Mobility, though a full stop of production is unlikely from this alone.",
+        "url": "https://www.aljazeera.com/economy/2025/11/20/us-tariffs-cast-shadow-over-nuevo-leons-steel-industry-in-mexico",
+        "date": "2025-11-20"
+      },
+      {
+        "title": "Mexico raises import duties on 1,400+ tariff lines, including steel and auto parts, from non-FTA countries",
+        "type": "regulatory",
+        "severity": 3,
+        "confidence": 0.7,
+        "relevance": 0.5,
+        "summary": "Effective January 2026, duties of 5 to 50% (mostly up to 35%) apply to imports of steel and auto parts from countries without a trade agreement with Mexico, including China, South Korea, India and Turkey. If the forge sources alloy steel, bar or forging stock from these origins, landed costs and lead times could rise. A second decree in April 2026 added more lines, which increases the need to check the supplier's bill of materials.",
+        "url": "https://harris-sliwoski.com/chinalawblog/moving-manufacturing-from-china-to-mexico",
+        "date": "2026-10-17"
+      },
+      {
+        "title": "Domestic Mexican hot-rolled steel prices remain elevated around 15,700 MXN/t",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "Fastmarkets reports Monterrey hot-rolled coil at about 15,763 MXN per tonne (about $910) in late May 2026. This is the main local raw-material benchmark for forging stock. Sustained high prices, together with tariff-driven volatility, can erode fixed-price contract margins on axle supply.",
+        "url": "https://www.fastmarkets.com/insights/mexico-eu-agreement-may-boost-steel-trade-but-us-to-remain-mexicos-preferred-partner",
+        "date": "2026-06-03"
+      },
+      {
+        "title": "USMCA review and US-Mexico tariff talks unresolved on steel and autos",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.65,
+        "relevance": 0.45,
+        "summary": "Mexico is pushing for a tariff freeze and relief on steel and auto duties during USMCA talks, but a deal had not been reached as of the latest reports. Continued uncertainty hampers medium-term planning for steel purchasing and for rail or automotive export volumes that depend on Mexican-made components. A deal that reduces the 50% steel duty would be a positive for the supplier.",
+        "url": "https://mexicobusiness.news/trade-and-investment/news/mexico-urges-us-tariff-freeze-and-relief-usmca-talks",
+        "date": "2026-08-14"
+      },
+      {
+        "title": "Mexico moves toward US auto and steel tariff deal, seeking better terms than Canada",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "Automotive News reports Mexico is nearing a US tariff arrangement on autos, steel and aluminium. A deal could ease steel input costs and export conditions for Mexican metal suppliers, though the timing and terms remain uncertain. This is a watch item rather than an immediate disruption.",
+        "url": "https://www.autonews.com/manufacturing/suppliers/an-mexico-us-trade-tariffs-steel-autos-0930/",
+        "date": "2026-09-30"
+      },
+      {
+        "title": "Legacy self-supply electricity companies given more time to migrate to new permit regime",
+        "type": "regulatory",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.3,
+        "summary": "Mexico's energy ministry extended the registration deadline for legacy self-supply power arrangements. Energy-intensive forging operations in Monterrey that rely on self-supply power could face cost or supply changes once the new regime applies. Exposure depends on whether the supplier uses such arrangements, which is not stated in its profile.",
+        "url": "https://www.bnamericas.com/en/analysis/mexico-extends-deadline-for-electricity-self-supply-companies-to-sign-up-for-migration",
+        "date": "2026-09-09"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S27": {
+    "summary": "Busan Power Cable's external risk is mainly indirect: rising AI-driven demand for high-voltage cable and electrical equipment in Asia may strain its capacity and input supply, while the rest of the news is not material to HV roof cable production.",
+    "events": [
+      {
+        "title": "AI data-centre build-out creates global shortage of HV transformers and cables made in Asia",
+        "type": "operational",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "Demand for high-voltage cables and switchgear from AI data centres may compete with rail OEM orders for the same Asian cable capacity, raising lead-time and allocation risk for Busan Power Cable's HV roof cable supply to Siemens Mobility.",
+        "url": "https://www.ajupress.com/view/20260514134755550",
+        "date": "2026-05-14"
+      },
+      {
+        "title": "US AI build-out hinges on Chinese electrical parts amid transformer and component shortage",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.55,
+        "relevance": 0.45,
+        "summary": "Shortages of electrical components and heavy reliance on Chinese supply could tighten the market for cable inputs and components used by Korean cable makers, and could add trade-policy exposure to sub-tier sourcing for HV roof cables.",
+        "url": "https://www.japantimes.co.jp/business/2026/04/02/tech/us-ai-china-electrical-parts",
+        "date": "2026-04-02"
+      },
+      {
+        "title": "Korean and multinational value chains remain dependent on China for critical inputs",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.4,
+        "relevance": 0.3,
+        "summary": "Continued China dependence in Korean cable supply chains (including LS Cable's rare-earth magnet sourcing) signals possible input concentration risk for Busan Power Cable's sub-suppliers, though rare-earth magnets are not a core HV cable input.",
+        "url": "https://itif.org/publications/2026/02/23/internal-value-chains-dependent-china-multinationals-shift-production-to-america",
+        "date": "2026-02-23"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S28": {
+    "summary": "Transilvania Composite faces moderate external risk: rising input-cost pressure from a commodity price shock in Romania, and tighter local skilled-labour competition from aerospace and defence expansions in Cluj County. No item points to a direct disruption of composite mask production.",
+    "events": [
+      {
+        "title": "Sonaca doubles Cluj County plant capacity and expands hiring",
+        "type": "labour",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "Sonaca is a large aerospace employer in the same county and is hiring to double capacity. This may draw skilled composite and manufacturing workers from the local labour pool, raising wage pressure and making it harder for S28 to staff production and maintain yields for train front-end masks.",
+        "url": "https://www.romaniajournal.ro/business/sonaca-doubles-romania-plant-capacity-and-expands-hiring",
+        "date": "2025-11-13"
+      },
+      {
+        "title": "World Bank June 2026 outlook: Romania growth cut on commodity price shock",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "The World Bank cites higher commodity prices as a main reason for downgrading Romania's 2026 growth, one of the largest revisions in the region. For a small Romanian composite maker, this signals likely cost inflation on resins, fibres and energy, plus possible margin pressure on fixed-price contracts.",
+        "url": "https://thedocs.worldbank.org/en/doc/2b672b3b0415d6b66c45b66579db4ef5-0050012026/original/GEP-Jun-2026.pdf",
+        "date": "2026-06-21"
+      },
+      {
+        "title": "IMF April 2026 outlook: commodity shock and rare earth shortage risk",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.35,
+        "summary": "The IMF forecasts Romania's growth to stay weak and flags a commodity shock and possible rare earth shortages. The direct effect on composite masks is limited, but it reinforces the cost and availability risk for petrochemical-based raw materials used in composite production.",
+        "url": "https://www.imf.org/-/media/files/publications/weo/2026/april/english/ch1.pdf",
+        "date": "2026-04-14"
+      },
+      {
+        "title": "OVES Enterprise and EDRONE expand drone production in Romania",
+        "type": "labour",
+        "severity": 1,
+        "confidence": 0.5,
+        "relevance": 0.35,
+        "summary": "A new defence drone production partnership in Romania could add demand for skilled technicians and composite-capable workers in the region. The impact is indirect and likely small, but it adds to the local labour competition.",
+        "url": "https://business-review.eu/business/defence/oves-enterprise-expands-partnership-with-ukraines-edrone-for-drone-production-in-romania-298883",
+        "date": "2026-07-28"
+      }
+    ],
+    "sources": 7,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S29": {
+    "summary": "Magyar Gearbox's external risk is mainly indirect: Hungary's energy cost and supply exposure under the EU Russian gas ban, plus regional automotive-cluster shifts that affect skilled-labour competition and demand for combustion-related drivetrain work.",
+    "events": [
+      {
+        "title": "EU Russian gas import ban raises costs for Hungary",
+        "type": "regulatory",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.5,
+        "summary": "The EU ban on Russian gas (short-term contracts from 17 June 2026, long-term from 1 January 2028) is reported to imply 30-40% higher prices for non-Russian gas for Hungary. Higher energy costs at the Gy\u0151r plant could squeeze margins and affect Siemens Mobility gearbox pricing and delivery planning.",
+        "url": "https://balkaninsight.com/2025/10/21/serbia-hungary-dismayed-by-eu-decision-to-end-russian-gas-imports/bi",
+        "date": "2025-10-21"
+      },
+      {
+        "title": "OECD Economic Surveys: Hungary 2026",
+        "type": "operational",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.5,
+        "summary": "The OECD flags that Hungary is landlocked, that the Russian gas ban could cause supply difficulties, and that manufacturing performance depends on combustion-engine vehicle demand. These are relevant to energy availability and to the regional demand base for a gearbox maker in Gy\u0151r.",
+        "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2026/07/oecd-economic-surveys-hungary-2026_ce78a709/1d93d51d-en.pdf",
+        "date": "2026-07-10"
+      },
+      {
+        "title": "German Company to Close Gy\u0151r Plant that Supplied Audi",
+        "type": "operational",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.4,
+        "summary": "A German automotive supplier is closing a Gy\u0151r plant that served Audi. This signals consolidation in the local supplier base, which may shift sourcing or create both competitive pressure and an available pool of skilled workers. The source text is truncated, so the details are uncertain.",
+        "url": "https://hungarytoday.hu/german-company-to-close-gyor-plant-that-supplied-audi",
+        "date": "2026-09-18"
+      },
+      {
+        "title": "Audi Hungaria: stable production volume and increased efficiency in fiscal year 2025",
+        "type": "labour",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.35,
+        "summary": "Audi Hungaria reports stable volumes but also a shift to electric drives (MEBeco electric motors from 2026). This may intensify competition for skilled engineers and technicians in Gy\u0151r and signals a longer-term move away from combustion drivetrains.",
+        "url": "https://www.audi.com/en/press-releases/audi-hungaria-stable-production-volume-and-increased-efficiency-in-fiscal-year-2025-17068",
+        "date": "2026-03-17"
+      },
+      {
+        "title": "Millions of Jobs at Risk as EU Auto Industry Faces Mounting Pressure",
+        "type": "financial",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.3,
+        "summary": "The EU Commissioner warns of an existential crisis in European automotive. If Magyar Gearbox serves automotive customers, demand weakness could spill over, and the industry-wide labour and cost pressure may affect regional suppliers.",
+        "url": "https://www.hungarianconservative.com/articles/current/eu-automotive-industry-crisis-sejourne",
+        "date": "2026-07-07"
+      },
+      {
+        "title": "VW Group reshapes European factory network to prioritize lowest-cost plants",
+        "type": "operational",
+        "severity": 1,
+        "confidence": 0.6,
+        "relevance": 0.3,
+        "summary": "VW's cost-first plan could shift production from Germany to Eastern Europe, which may increase volumes and investment in the Gy\u0151r cluster. This is more of an opportunity than a risk, but it adds capacity competition for the local skilled workforce.",
+        "url": "https://www.autonews.com/volkswagen/ane-vw-reshapes-europe-plants-cost-savings-0721",
+        "date": "2026-07-21"
+      },
+      {
+        "title": "Hungary and Slovakia release strategic reserves to avoid oil supply crunch",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.3,
+        "summary": "Hungary released strategic oil reserves amid Druzhba pipeline disputes over Russian oil. Possible fuel and energy-linked cost or logistics disruption for regional manufacturing and transport, though the direct impact on gearbox inputs is limited.",
+        "url": "https://www.upstreamonline.com/energy-security/hungary-and-slovakia-release-strategic-reserves-to-avoid-oil-supply-crunch/2-1-1950452",
+        "date": "2026-02-26"
+      },
+      {
+        "title": "Plinacro, FGSZ to increase capacity of Croatia-Hungary gas interconnection",
+        "type": "raw_material",
+        "severity": 1,
+        "confidence": 0.7,
+        "relevance": 0.3,
+        "summary": "Expanded Croatia-Hungary gas interconnection capacity is a partial mitigation for Hungary's gas supply diversification after the Russian gas ban, which may reduce supply-continuity risk for Gy\u0151r operations.",
+        "url": "https://balkangreenenergynews.com/plinacro-fgsz-to-increase-capacity-of-croatia-hungary-gas-interconnection",
+        "date": "2026-08-10"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S30": {
+    "summary": "Ruhr Spezialstahl's main external exposure is energy-cost pressure on German steelmaking, driven by high domestic electricity prices and an energy-price shock linked to the Iran conflict, with decarbonization capex as a longer-term concern.",
+    "events": [
+      {
+        "title": "German steel industry crisis driven by high electricity prices",
+        "type": "financial",
+        "severity": 3,
+        "confidence": 0.4,
+        "relevance": 0.7,
+        "summary": "Sustained high power costs erode margins for an electricity-intensive steel plate and forgings producer in Germany. Margin pressure could lead to reduced capacity, delayed investment or supplier financial stress, which could affect delivery reliability for the tier-2 part feeding S01 and S02. The source is a social media post, so the claim should be checked against industry data.",
+        "url": "https://www.facebook.com/VIKTORMACHA.INDUSTRIAL/posts/two-weeks-ago-i-got-a-chance-to-document-the-last-breath-of-blast-furnace-a-at-h/1642030030639306",
+        "date": ""
+      },
+      {
+        "title": "Iran war hitting energy-intensive industries including steel",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.7,
+        "summary": "A conflict-driven energy price shock raises input costs for European steelmakers. This increases the risk of cost-driven price increases, surcharges or supply disruption for a Bochum-based steel supplier, and could pressure its ability to keep forging and plate capacity stable for rolling stock components.",
+        "url": "https://www.theguardian.com/business/2026/mar/17/iran-war-energy-uk-europe-steel-chemicals",
+        "date": "2026-03-17"
+      },
+      {
+        "title": "Decarbonization push in German steel (BF/BOF to DRI/EAF transition)",
+        "type": "esg",
+        "severity": 2,
+        "confidence": 0.5,
+        "relevance": 0.4,
+        "summary": "Germany's steel sector, which accounts for about 30% of national industrial emissions, is moving toward low-carbon routes. For a small producer this may mean capex or process changes, and possibly requalification of steel grades or material certifications that Siemens Mobility suppliers must maintain. This is a medium-term risk rather than an immediate production threat.",
+        "url": "https://eurometal.net/tag/decarbonization",
+        "date": "2025-11-11"
+      }
+    ],
+    "sources": 6,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S31": {
+    "summary": "As a China-based NdFeB magnet maker, S31 is directly exposed to Chinese export licensing: the controls on magnets and heavy rare earths, the November expiry of the export-control pause, and foreign rules that exclude Chinese-made magnets could disrupt shipments that feed S07 and wider train production.",
+    "events": [
+      {
+        "title": "China rare earth magnet export controls and Japan shipment cuts",
+        "type": "geopolitical",
+        "severity": 4,
+        "confidence": 0.9,
+        "relevance": 0.8,
+        "summary": "China's April 2025 export controls on seven rare earths and magnets remain unresolved, and shipments to Japan have been cut in a political dispute. For S31, licence-gated exports of its magnets could delay or cut supply to S07 and other non-Chinese customers.",
+        "url": "https://www.nytimes.com/2026/09/21/business/china-rare-earth-summit.html",
+        "date": "2026-09-22"
+      },
+      {
+        "title": "China's export-control pause on toughest rare earth controls expires in November",
+        "type": "geopolitical",
+        "severity": 4,
+        "confidence": 0.85,
+        "relevance": 0.85,
+        "summary": "China's one-year pause on its toughest rare earth export controls is set to expire in November. If it lapses, licences for magnet exports could tighten sharply, creating a near-term supply-interruption risk for S31's export flows and therefore for S07.",
+        "url": "https://www.kitco.com/news/video/2026-09-24/china-s-grip-on-rare-earth-magnets-looms-over-the-trump-xi-meeting-as-its-export-control-pause-nears-expiry-this-week-in-focus",
+        "date": "2026-09-23"
+      },
+      {
+        "title": "US DoD ban on China-origin rare earth magnets from January 2027",
+        "type": "regulatory",
+        "severity": 3,
+        "confidence": 0.85,
+        "relevance": 0.5,
+        "summary": "From 1 January 2027, DoD contractors may not supply systems with NdFeB or SmCo magnets made in China, covering mining through manufacture. This does not apply directly to rail, but if S07 or its sub-suppliers have US defence-linked business, S31 could lose that demand or face traceability requirements.",
+        "url": "https://investornews.com/critical-minerals-rare-earths/critical-minerals-report-05-24-2026-national-security-moves-downstream",
+        "date": "2026-05-24"
+      },
+      {
+        "title": "Heavy rare earth exports to Japan frozen",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.85,
+        "relevance": 0.6,
+        "summary": "Chinese customs data show zero heavy rare earth shipments (dysprosium, terbium and others) to Japan, the largest magnet market outside China. This signals that Chinese authorities are willing to cut specific destinations, which could affect S31's magnet exports to any customer in a targeted country.",
+        "url": "https://mining.com.au/chinas-heavy-rare-earth-exports-to-japan-remain-frozen/",
+        "date": "2026-07-21"
+      },
+      {
+        "title": "Japan heavy rare earth exports collapse, falling 34% year on year",
+        "type": "geopolitical",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.55,
+        "summary": "Exports of controlled rare earths to Japan fell 34% from January to April 2026, with heavy rare earths at zero. This confirms a sustained pattern of destination-specific restrictions that could hit S31's exports to Japanese or Japan-linked customers.",
+        "url": "https://moderndiplomacy.eu/2026/06/25/how-far-is-japan-from-an-existence-threatening-crisis",
+        "date": "2026-06-24"
+      },
+      {
+        "title": "Trump-Xi summit may use magnet export licences as bargaining chip",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.5,
+        "summary": "Beijing reportedly intends to offer additional magnet export licences as a bargaining chip at the summit. Licence availability could change quickly, which is a source of volatility for S31's export volumes, though a deal might also ease constraints.",
+        "url": "https://www.mining.com/web/worlds-top-rare-earth-magnet-maker-gives-xi-leverage-over-us/",
+        "date": "2026-09-22"
+      },
+      {
+        "title": "JL Mag expansion strengthens Chinese magnet capacity",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.35,
+        "summary": "The world's largest magnet maker, JL Mag, plans a major expansion to 2028, which could increase Chinese supply and competitive pressure on S31 in the magnet market. It may also reduce tightness for S07 over time.",
+        "url": "https://www.mining.com/web/worlds-top-rare-earth-magnet-maker-gives-xi-leverage-over-us/",
+        "date": "2026-09-22"
+      },
+      {
+        "title": "Western rebuilding of rare earth supply chains outside China",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.75,
+        "relevance": 0.4,
+        "summary": "The US committed about $2.9 billion in June 2026 to build magnet and rare earth capacity outside China. Over the longer term this may reduce demand for Chinese-origin magnets such as S31's, and it may also reshape how S07's sourcing is structured.",
+        "url": "https://www.fastmarkets.com/insights/washingtons-five-week-rare-earths-funding-surge-how-the-us-is-rebuilding-a-supply-chain-outside-china",
+        "date": "2026-07-09"
+      },
+      {
+        "title": "Coordinated international response may weaken China's rare earth grip",
+        "type": "geopolitical",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.35,
+        "summary": "Export restrictions have led to coordinated investment across the EU, Japan, Australia and South Korea. This could erode China's dominance over time, but it does not remove near-term export-licence risk for S31.",
+        "url": "https://www.mining.com/chinas-rare-earth-clampdown-backfired-csis-analyst/",
+        "date": "2026-07-21"
+      },
+      {
+        "title": "Magnet export volumes to the US recovering",
+        "type": "raw_material",
+        "severity": 1,
+        "confidence": 0.6,
+        "relevance": 0.4,
+        "summary": "Permanent magnet exports to the US reached 647 tonnes in August 2026, the first month since October 2025 to exceed the 2024 monthly average. This suggests licensed flows are recovering, which lowers near-term risk for S31 export volumes.",
+        "url": "https://tech-insider.org/china-rare-earth-export-controls-hardware-2026",
+        "date": "2026-07-30"
+      },
+      {
+        "title": "Capacity shortfall in non-Chinese magnet supply ahead of DoD deadline",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.7,
+        "relevance": 0.35,
+        "summary": "CSIS notes that non-Chinese magnet capacity will fall short of demand before the January 2027 DoD deadline. This could keep demand for Chinese-origin magnets high, which supports S31's position but also means its supply remains tied to licence decisions.",
+        "url": "https://www.csis.org/analysis/rare-earth-export-restrictions-one-year-later",
+        "date": "2026-04-27"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  },
+  "S32": {
+    "summary": "Andes Copper Rod sits in Antofagasta, Chile's main copper region, so its exposure is mainly to local labour unrest at nearby mines (Centinela now, Escondida possibly next), tight and volatile copper supply and prices, and occasional weather disruption to Chilean logistics.",
+    "events": [
+      {
+        "title": "Strike at Antofagasta Minerals' Centinela mine (709 workers, about 22% of direct workforce)",
+        "type": "labour",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.8,
+        "summary": "Two unions struck on 7 Oct 2026 after government-mediated wage talks failed. Centinela produced about 240 kt of copper in 2025, and this is the local mine most likely to supply feedstock to a rod maker in Antofagasta. Reports on 13 Oct say talks had resumed and the strike may be nearing an end, and the company says its production forecast is unchanged. Risk is a possible delay or tightness in local concentrate or cathode supply to Andes Copper Rod, which could affect rod output for S11, S12, S27 and S06.",
+        "url": "https://www.bloomberg.com/news/articles/2026-10-07/antofagasta-copper-miners-to-strike-as-high-prices-fan-tensions",
+        "date": "2026-10-07"
+      },
+      {
+        "title": "Possible strike at BHP's Escondida, the world's largest copper mine",
+        "type": "labour",
+        "severity": 3,
+        "confidence": 0.5,
+        "relevance": 0.7,
+        "summary": "Escondida is in government-mediated negotiations, and its union could strike once that process ends. A strike there would tighten global and regional copper supply, and it is in the same Antofagasta region as the supplier, so local feedstock availability could be affected.",
+        "url": "https://www.industrialinfo.com/news/article/workers-at-chiles-centinela-copper-mine-on-strike--363543",
+        "date": "2026-10-12"
+      },
+      {
+        "title": "Copper prices near record highs amid AI-driven demand and supply tightness",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.85,
+        "relevance": 0.8,
+        "summary": "LME three-month copper rose to about $14,600/t on the Centinela news, and US futures were about $6.61/lb against a record of $6.80/lb. High and volatile input costs squeeze the margins of a small rod maker and may cause supplier price pressure or contract renegotiation with the Siemens Mobility sub-tier chain.",
+        "url": "https://startupfortune.com/a-chilean-strike-at-one-copper-mine-is-testing-the-ai-buildouts-supply-chain",
+        "date": "2026-10-11"
+      },
+      {
+        "title": "Chile copper output falls to lowest monthly level in over 15 years",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.8,
+        "relevance": 0.6,
+        "summary": "Chile's August 2026 copper output fell 12.8% year on year to 369,500 t, according to INE. Lower national output and combined strikes point to a structurally tight domestic supply of copper for local rod producers, which raises the risk of allocation or delivery delays.",
+        "url": "https://www.latintimes.com/chiles-copper-hits-15-year-low-mine-strike-could-make-it-worse-599774",
+        "date": "2026-10-02"
+      },
+      {
+        "title": "DRC export ban tightens global copper supply",
+        "type": "raw_material",
+        "severity": 3,
+        "confidence": 0.6,
+        "relevance": 0.5,
+        "summary": "A Democratic Republic of Congo export ban is tightening global copper supply, with analysts expecting prices to stay supported. It has no direct effect on Chilean feedstock, but it adds to the global tightness that can affect the supplier's copper purchasing and pricing.",
+        "url": "https://www.cruxinvestor.com/posts/copper-deficit-deepens-on-chile-storms-drc-export-ban-what-confirms-the-rally",
+        "date": "2026-08-07"
+      },
+      {
+        "title": "Codelco suspends Andes Norte project over seismic risk; El Teniente problems",
+        "type": "raw_material",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.4,
+        "summary": "Codelco has suspended its Andes Norte project and faces underground problems at El Teniente. This limits new Chilean output and keeps national supply constrained, a modest long-term influence on the supplier's copper availability.",
+        "url": "https://www.mining.com/chile-copper-supply-under-pressure-as-disruptions-mount",
+        "date": "2026-10-13"
+      },
+      {
+        "title": "Chile storms disrupt copper operations and logistics",
+        "type": "natural_disaster",
+        "severity": 2,
+        "confidence": 0.6,
+        "relevance": 0.4,
+        "summary": "Storms in Chile disrupted copper supply in August 2026. Weather events in the north can disrupt road and port logistics in the Antofagasta region, which could affect inbound feedstock and outbound rod shipments.",
+        "url": "https://www.cruxinvestor.com/posts/copper-deficit-deepens-on-chile-storms-drc-export-ban-what-confirms-the-rally",
+        "date": "2026-08-07"
+      }
+    ],
+    "sources": 10,
+    "scanned_at": "2026-10-18 11:55"
+  }
+}
