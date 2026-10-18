@@ -50,6 +50,23 @@ cp .env.example .env   # add NEBIUS_API_KEY and TAVILY_API_KEY; optional APP_USE
 
 Filtering, comparison and profiles work without any keys. The chat assistant, memo and research agent need an LLM key, and the research agent also needs Tavily. `python prewarm.py` pre-runs the slow agent workflows into `cache/` so every tab opens populated.
 
+## Deploy
+
+Every new session opens with the demo results tracked in `cache/demo/` (research report, memo, threats, scenario, response plan). Results a user produces stay in that user's session, and so does the model picked in the sidebar, so jurors don't overwrite each other. `python prewarm.py` regenerates the seeds; `python prewarm.py --local` writes gitignored `cache/last_*.json` instead, which take precedence on that machine. Set `PERSIST_DEMO_CACHE=1` locally to save each new result there too. Leave it unset on a shared deployment.
+
+**Login.** `APP_USERS="jury:password,alice:other"` turns on a sign-in form. Without it the app is open.
+
+**Streamlit Community Cloud.** Point the app at `app.py` and paste the keys under *App settings → Secrets*, using [`.streamlit/secrets.toml.example`](.streamlit/secrets.toml.example) as the template (`APP_USERS`, `NEBIUS_API_KEY`, `TAVILY_API_KEY`). `app.py` copies these secrets into the environment unless the variable is already set there.
+
+**Docker.**
+
+```bash
+docker build -t railrisk-radar .
+docker run --rm -p 8501:8501 --env-file .env railrisk-radar   # honours $PORT if the platform sets it
+```
+
+`.env`, `.streamlit/secrets.toml`, `.venv` and `.git` are kept out of the image by `.dockerignore`. Pass keys at runtime.
+
 ## Data
 
 The 10,000 suppliers are the challenge's anonymized dataset. The rail impact lab uses separate fictional suppliers, customers and KPIs (`data/`, regenerate with `python data/seed.py`); train product names are used for context only. News and research come from live web search.
