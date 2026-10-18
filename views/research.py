@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from core import dataset as ds, llm, workflows as wf
+from core.fmt import esc, safe_url
 from views.common import pill, remember, run_streaming
 
 VERDICT_COLOR = {"approve": "Low", "approve with conditions": "Medium", "escalate": "High", "reject": "Critical"}
@@ -51,22 +52,25 @@ def render():
 
 
 def linkify(text: str, src: dict) -> str:
-    return re.sub(r"\[(\d+)\]", lambda m: f"[[{m.group(1)}]]({src[int(m.group(1))]['url']})"
-                  if int(m.group(1)) in src else m.group(0), text or "")
+    return re.sub(r"\[(\d+)\]", lambda m: f"[[{m.group(1)}]]({safe_url(src[int(m.group(1))]['url'])})"
+                  if int(m.group(1)) in src and safe_url(src[int(m.group(1))]['url']) else m.group(0), text or "")
 
 
 def show_report(rep: dict):
     src = {s["n"]: s for s in rep.get("sources", [])}
 
     def cites(ns):
-        return " ".join(f"<a href='{src[n]['url']}' target='_blank'>[{n}]</a>" for n in ns or [] if n in src)
+        return " ".join(f"<a href='{esc(safe_url(src[n]['url']))}' target='_blank'>[{n}]</a>"
+                        for n in ns or [] if n in src and safe_url(src[n]['url']))
 
     verdict = (rep.get("verdict") or "").lower()
-    st.markdown(f"## {rep.get('company', '')} {pill(rep['level'], 'TRI ' + str(rep['total_risk_index']) + ' · ' + rep['level'].upper())} "
-                f"{pill(VERDICT_COLOR.get(verdict, 'Medium'), verdict.upper() or 'NO VERDICT')}", unsafe_allow_html=True)
+    st.markdown(f"## {esc(rep.get('company', ''))} {pill(rep['level'], 'TRI ' + str(rep['total_risk_index']) + ' · ' + rep['level'].upper())} "
+                f"{pill(VERDICT_COLOR.get(verdict, 'Medium'), esc(verdict.upper()) or 'NO VERDICT')}", unsafe_allow_html=True)
     meta = f"Researched {rep.get('researched_at', '')} · {len(src)} sources"
-    if rep.get("website"):
-        meta += f" · [{rep['website']}]({rep['website']})"
+    if "rounds" in rep:
+        meta += f" · {rep['rounds']} dig-deeper round(s)"
+    if safe_url(rep.get("website")):
+        meta += f" · [{wf._domain(rep['website'])}]({safe_url(rep['website'])})"
     st.caption(meta)
     st.markdown(linkify(rep.get("overview", ""), src))
     k = st.columns(4)
@@ -75,6 +79,10 @@ def show_report(rep: dict):
     k[2].metric("Evidence coverage", f"{rep['evidence_coverage']:.0%}", help="Share of the TRI weight backed by sources. "
                 "Dimensions without evidence count as the dataset average.")
     k[3].metric("Red flags", len(rep.get("red_flags") or []))
+    if "tri_low" in rep:
+        st.caption(f"TRI range **{rep['tri_low']}–{rep['tri_high']}** given unknowns: the "
+                   f"{len(rep.get('unknown_dimensions') or [])} dimensions without evidence set to the dataset's "
+                   "10th and 90th percentile instead of the average.")
     st.info(linkify(rep.get("recommendation", ""), src))
 
     if rep.get("trace"):
@@ -92,9 +100,17 @@ def show_report(rep: dict):
         for f in flags:
             if not isinstance(f, dict):
                 continue
-            sev = int(f.get("severity") or 0)
-            st.markdown(f"<div class='evt'><b>{f.get('title', '')}</b> · severity {sev}/5 · {f.get('status', '')}<br>"
-                        f"{f.get('detail', '')} {cites(f.get('sources'))}</div>", unsafe_allow_html=True)
+            try:
+                sev = int(f.get("severity") or 0)
+            except (TypeError, ValueError):
+                sev = 0
+            res = f" · {esc(f['resolution'])}" if f.get("resolution") else ""
+            st.markdown(f"<div class='evt'><b>{esc(f.get('title', ''))}</b> · severity {sev}/5 · {esc(f.get('status', ''))}{res}<br>"
+                        f"{esc(f.get('detail', ''))} {cites(f.get('sources'))}</div>", unsafe_allow_html=True)
+        refuted = [f for f in rep.get("triage_flags") or [] if isinstance(f, dict) and f.get("resolution") == "refuted"]
+        if refuted:
+            st.caption("Checked and refuted: " + "; ".join(f"{f.get('flag', '')} {linkify(''.join(f'[{n}]' for n in f.get('sources') or []), src)}"
+                                                         for f in refuted))
         if rep.get("strengths"):
             st.markdown("#### ✅ Strengths")
             st.markdown("\n".join(f"- {linkify(s, src)}" for s in rep["strengths"]))
@@ -103,9 +119,10 @@ def show_report(rep: dict):
         for c in ds.SCORES:
             d = (rep.get("scores") or {}).get(c) or {}
             if d.get("score") is not None:
-                st.markdown(f"**{ds.label(c)}: {d['score']}** · {d.get('evidence', '')} {cites(d.get('sources'))}",
+                st.markdown(f"**{ds.label(c)}: {esc(d['score'])}** · {esc(d.get('evidence', ''))} {cites(d.get('sources'))}",
                             unsafe_allow_html=True)
     with st.expander(f"Sources ({len(src)})"):
-        st.markdown("\n".join(f"{s['n']}. [{s['title']}]({s['url']}) · *{s.get('area', '')}*" for s in src.values()))
+        st.markdown("\n".join(f"{s['n']}. [{s['title']}]({safe_url(s['url'])}) · *{s.get('area', '')}*"
+                              for s in src.values() if safe_url(s["url"])))
     st.download_button("⬇ Download report (.md)", wf.report_markdown(rep),
                        file_name=f"risk_report_{rep.get('company', 'company').replace(' ', '_')}.md", mime="text/markdown")
