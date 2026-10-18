@@ -2,6 +2,8 @@
 import json
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
+from contextvars import ContextVar, copy_context
 from functools import lru_cache
 
 from dotenv import load_dotenv
@@ -46,16 +48,31 @@ def default_model() -> str:
     return "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
 
 
-MODEL = {"name": None}
+MODEL = {"name": None}  # process-wide cache of default_model(); the UI choice lives in _SESSION_MODEL
+# Per-session model choice. app.py sets it on every run; contextvars keep one user's pick out of other sessions.
+_SESSION_MODEL: ContextVar[str | None] = ContextVar("llm_model", default=None)
+
+
+def set_model(name: str | None):
+    _SESSION_MODEL.set(name or None)
 
 
 def model() -> str:
     if PROVIDER == "claude":
         from core import llm_claude
         return llm_claude.MODEL
+    if _SESSION_MODEL.get():
+        return _SESSION_MODEL.get()
     if not MODEL["name"]:
         MODEL["name"] = default_model()
     return MODEL["name"]
+
+
+class ContextPool(ThreadPoolExecutor):
+    """ThreadPoolExecutor whose workers inherit the caller's context (and so the session's model)."""
+
+    def submit(self, fn, /, *args, **kwargs):
+        return super().submit(copy_context().run, fn, *args, **kwargs)
 
 
 THINK_RE = re.compile(r"<think>.*?</think>", re.S)

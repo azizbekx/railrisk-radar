@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+.venv
+.git
+.devin
+.claude
+__pycache__
+*.pyc
+.DS_Store
+cache/last_*.json
+cache/*.tmp

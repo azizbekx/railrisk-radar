@@ -226,9 +226,14 @@ def narrative(sid: str) -> str:
         text += (f"The index is pushed up mainly by {ups}. " if ups else "") + (f"Partly offset by {downs}. " if downs else "")
     else:
         text += (f"It is kept low mainly by {downs}. " if downs else "") + (f"Weak spots: {ups}. " if ups else "")
-    if e["critical_scores"]:
-        text += f"Critical-level scores: {', '.join(e['critical_scores'])}."
-    return text
+    crit = e["critical_scores"]  # ordered by contribution above average
+    if len(crit) == 1:
+        text += f"1 of {len(TRI_WEIGHTS)} scores is Critical: {crit[0]}."
+    elif len(crit) <= 3 and crit:
+        text += f"{len(crit)} of {len(TRI_WEIGHTS)} scores are Critical: {', '.join(crit)}."
+    elif crit:
+        text += f"{len(crit)} of {len(TRI_WEIGHTS)} scores are Critical, incl. {', '.join(crit[:3])}."
+    return text.rstrip()
 
 
 # ---------- query & compare ----------
