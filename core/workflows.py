@@ -86,17 +86,28 @@ Return JSON only:
 Be selective: only suppliers with a plausible direct link. Duration is how long output is disrupted."""
 
 
-def scenario(text: str) -> dict:
-    roster = "\n".join(f"{s['id']} | {s['name']} | {s['city']}, {s['country']} | {s['category']} | tier {s['tier']}"
-                       for s in m.suppliers().values())
-    data = llm.ask_json(SCENARIO_SYSTEM, f"SCENARIO: {text}\n\nSUPPLIERS:\n{roster}")
+def _roster() -> str:
+    return "\n".join(f"{s['id']} | {s['name']} | {s['city']}, {s['country']} | {s['category']} | tier {s['tier']}"
+                     for s in m.suppliers().values())
+
+
+def scenario(text: str, log=None) -> dict:
+    say = log or (lambda _: None)
+    say({"type": "thought", "content": f"Mapping the scenario onto {len(m.suppliers())} suppliers in 22 countries"})
+    data = llm.ask_json(SCENARIO_SYSTEM, f"SCENARIO: {text}\n\nSUPPLIERS:\n{_roster()}")
     weeks = float(data.get("duration_weeks") or 4)
+    say({"type": "tool_result", "name": "map_scenario",
+         "content": f"{data.get('title', 'Event')}: {len(data.get('matched', []))} supplier(s) hit directly, ~{weeks:g} weeks"})
     impacts, per_project = [], {}
     for hit in data.get("matched", []):
         if hit.get("id") not in m.suppliers():
             continue
+        say({"type": "tool_call", "name": "trace_impact",
+             "args": {"supplier": m.suppliers()[hit["id"]]["name"], "weeks": weeks, "capacity_loss": hit.get("capacity_loss", 1.0)}})
         imp = m.trace_impact(hit["id"], weeks, float(hit.get("capacity_loss", 1.0)))
         imp["reason"] = hit.get("reason", "")
+        say({"type": "tool_result", "name": "trace_impact",
+             "content": f"{len(imp['components'])} component(s) → {sum(1 for p in imp['projects'] if p['late_days'] > 0)} train project(s) late, €{imp['total_exposure_eur']/1e6:.1f}M"})
         impacts.append(imp)
         for p in imp["projects"]:
             cur = per_project.get(p["project"])
@@ -106,6 +117,44 @@ def scenario(text: str) -> dict:
     data.update({"impacts": impacts, "projects": projects,
                  "total_exposure_eur": sum(p["exposure_eur"] for p in projects)})
     return data
+
+
+THREATS_SYSTEM = """You monitor world news for a rolling stock manufacturer's supply chain. Given recent headlines and the
+supplier roster, pick the 4 headlines most likely to disrupt THESE suppliers (location, industry, raw materials,
+trade policy). Return JSON only:
+{"threats": [{"headline": "short", "scenario": "one-sentence disruption scenario to simulate, with place and duration",
+  "suppliers": ["S.."], "url": "source url", "why": "one sentence"}]}"""
+
+
+def headline_threats(log=None) -> list[dict]:
+    say = log or (lambda _: None)
+    queries = ["supply chain disruption factory shutdown this week",
+               "export controls rare earth semiconductors 2026",
+               "port strike flood earthquake manufacturing Europe Asia",
+               "steel foundry insolvency energy prices Europe"]
+    news, seen = [], set()
+    with ThreadPoolExecutor(4) as ex:
+        for q, res in zip(queries, ex.map(lambda q: llm.search_news(q, days=14, max_results=6), queries)):
+            say({"type": "tool_call", "name": "search_news", "args": {"query": q, "days": 14}})
+            fresh = [r for r in res if r["url"] not in seen]
+            seen.update(r["url"] for r in fresh)
+            news += fresh
+            say({"type": "tool_result", "name": "search_news", "content": f"{len(fresh)} new headlines"})
+    say({"type": "thought", "content": f"Ranking {len(news)} headlines against the supplier base"})
+    digest = "\n".join(f"- {r['title']} ({r['date']}) {r['url']}\n  {r['content'][:250]}" for r in news[:28])
+    data = llm.ask_json(THREATS_SYSTEM, f"HEADLINES:\n{digest}\n\nSUPPLIERS:\n{_roster()}")
+    return data.get("threats", [])[:4]
+
+
+def response_prompt(sc: dict) -> str:
+    hits = "; ".join(f"{i['supplier']} ({i['supplier_id']}, capacity loss {i['capacity_loss']:.0%}, €{i['total_exposure_eur']/1e6:.1f}M)"
+                     for i in sc["impacts"])
+    late = "; ".join(f"{p['name']} {p['late_days']} days late, €{p['exposure_eur']/1e6:.1f}M" for p in sc["projects"] if p["late_days"])
+    return (f"Disruption: {sc.get('title')}. {sc.get('explanation', '')} Duration ~{sc.get('duration_weeks')} weeks.\n"
+            f"Suppliers hit: {hits}.\nTrain projects late: {late or 'none'}.\n"
+            "Build a response plan. Use tools: check each hit supplier's profile, find alternatives for the affected "
+            "components, and check one recent news item if useful. Then give a ranked action list (owner, horizon, "
+            "€ or days saved) and a 2-line message for the Siemens Mobility board.")
 
 
 # ---------- 3. mitigation ----------
