@@ -9,6 +9,8 @@ from openai import OpenAI
 
 load_dotenv()
 
+# "nebius" (Nemotron on Token Factory) or "claude" (stand-in until Nebius keys are ready)
+PROVIDER = os.getenv("LLM_PROVIDER", "nebius").lower()
 BASE_URL = os.getenv("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/")
 # Preference order when NEMOTRON_MODEL is not set: biggest Nemotron available wins
 PREFERRED = ["ultra", "super", "nano-30b", "nemotron"]
@@ -21,6 +23,8 @@ def client() -> OpenAI:
 
 @lru_cache
 def available_models() -> list[str]:
+    if PROVIDER == "claude":
+        return []
     try:
         return sorted(m.id for m in client().models.list().data)
     except Exception:
@@ -46,6 +50,9 @@ MODEL = {"name": None}
 
 
 def model() -> str:
+    if PROVIDER == "claude":
+        from core import llm_claude
+        return llm_claude.MODEL
     if not MODEL["name"]:
         MODEL["name"] = default_model()
     return MODEL["name"]
@@ -60,6 +67,11 @@ def clean(text: str | None) -> str:
 
 
 def chat(messages: list[dict], tools: list | None = None, temperature: float = 0.2, max_tokens: int = 2500):
+    if PROVIDER == "claude":
+        from core import llm_claude
+        return llm_claude.chat(messages, tools=tools, max_tokens=max_tokens)
+    # drop provider-private keys such as _claude_content
+    messages = [{k: v for k, v in msg.items() if not k.startswith("_")} for msg in messages]
     kwargs = {"model": model(), "messages": messages, "temperature": temperature, "max_tokens": max_tokens}
     if tools:
         kwargs["tools"] = tools
@@ -119,4 +131,5 @@ def search_web(query: str, max_results: int = 5) -> list[dict]:
 
 
 def keys_status() -> dict:
-    return {"nebius": bool(os.getenv("NEBIUS_API_KEY")), "tavily": bool(os.getenv("TAVILY_API_KEY"))}
+    llm_key = os.getenv("ANTHROPIC_API_KEY") if PROVIDER == "claude" else os.getenv("NEBIUS_API_KEY")
+    return {"llm": bool(llm_key), "provider": PROVIDER, "tavily": bool(os.getenv("TAVILY_API_KEY"))}

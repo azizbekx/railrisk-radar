@@ -110,9 +110,11 @@ with st.sidebar:
     st.markdown("## 🚆 RailRisk Radar")
     st.caption("Agentic supplier risk intelligence for rolling stock")
     keys = llm.keys_status()
-    st.markdown(f"Nemotron (Token Factory): {'🟢' if keys['nebius'] else '🔴 set NEBIUS_API_KEY'}  \n"
+    llm_name = "Claude (temporary)" if keys["provider"] == "claude" else "Nemotron (Token Factory)"
+    key_name = "ANTHROPIC_API_KEY" if keys["provider"] == "claude" else "NEBIUS_API_KEY"
+    st.markdown(f"{llm_name}: {'🟢' if keys['llm'] else '🔴 set ' + key_name}  \n"
                 f"Tavily search: {'🟢' if keys['tavily'] else '🔴 set TAVILY_API_KEY'}")
-    models = llm.nemotron_models() if keys["nebius"] else []
+    models = llm.nemotron_models() if keys["llm"] and keys["provider"] == "nebius" else []
     if models:
         default = llm.model()
         choice = st.selectbox("Model", models, index=models.index(default) if default in models else 0)
@@ -194,7 +196,7 @@ with tab_over:
     default_ids = [r["id"] for r in scores[:8]]
     pick = st.multiselect("Suppliers to scan", options=list(m.suppliers()), default=default_ids,
                           format_func=lambda i: f"{i} · {m.suppliers()[i]['name']}")
-    if st.button("▶ Run agent scan", type="primary", disabled=not (keys["nebius"] and keys["tavily"]) or not pick):
+    if st.button("▶ Run agent scan", type="primary", disabled=not (keys["llm"] and keys["tavily"]) or not pick):
         res, _ = run_streaming(wf.scan_many, pick, label=f"Scanning {len(pick)} suppliers")
         if res is not None:
             st.success("Scan complete. Scores updated.")
@@ -273,7 +275,7 @@ with tab_deep:
     st.plotly_chart(sankey(imp["edges"], height=300), width="stretch")
     st.dataframe(pd.DataFrame(imp["projects"]).rename(columns={"exposure_eur": "exposure €"}), hide_index=True, width="stretch")
 
-    if st.button("🛠 Generate mitigation plan", disabled=not keys["nebius"]):
+    if st.button("🛠 Generate mitigation plan", disabled=not keys["llm"]):
         with st.spinner("Nemotron is drafting a mitigation plan..."):
             try:
                 st.session_state[f"mit_{sid}"] = wf.mitigation(sid, weeks)
@@ -309,7 +311,7 @@ with tab_what:
         if col.button(ex, width="stretch"):
             st.session_state["scenario_text"] = ex
     text = st.text_area("Scenario", key="scenario_text", height=80, placeholder="e.g. Port of Rotterdam closed by a cyber attack for 2 weeks")
-    if st.button("🌪️ Simulate impact", type="primary", disabled=not keys["nebius"] or not text):
+    if st.button("🌪️ Simulate impact", type="primary", disabled=not keys["llm"] or not text):
         with st.spinner("Mapping the scenario onto the supplier base..."):
             try:
                 st.session_state["scenario"] = wf.scenario(text)
@@ -368,7 +370,7 @@ with tab_chat:
                 with st.expander(f"Agent trace ({len(msg['trace'])} steps)"):
                     st.markdown("\n\n".join(msg["trace"]))
             st.markdown(msg["content"])
-    prompt = st.chat_input("Ask the risk copilot...", disabled=not keys["nebius"]) or preset
+    prompt = st.chat_input("Ask the risk copilot...", disabled=not keys["llm"]) or preset
     if prompt:
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -393,7 +395,7 @@ with tab_dd:
     st.markdown("Run live due diligence on **any real company** before onboarding it as a supplier. "
                 "The agent searches the web, plans follow-up research, and writes a cited report.")
     name = st.text_input("Company name", placeholder="e.g. a brake, bogie or semiconductor supplier", key="dd_name")
-    if st.button("🧾 Run due diligence", type="primary", disabled=not (keys["nebius"] and keys["tavily"]) or not name):
+    if st.button("🧾 Run due diligence", type="primary", disabled=not (keys["llm"] and keys["tavily"]) or not name):
         rep, _ = run_streaming(wf.due_diligence, name, label=f"Researching {name}")
         if rep:
             st.session_state["dd"] = rep

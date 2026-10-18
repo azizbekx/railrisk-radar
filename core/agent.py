@@ -155,7 +155,8 @@ def run(question: str, history: list | None = None, max_steps: int = 8, tools=No
         msgs.append({"role": "assistant", "content": msg.content or "",
                      "tool_calls": [{"id": c.id, "type": "function",
                                      "function": {"name": c.function.name, "arguments": c.function.arguments or "{}"}}
-                                    for c in calls]})
+                                    for c in calls],
+                     "_claude_content": getattr(msg, "claude_content", None)})
         for c in calls:
             try:
                 args = json.loads(c.function.arguments or "{}")
