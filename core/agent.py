@@ -1,5 +1,7 @@
 """Tool-calling agent loop (Nemotron) with a visible reasoning trace."""
+import ast
 import json
+import re
 from pathlib import Path
 
 from core import dataset as ds, llm, model as m
@@ -123,11 +125,29 @@ def t_explain_risk(supplier: str):
     return e
 
 
+def _score_columns(columns):
+    """Resolve loose column names; '<Score>_Level' maps to the score itself (its level is returned alongside)."""
+    out = []
+    for c in columns or []:
+        col = ds.resolve_column(str(c))
+        if col and col.endswith("_Level"):
+            col = col[:-len("_Level")]
+        if col and col in ds.df().columns and col != "supplierID":
+            out.append(col)
+    return list(dict.fromkeys(out))
+
+
 def t_compare_suppliers(suppliers: list | str, columns: list | None = None):
     ids, bad = ds.resolve_many(suppliers)
     if not ids:
         return {"error": "none of these suppliers exist in the dataset", "not_found": bad}
-    return {**ds.compare(ids[:20], columns), "not_found": bad}
+    cols = _score_columns(columns) if columns else None
+    out = ds.compare(ids[:20], cols or None)
+    d = ds.df().loc[ids[:20]]
+    for col, v in out["columns"].items():
+        if isinstance(v, dict) and f"{col}_Level" in d.columns:
+            v["levels"] = d[f"{col}_Level"].to_dict()
+    return {**out, "not_found": bad}
 
 
 def t_column_stats(column: str, group_by: str = "", suppliers: list | None = None):
@@ -216,13 +236,167 @@ def tool_specs(names=None):
     return out
 
 
+# ---------- tool-argument robustness (Nemotron sends lists as strings, singular keys, string numbers...) ----------
+
+def parse_args(raw) -> dict:
+    """Tool-call arguments -> dict. Accepts dicts, JSON, double-encoded JSON, single-quoted dicts, trailing junk."""
+    if isinstance(raw, dict):
+        return raw
+    text = (raw or "").strip()
+    if not text:
+        return {}
+    for _ in range(2):  # JSON, or JSON encoded as a JSON string
+        try:
+            val = json.loads(text)
+        except json.JSONDecodeError:
+            break
+        if isinstance(val, dict):
+            return val
+        if not isinstance(val, str):
+            return {}
+        text = val.strip()
+    try:
+        val = ast.literal_eval(text)
+        if isinstance(val, dict):
+            return val
+    except (ValueError, SyntaxError):
+        pass
+    start, end = text.find("{"), text.rfind("}")
+    if start != -1 and end > start:
+        try:
+            return json.loads(text[start:end + 1])
+        except json.JSONDecodeError:
+            pass
+    return {}
+
+
+def _as_list(v) -> list:
+    if v is None:
+        return []
+    if isinstance(v, (list, tuple, set)):
+        return [x for x in v if x not in (None, "")]
+    if isinstance(v, dict):
+        return [v]
+    s = str(v).strip()
+    if s[:1] in "[{":
+        try:
+            val = json.loads(s)
+            return _as_list(val) if isinstance(val, (list, dict)) else [val]
+        except json.JSONDecodeError:
+            try:
+                val = ast.literal_eval(s)
+                if isinstance(val, (list, tuple, dict)):
+                    return _as_list(val)
+            except (ValueError, SyntaxError):
+                s = s.strip("[]")
+    parts = [p.strip().strip("'\"") for p in re.split(r"\s*(?:[,;\n]|\band\b)\s*", s)]
+    return [p for p in parts if p]
+
+
+COND_RE = re.compile(r"^\s*(.+?)\s*(<=|>=|!=|==|=|<|>|\bcontains\b|\bin\b)\s*(.+?)\s*$", re.I)
+OP_ALIAS = {"=": "==", "eq": "==", "equals": "==", "is": "==", "ne": "!=", "not": "!=", "gt": ">", "gte": ">=",
+            "lt": "<", "lte": "<=", "greater_than": ">", "less_than": "<", "above": ">", "below": "<"}
+
+
+def _condition(c):
+    if isinstance(c, str):
+        m = COND_RE.match(c)
+        if not m:
+            return None
+        c = {"column": m.group(1), "op": m.group(2), "value": m.group(3).strip("'\"")}
+    if not isinstance(c, dict):
+        return None
+    col = c.get("column", c.get("field", c.get("col", c.get("name"))))
+    op = str(c.get("op", c.get("operator", c.get("comparison", "==")))).strip().lower()
+    op = OP_ALIAS.get(op, op)
+    val = c.get("value", c.get("values", c.get("val")))
+    if op == "in":
+        val = _as_list(val)
+    elif isinstance(val, str):
+        num = val.replace("%", "").replace(",", "").strip()
+        try:
+            val = float(num) if re.fullmatch(r"-?\d+(\.\d+)?", num) else val
+        except ValueError:
+            pass
+    return {"column": col, "op": op, "value": val} if col else None
+
+
+KEY_ALIAS = {"filters": "conditions", "where": "conditions", "filter": "conditions", "order_by": "sort_by",
+             "sort": "sort_by", "sortBy": "sort_by", "top": "limit", "top_n": "limit", "n": "limit", "k": "limit",
+             "max_results": "limit", "fields": "columns", "metrics": "columns", "chart": "kind", "type": "kind",
+             "chart_type": "kind", "groupby": "group_by", "group": "group_by", "by": "group_by"}
+
+
+def coerce_args(name: str, args: dict) -> dict:
+    """Fit loosely-typed arguments to the tool's JSON schema; drop keys the tool does not take."""
+    props = TOOLS[name][2]
+    args = dict(args or {})
+    for k in [k for k in args if k not in props and KEY_ALIAS.get(k) in props and KEY_ALIAS[k] not in args]:
+        args[KEY_ALIAS[k]] = args.pop(k)
+    for k in list(args):  # singular/plural and near-miss keys: supplier <-> suppliers, column <-> columns
+        if k in props:
+            continue
+        alt = next((p for p in props if p.rstrip("s") == k.rstrip("s") or p in ("suppliers", "supplier")
+                    and k in ("ids", "supplier_ids", "supplierIDs", "supplier_id", "id")), None)
+        val = args.pop(k)
+        if alt and alt not in args:
+            args[alt] = val
+    for k, spec in props.items():
+        if k not in args:
+            continue
+        v, typ = args[k], spec.get("type")
+        if v is None:
+            args.pop(k)
+        elif typ == "array":
+            v = _as_list(v)
+            if k == "conditions":
+                v = [c for c in map(_condition, v) if c]
+            args[k] = v
+        elif typ == "string" and isinstance(v, (list, tuple)):
+            args[k] = str(v[0]) if v else ""
+        elif typ == "string" and not isinstance(v, str):
+            args[k] = str(v)
+        elif typ in ("integer", "number") and isinstance(v, str):
+            try:
+                args[k] = int(float(v)) if typ == "integer" else float(v)
+            except ValueError:
+                args.pop(k)
+        elif typ == "boolean" and isinstance(v, str):
+            args[k] = v.strip().lower() in ("true", "1", "yes", "asc", "ascending")
+    return args
+
+
+def _fit(result, limit: int = 40000) -> str:
+    """Tool result as JSON for the model. Oversized results are shrunk (level columns dropped, rows cut)
+    instead of sliced mid-JSON, so the model never reads a half-truncated table."""
+    text = json.dumps(result, default=str, separators=(",", ":"))
+    if len(text) <= limit or not isinstance(result, dict):
+        return text[:limit]
+    rows_key = next((k for k in ("suppliers", "rows") if isinstance(result.get(k), list)
+                     and result[k] and isinstance(result[k][0], dict)), None)
+    if not rows_key:
+        return text[:limit]
+    rows = [{k: v for k, v in r.items() if not k.endswith("_Level")} for r in result[rows_key]]
+    total = len(rows)
+    while rows:
+        out = {**result, rows_key: rows}
+        if len(rows) < total:
+            out["truncated"] = f"showing {len(rows)} of {total} rows to fit; ask for fewer suppliers or columns"
+        text = json.dumps(out, default=str, separators=(",", ":"))
+        if len(text) <= limit:
+            return text
+        rows = rows[:max(1, int(len(rows) * 0.75))] if len(rows) > 1 else []
+    return text[:limit]
+
+
 def run_tool(name: str, args: dict):
+    name = (name or "").split(".")[-1].strip()
     if name not in TOOLS:
         return {"error": f"unknown tool {name}"}
     try:
-        return TOOLS[name][0](**args)
+        return TOOLS[name][0](**coerce_args(name, args))
     except Exception as e:  # surface tool errors to the model instead of crashing
-        return {"error": str(e)}
+        return {"error": f"{type(e).__name__}: {e}"}
 
 
 # ---------- loop ----------
@@ -239,8 +413,8 @@ concrete recommended actions. Cite news URLs when you used them."""
 
 DATA_SYSTEM = f"""You are the supplier selection assistant for Siemens rail procurement buyers. You answer questions
 about a dataset of 10,000 anonymized suppliers (IDs like SUPP_00012) using tools. Every number you state must come
-from a tool result in this conversation; never guess. If something is not in the data (country, product category,
-real company identity) say so plainly.
+from a tool result in this conversation; never guess. The data has NO country, location, product category or real
+company identity: if asked for one, say plainly that the dataset does not contain it and never name one.
 
 Facts about the data:
 - All risk scores run 0-100, higher = riskier. Levels: Low <25, Medium 25-49, High 50-74, Critical >=75.
@@ -250,18 +424,46 @@ Facts about the data:
   Order Change Rate (higher = worse), Purchase Order Volume (EUR) = financial exposure.
 - Sourcing Risk Level = how hard the supplier is to replace (Low = easy to find alternatives, High = hard).
   Supply Chain Complexity = complexity of the supplier's logistics routes and sub-tiers.
-- "Financial risk" is ambiguous: Financial_Health_Score and Credit_Rating_Score both measure it. Answer with
-  Financial_Health_Score and mention Credit_Rating_Score when it changes the picture.
+- "Financial risk" is ambiguous: Financial_Health_Score and Credit_Rating_Score both measure it. Rank by
+  Financial_Health_Score, and always also state the chosen supplier's Credit_Rating_Score and its level.
 
 Style: lead with the direct answer and the supplier ID in bold, then the evidence as a short list or small markdown
 table. Keep it under 200 words unless asked for more. Call show_chart once when comparing several suppliers or
-explaining a score, so the buyer sees it. Only call add_to_shortlist when the buyer asks."""
+explaining a score, so the buyer sees it (charts render below your answer). Only call add_to_shortlist when the buyer asks. Your last message must
+contain the complete answer (not just a remark about the chart)."""
+
+
+SIDE_EFFECT_TOOLS = {"show_chart", "add_to_shortlist"}  # their results add no facts for the answer
+FINAL_NUDGE = "Stop using tools now and give your final answer to the buyer from the tool results above."
+RETRY_NUDGE = "Your reply was empty. Call the tools you need to answer my question, then answer."
+
+
+def _merge(draft: str, text: str) -> str:
+    """Nemotron often writes the full answer next to a show_chart/add_to_shortlist call and then ends with a
+    one-liner ('The chart above shows...'). Keep the full answer in that case."""
+    if not draft or (text and len(text) >= 0.5 * len(draft)) or (text and draft in text):
+        return text or draft
+    return f"{draft}\n\n{text}" if text and text not in draft else draft
+
+
+def _answer_like(text: str) -> bool:
+    return len(text) >= 200 or "|" in text or bool(re.search(r"\*\*SUPP_\d+", text))
+
+
+def _final(msgs: list, draft: str):
+    """One tool-free call for the final answer. Returns (answer, error)."""
+    try:
+        text = llm.clean(llm.chat(msgs + [{"role": "user", "content": FINAL_NUDGE}], max_tokens=2500).content)
+    except Exception as e:
+        return (draft, None) if draft else (None, f"LLM call failed: {e}")
+    return _merge(draft, text) or "(no answer)", None
 
 
 def run(question: str, history: list | None = None, max_steps: int = 8, tools=None, system: str = SYSTEM):
     """Generator yielding trace steps: {'type': 'tool_call'|'tool_result'|'thought'|'answer'|'error', ...}."""
     msgs = [{"role": "system", "content": system}] + (history or []) + [{"role": "user", "content": question}]
     specs = tool_specs(tools)
+    seen, repeats, draft, nudged = set(), 0, "", False
     for step in range(max_steps):
         try:
             msg = llm.chat(msgs, tools=specs, max_tokens=3000)
@@ -271,26 +473,39 @@ def run(question: str, history: list | None = None, max_steps: int = 8, tools=No
         calls = msg.tool_calls or []
         text = llm.clean(msg.content)
         if not calls:
-            yield {"type": "answer", "content": text or "(no answer)"}
-            return
+            if text:
+                yield {"type": "answer", "content": _merge(draft, text)}
+                return
+            if not seen and not nudged:  # empty reply before any tool use: ask again, tools still on
+                nudged = True
+                msgs.append({"role": "user", "content": RETRY_NUDGE})
+                continue
+            break  # empty reply after tool use (answer stuck in reasoning): ask once more without tools
         if text:
             yield {"type": "thought", "content": text}
-        msgs.append({"role": "assistant", "content": msg.content or "",
-                     "tool_calls": [{"id": c.id, "type": "function",
-                                     "function": {"name": c.function.name, "arguments": c.function.arguments or "{}"}}
-                                    for c in calls],
+        parsed = [((c.function.name or "").split(".")[-1].strip(), parse_args(c.function.arguments),
+                   c.id or f"call_{step}_{i}") for i, c in enumerate(calls)]
+        if text and _answer_like(text) and all(n in SIDE_EFFECT_TOOLS for n, _, _ in parsed):
+            draft = text
+        msgs.append({"role": "assistant", "content": text,
+                     "tool_calls": [{"id": cid, "type": "function",
+                                     "function": {"name": name, "arguments": json.dumps(args, default=str)}}
+                                    for name, args, cid in parsed],
                      "_claude_content": getattr(msg, "claude_content", None)})
-        for c in calls:
-            try:
-                args = json.loads(c.function.arguments or "{}")
-            except json.JSONDecodeError:
-                args = {}
-            yield {"type": "tool_call", "name": c.function.name, "args": args}
-            result = run_tool(c.function.name, args)
-            yield {"type": "tool_result", "name": c.function.name, "content": result}
-            msgs.append({"role": "tool", "tool_call_id": c.id, "content": json.dumps(result, default=str)[:12000]})
-    msgs.append({"role": "user", "content": "Stop using tools now and give your final answer from what you have."})
-    try:
-        yield {"type": "answer", "content": llm.clean(llm.chat(msgs, max_tokens=2500).content)}
-    except Exception as e:
-        yield {"type": "error", "content": str(e)}
+        for name, args, cid in parsed:
+            key = name + json.dumps(args, sort_keys=True, default=str)
+            if key in seen:  # identical call again: don't re-run it, push the model to answer
+                repeats += 1
+                yield {"type": "thought", "content": f"(skipped a repeated `{name}` call)"}
+                result = {"note": f"You already called {name} with exactly these arguments and the result is above. "
+                                  "Do not repeat it; answer the buyer now or use different arguments."}
+            else:
+                seen.add(key)
+                yield {"type": "tool_call", "name": name, "args": args}
+                result = run_tool(name, args)
+                yield {"type": "tool_result", "name": name, "content": result}
+            msgs.append({"role": "tool", "tool_call_id": cid, "content": _fit(result)})
+        if repeats >= 2:
+            break
+    answer, err = _final(msgs, draft)
+    yield {"type": "error", "content": err} if err else {"type": "answer", "content": answer}

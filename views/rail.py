@@ -66,17 +66,22 @@ def render(keys: dict):
     score_by_id = {r["id"]: r for r in scores}
     summary = m.portfolio_summary(scores)
 
-    st.markdown("### 🚆 Rail impact lab")
-    st.caption(f"Siemens Mobility rolling stock · {len(m.projects())} train projects · {summary['suppliers']} suppliers (tier 1 and tier 2) · as of {m.TODAY:%d %b %Y}")
-    st.info("Rail extension: how a single supplier failure cascades through a train bill of materials into delivery delays and contract penalties. "
-            "Uses a separate, fictional 32-supplier rail dataset; the buyer tabs use the 10,000-supplier Siemens dataset.")
+    st.markdown("### 🚆 Rail impact lab (demo data)")
+    st.caption(f"Fictional demo network · {len(m.projects())} train projects · {summary['suppliers']} suppliers (tier 1 and tier 2) · as of {m.TODAY:%d %b %Y}")
+    st.info(f"**Extension on fictional demo data.** This lab uses a separate, made-up network of {summary['suppliers']} rail suppliers "
+            f"wired to {len(m.projects())} train projects, to show how one supplier failure cascades through a bill of materials "
+            "into delivery delays and contract penalties. None of these suppliers are in the 10,000-supplier dataset.\n\n"
+            "Suppliers here get an **exposure score** (0–100, higher = more exposed) from 7 weighted factors: "
+            f"{', '.join(f'{m.FACTOR_LABELS[k]} {w:.0%}' for k, w in m.WEIGHTS.items())}. "
+            "It is **not** the Total Risk Index (TRI) used in the other tabs and the two scales are not comparable. "
+            "Exposure bands: **act now** ≥ 60, **watch** 40–59, **low** < 40.")
     tab_over, tab_deep, tab_what, tab_chat = st.tabs(["📡 Overview", "🔍 Supplier deep dive", "🌪️ What-if scenario", "💬 Rail copilot"])
 
     with tab_over:
         c = st.columns(5)
         c[0].metric("Suppliers monitored", summary["suppliers"])
-        c[1].metric("Act now (≥60)", summary["act"])
-        c[2].metric("Watch (40–59)", summary["watch"])
+        c[1].metric("Act now (exposure ≥60)", summary["act"])
+        c[2].metric("Watch (exposure 40–59)", summary["watch"])
         c[3].metric("Single-source suppliers", summary["single_source"])
         c[4].metric("€ at risk if act-now suppliers fail 6 wks", eur(summary["exposure_eur"]))
 
@@ -93,9 +98,9 @@ def render(keys: dict):
             for b in ["low", "watch", "act now"]:
                 d = df_map[df_map.band == b]
                 fig.add_trace(go.Scattermap(
-                    lat=d.lat, lon=d.lon, mode="markers", name=b,
+                    lat=d.lat, lon=d.lon, mode="markers", name=f"{b} exposure",
                     marker=dict(size=10 + d.score / 5, color=BAND_COLOR[b], opacity=0.85),
-                    text=d.name + "<br>" + d.category + "<br>Risk " + d.score.astype(str),
+                    text=d.name + "<br>" + d.category + "<br>Exposure " + d.score.astype(str),
                     hoverinfo="text"))
             fig.update_layout(map=dict(style="carto-positron", center=dict(lat=45, lon=20), zoom=2.3),
                               height=470, margin=dict(l=0, r=0, t=0, b=0),
@@ -108,9 +113,9 @@ def render(keys: dict):
             for (k, w), col in zip(m.WEIGHTS.items(), palette):
                 fig.add_bar(y=[m.suppliers()[r["id"]]["name"][:26] for r in top], x=[r["factors"][k] * w for r in top],
                             name=m.FACTOR_LABELS[k], orientation="h", marker_color=col)
-            fig.update_layout(barmode="stack", height=470, margin=dict(l=0, r=0, t=30, b=0), title="Top 10 risk scores by factor",
+            fig.update_layout(barmode="stack", height=470, margin=dict(l=0, r=0, t=30, b=0), title="Top 10 exposure scores by factor",
                               yaxis=dict(autorange="reversed"), legend=dict(orientation="h", y=-0.15, font_size=10),
-                              xaxis=dict(range=[0, 100], title="risk score"))
+                              xaxis=dict(range=[0, 100], title="exposure score"))
             st.plotly_chart(fig, width="stretch")
 
         st.subheader("Watch list")
@@ -118,10 +123,10 @@ def render(keys: dict):
         for r in scores:
             s = m.suppliers()[r["id"]]
             rows.append({"ID": r["id"], "Supplier": s["name"], "Country": s["country"], "Makes": s["category"],
-                         "Tier": s["tier"], "Risk": r["score"], "Band": r["band"],
+                         "Tier": s["tier"], "Exposure": r["score"], "Exposure band": r["band"],
                          "Agent events": len(agent.events_for(r["id"])), "Why": "; ".join(r["reasons"][:3])})
         st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch", height=330,
-                     column_config={"Risk": st.column_config.ProgressColumn("Risk", min_value=0, max_value=100, format="%.0f")})
+                     column_config={"Exposure": st.column_config.ProgressColumn("Exposure score", min_value=0, max_value=100, format="%.0f")})
 
         st.subheader("Agent risk scan")
         st.caption("Nemotron searches live news per supplier region, industry and raw material, then extracts cited risk events.")
@@ -131,23 +136,24 @@ def render(keys: dict):
         if st.button("▶ Run agent scan", type="primary", disabled=not (keys["llm"] and keys["tavily"]) or not pick):
             res, _ = run_streaming(wf.scan_many, pick, label=f"Scanning {len(pick)} suppliers")
             if res is not None:
-                st.success("Scan complete. Scores updated.")
+                st.success("Scan complete. Exposure scores updated.")
                 time.sleep(0.6)
                 st.rerun()
 
     with tab_deep:
         ids = [r["id"] for r in scores]
-        sid = st.selectbox("Supplier", ids, format_func=lambda i: f"{m.suppliers()[i]['name']}  ·  risk {score_by_id[i]['score']:.0f}")
+        sid = st.selectbox("Supplier", ids, format_func=lambda i: f"{m.suppliers()[i]['name']}  ·  exposure {score_by_id[i]['score']:.0f}")
         s, r = m.suppliers()[sid], score_by_id[sid]
         head, gauge = st.columns([3, 1])
         with head:
-            st.markdown(f"### {s['name']} {pill(r['band'])}", unsafe_allow_html=True)
+            st.markdown(f"### {s['name']} {pill(r['band'], 'EXPOSURE: ' + r['band'].upper())}", unsafe_allow_html=True)
             comps = ", ".join(c["component"] for c in m.components_of(sid)) or f"Tier 2 → feeds {', '.join(m.suppliers()[x]['name'] for x in s['feeds'])}"
             st.markdown(f"{s['city']}, {m.country_risk()[s['country']]['name']} · **{s['category']}** · {comps}")
             if s["note"]:
                 st.caption(s["note"])
-            st.markdown("**Why this score:** " + ("; ".join(r["reasons"]) or "no major issues"))
+            st.markdown("**Why this exposure score:** " + ("; ".join(r["reasons"]) or "no major issues"))
         with gauge:
+            st.caption("Exposure score (demo scale, not TRI)")
             g = go.Figure(go.Indicator(mode="gauge+number", value=r["score"], number=dict(suffix="/100"),
                                        gauge=dict(axis=dict(range=[0, 100]), bar=dict(color=BAND_COLOR[r["band"]]),
                                                   steps=[dict(range=[0, 40], color="#e8f1ea"), dict(range=[40, 60], color="#f7edd8"),
@@ -161,7 +167,7 @@ def render(keys: dict):
             fig = go.Figure(go.Bar(y=[m.FACTOR_LABELS[k] for k in f], x=list(f.values()), orientation="h",
                                    marker_color=[BAND_COLOR[m.band(v)] for v in f.values()],
                                    text=[f"{v:.0f} × {m.WEIGHTS[k]:.0%}" for k, v in f.items()], textposition="auto"))
-            fig.update_layout(height=290, margin=dict(l=0, r=0, t=30, b=0), title="Factor scores (0–100) × weight",
+            fig.update_layout(height=290, margin=dict(l=0, r=0, t=30, b=0), title="Exposure factors (0–100) × weight",
                               xaxis=dict(range=[0, 100]), yaxis=dict(autorange="reversed"))
             st.plotly_chart(fig, width="stretch")
         with b:
@@ -322,7 +328,7 @@ def render(keys: dict):
                 st.markdown(resp["answer"])
 
     with tab_chat:
-        st.markdown("Ask anything about the supplier base. The agent calls tools: supplier data, live news, impact tracing, alternatives.")
+        st.markdown("Ask anything about the demo rail network. The agent calls tools: supplier data, live news, impact tracing, alternatives.")
         if "chat" not in st.session_state:
             st.session_state.chat = []
         qs = ["Which single-sourced suppliers in high-risk countries threaten Mireo Plus H?",
