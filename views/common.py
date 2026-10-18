@@ -31,7 +31,7 @@ def run_streaming(fn, *args, label="Agent working", keep=14, **kwargs):
         except Exception as e:
             out["error"] = e
 
-    # copy the context so the worker sees this session's model choice (llm.set_model)
+    # copy the context so the worker sees this session's state
     th = threading.Thread(target=contextvars.copy_context().run, args=(target,), daemon=True)
     th.start()
     lines = []

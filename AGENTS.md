@@ -2,8 +2,8 @@
 
 Notes for coding agents working on RailRisk Radar.
 
-- Python: use the repo venv (`.venv/bin/python`). Keys come from `.env` (`LLM_PROVIDER`, `NEBIUS_API_KEY`,
-  optional `NEMOTRON_MODEL`, `TAVILY_API_KEY`). Never print or commit them.
+- Python: use the repo venv (`.venv/bin/python`). Keys come from `.env` (`NEBIUS_API_KEY`, `TAVILY_API_KEY`). Never print or commit them.
+- The LLM is always NVIDIA Nemotron 3 Ultra on Nebius Token Factory, hardcoded as `MODEL_ID` in `core/llm.py`.
 - The data chat (views/chat.py) runs `core.agent.run(..., tools=agent.DATA_TOOLS, system=agent.DATA_SYSTEM)`;
   ground truth for the 10,000 suppliers lives in `core/dataset.py`.
 

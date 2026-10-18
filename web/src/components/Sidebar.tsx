@@ -94,7 +94,7 @@ export function Sidebar({ user, onLogout }: { user: string | null; onLogout: () 
 
       <div className="space-y-1.5 px-2 text-[11px] text-muted">
         <div className="flex items-center gap-1.5"><Bot className="size-3.5" />
-          <span className="truncate" title={meta?.model ?? undefined}>{meta?.keys.llm ? (meta.keys.provider === 'claude' ? 'Claude' : 'Nemotron') : 'No LLM key'}{meta?.model && <span className="ml-1 font-mono text-[10px]">{meta.model}</span>}</span>
+          <span className="truncate" title={meta?.model ?? undefined}>{meta?.keys.llm ? 'Nemotron' : 'No LLM key'}{meta?.model && <span className="ml-1 font-mono text-[10px]">{meta.model}</span>}</span>
           <span className={clsx('ml-auto size-1.5 rounded-full', meta?.keys.llm ? 'bg-low-dot' : 'bg-critical-dot')} />
         </div>
         <div className="flex items-center gap-1.5"><Globe className="size-3.5" />

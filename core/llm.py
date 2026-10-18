@@ -3,7 +3,7 @@ import json
 import os
 import re
 from concurrent.futures import ThreadPoolExecutor
-from contextvars import ContextVar, copy_context
+from contextvars import copy_context
 from functools import lru_cache
 
 from dotenv import load_dotenv
@@ -11,11 +11,9 @@ from openai import OpenAI
 
 load_dotenv()
 
-# "nebius" (Nemotron on Token Factory, used in production) or "claude" (Anthropic, local dev)
-PROVIDER = os.getenv("LLM_PROVIDER", "nebius").lower()
 BASE_URL = os.getenv("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/")
-# Preference order when NEMOTRON_MODEL is not set: biggest Nemotron available wins
-PREFERRED = ["ultra", "super", "nano-30b", "nemotron"]
+# The app always runs NVIDIA Nemotron 3 Ultra on Token Factory; no env var or UI choice changes it
+MODEL_ID = "nvidia/Nemotron-3-Ultra-550b-a55b"
 
 
 @lru_cache
@@ -25,8 +23,6 @@ def client() -> OpenAI:
 
 @lru_cache
 def available_models() -> list[str]:
-    if PROVIDER == "claude":
-        return []
     try:
         return sorted(m.id for m in client().models.list().data)
     except Exception:
@@ -37,39 +33,12 @@ def nemotron_models() -> list[str]:
     return [m for m in available_models() if "nemotron" in m.lower()]
 
 
-def default_model() -> str:
-    if os.getenv("NEMOTRON_MODEL"):
-        return os.getenv("NEMOTRON_MODEL")
-    cands = nemotron_models()
-    for key in PREFERRED:
-        for m in cands:
-            if key in m.lower() and "reward" not in m.lower() and "embed" not in m.lower():
-                return m
-    return "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B"
-
-
-MODEL = {"name": None}  # process-wide cache of default_model(); the UI choice lives in _SESSION_MODEL
-# Per-session model choice. app.py sets it on every run; contextvars keep one user's pick out of other sessions.
-_SESSION_MODEL: ContextVar[str | None] = ContextVar("llm_model", default=None)
-
-
-def set_model(name: str | None):
-    _SESSION_MODEL.set(name or None)
-
-
 def model() -> str:
-    if PROVIDER == "claude":
-        from core import llm_claude
-        return llm_claude.MODEL
-    if _SESSION_MODEL.get():
-        return _SESSION_MODEL.get()
-    if not MODEL["name"]:
-        MODEL["name"] = default_model()
-    return MODEL["name"]
+    return MODEL_ID
 
 
 class ContextPool(ThreadPoolExecutor):
-    """ThreadPoolExecutor whose workers inherit the caller's context (and so the session's model)."""
+    """ThreadPoolExecutor whose workers inherit the caller's context."""
 
     def submit(self, fn, /, *args, **kwargs):
         return super().submit(copy_context().run, fn, *args, **kwargs)
@@ -172,11 +141,6 @@ class _Reply:
 
 
 def chat(messages: list[dict], tools: list | None = None, temperature: float = 0.2, max_tokens: int = 2500):
-    if PROVIDER == "claude":
-        from core import llm_claude
-        return llm_claude.chat(messages, tools=tools, max_tokens=max_tokens)
-    # drop provider-private keys such as _claude_content
-    messages = [{k: v for k, v in msg.items() if not k.startswith("_")} for msg in messages]
     kwargs = {"model": model(), "messages": messages, "temperature": temperature, "max_tokens": max_tokens}
     if tools:
         kwargs["tools"] = tools
@@ -243,5 +207,4 @@ def search_web(query: str, max_results: int = 5) -> list[dict]:
 
 
 def keys_status() -> dict:
-    llm_key = os.getenv("ANTHROPIC_API_KEY") if PROVIDER == "claude" else os.getenv("NEBIUS_API_KEY")
-    return {"llm": bool(llm_key), "provider": PROVIDER, "tavily": bool(os.getenv("TAVILY_API_KEY"))}
+    return {"llm": bool(os.getenv("NEBIUS_API_KEY")), "tavily": bool(os.getenv("TAVILY_API_KEY"))}

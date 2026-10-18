@@ -49,8 +49,6 @@ def _logged_chat(messages, tools=None, **kw):
 def use_model(name: str):
     """Point llm.chat at a model without touching how the app stores its selection."""
     llm.model = lambda: name
-    if isinstance(getattr(llm, "MODEL", None), dict):
-        llm.MODEL["name"] = name
 
 
 def chat_models() -> list[str]:
@@ -142,11 +140,11 @@ def main():
         return
     if a.list:
         print("cases:", ", ".join(c.name for c in CASES))
-        print("models:", ", ".join(chat_models()), "| default:", llm.default_model())
+        print("models:", ", ".join(chat_models()), "| default:", llm.MODEL_ID)
         return
     models = []
     for m in a.model or ["default"]:
-        models += chat_models() if m == "all" else [llm.default_model()] if m == "default" else [m]
+        models += chat_models() if m == "all" else [llm.MODEL_ID] if m == "default" else [m]
     models = list(dict.fromkeys(models))
     cases = [c for c in CASES if not a.case or any(k == c.name or k in c.name for k in a.case)]
     if not cases:

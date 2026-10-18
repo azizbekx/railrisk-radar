@@ -45,8 +45,7 @@ supplier_risk_dataset.csv, risk_criteria_description.md   (challenge inputs)
    ├── core/agent.py      tool-calling agent loop with visible trace; dataset tools + rail tools
    ├── core/team.py       agent team: leader plan → 4 parallel specialists → leader verdict and memo
    ├── core/workflows.py  research agent · rail news scan, scenarios, mitigation
-   ├── core/llm.py        Nemotron on Nebius Token Factory (OpenAI-compatible) + Tavily search/extract
-   │                      (core/llm_claude.py: Claude backend for local dev via LLM_PROVIDER=claude)
+   ├── core/llm.py        Nemotron 3 Ultra on Nebius Token Factory (model hardcoded as MODEL_ID) + Tavily search/extract
    └── core/model.py      rail extension: scoring + networkx supply graph + impact propagation (data/)
 api/main.py               FastAPI: jury login, shared metadata, serves the React build
 api/routes/               one router per page; agent runs stream to the browser as NDJSON
@@ -58,7 +57,7 @@ app.py, views/            previous Streamlit UI, kept as a fallback (includes th
 
 ```bash
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -r requirements.txt
-cp .env.example .env   # local: LLM_PROVIDER=claude + ANTHROPIC_API_KEY, plus TAVILY_API_KEY; optional APP_USERS=jury:password
+cp .env.example .env   # NEBIUS_API_KEY + TAVILY_API_KEY; optional APP_USERS=jury:password
 cd web && npm ci && npm run build && cd ..
 .venv/bin/uvicorn api.main:app --port 8000   # open http://localhost:8000
 ```

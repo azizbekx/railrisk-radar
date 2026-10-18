@@ -490,8 +490,7 @@ def run(question: str, history: list | None = None, max_steps: int = 8, tools=No
         msgs.append({"role": "assistant", "content": text,
                      "tool_calls": [{"id": cid, "type": "function",
                                      "function": {"name": name, "arguments": json.dumps(args, default=str)}}
-                                    for name, args, cid in parsed],
-                     "_claude_content": getattr(msg, "claude_content", None)})
+                                    for name, args, cid in parsed]})
         for name, args, cid in parsed:
             key = name + json.dumps(args, sort_keys=True, default=str)
             if key in seen:  # identical call again: don't re-run it, push the model to answer

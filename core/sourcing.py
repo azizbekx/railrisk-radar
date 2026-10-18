@@ -21,7 +21,7 @@ from functools import lru_cache
 
 from core import dataset as ds, llm, team
 from core.fmt import eur
-from core.llm import ContextPool as ThreadPoolExecutor  # workers keep the session's model choice
+from core.llm import ContextPool as ThreadPoolExecutor  # workers keep the caller's context
 
 LONGLIST, CANDIDATES, FINALISTS, TOP = 50, 12, 7, 3
 AGENT_TIMEOUT_S = 150  # a stalled agent call is abandoned; the run continues with the Python ranking

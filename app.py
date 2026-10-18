@@ -5,8 +5,7 @@ import os
 import streamlit as st
 
 # Streamlit Community Cloud passes keys via st.secrets; core/ reads os.environ. Real env vars win.
-for _k in ("NEBIUS_API_KEY", "TAVILY_API_KEY", "ANTHROPIC_API_KEY", "LLM_PROVIDER", "NEMOTRON_MODEL",
-           "NEBIUS_BASE_URL", "CLAUDE_MODEL", "APP_USERS", "PERSIST_DEMO_CACHE"):
+for _k in ("NEBIUS_API_KEY", "TAVILY_API_KEY", "NEBIUS_BASE_URL", "APP_USERS", "PERSIST_DEMO_CACHE"):
     try:
         if not os.getenv(_k) and _k in st.secrets:
             os.environ[_k] = str(st.secrets[_k])
@@ -66,17 +65,8 @@ with st.sidebar:
     st.markdown("## 🚆 RailRisk Radar")
     st.caption("Supplier selection for rail procurement")
     keys = llm.keys_status()
-    llm_name = "Claude" if keys["provider"] == "claude" else "Nemotron (Token Factory)"
-    st.markdown(f"{llm_name}: {'🟢' if keys['llm'] else '🔴 no key'}  \nWeb search: {'🟢' if keys['tavily'] else '🔴'}")
-    models = llm.nemotron_models() if keys["llm"] and keys["provider"] == "nebius" else []
-    if models:
-        default = llm.default_model()
-        # per session: the widget value lives in this user's session_state, set_model() scopes it to this run
-        llm.set_model(st.selectbox("Model", models, index=models.index(default) if default in models else 0,
-                                   key="llm_model"))
-    else:
-        llm.set_model(None)
-        st.caption(f"Model: `{llm.model()}`")
+    st.markdown(f"Nemotron (Token Factory): {'🟢' if keys['llm'] else '🔴 no key'}  \nWeb search: {'🟢' if keys['tavily'] else '🔴'}")
+    st.caption(f"Model: `{llm.model()}`")
 
     st.divider()
     st.markdown("**Risk lens**")

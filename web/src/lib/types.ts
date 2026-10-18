@@ -47,6 +47,6 @@ export interface Meta {
   summary: { suppliers: number; avg_tri: number; critical: number; high: number; po_volume: number }
   means: Record<string, number>
   tri_check: number
-  keys: { llm: boolean; provider: string; tavily: boolean }
+  keys: { llm: boolean; tavily: boolean }
   model: string | null
 }

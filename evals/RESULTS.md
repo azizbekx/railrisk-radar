@@ -36,4 +36,4 @@ Other hardening, covered offline by `evals/test_agent_offline.py`:
 
 The default stays **Nemotron-3-Ultra-550b-a55b**: 10/10 after the fixes, and 8/8 on the two jury questions
 (about 8 s each). Super-VL scored the same (10/10 before, jury 6/6) and is about 25 % faster, so it is a good fallback.
-On this sample it is not clearly more accurate, so `PREFERRED` is unchanged.
+On this sample it is not clearly more accurate, so the hardcoded `MODEL_ID` is unchanged.

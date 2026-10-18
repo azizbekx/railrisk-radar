@@ -65,7 +65,7 @@ def render(keys: dict):
     scores = agent.current_scores()
     score_by_id = {r["id"]: r for r in scores}
     summary = m.portfolio_summary(scores)
-    llm_name = "Claude" if keys["provider"] == "claude" else "Nemotron"
+    llm_name = "Nemotron"
 
     st.markdown("### 🚆 Rail impact lab (demo data)")
     st.caption(f"Fictional demo network · {len(m.projects())} train projects · {summary['suppliers']} suppliers (tier 1 and tier 2) · as of {m.TODAY:%d %b %Y}")

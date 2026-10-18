@@ -7,7 +7,7 @@ from functools import lru_cache
 from urllib.parse import urlparse
 
 from core import dataset as ds, llm, model as m
-from core.llm import ContextPool as ThreadPoolExecutor  # workers keep the session's model choice
+from core.llm import ContextPool as ThreadPoolExecutor  # workers keep the caller's context
 from core.agent import load_events, save_events
 
 EVENT_TYPES = "financial, geopolitical, operational, natural_disaster, labour, regulatory, cyber, raw_material, logistics, quality, esg"
