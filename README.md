@@ -1,60 +1,55 @@
 # RailRisk Radar
 
-Agentic supplier risk intelligence for rolling stock. Built for the **Siemens: Supplier Risk Intelligence** challenge at Nebius Build Week (Berlin, 18 Oct 2026).
+Supplier selection and risk intelligence for rail procurement. Built for the **Siemens: Supplier Risk Intelligence** challenge at Nebius Build Week (Berlin, 18 Oct 2026).
 
-A train is built from thousands of parts, and many have only one qualified supplier. Rail certification (EN 15085-2 welding, EN 45545-2 fire safety, ISO/TS 22163, EN 50155) makes switching take 12–24 months. A late bogie frame or a missing power semiconductor stops a train worth tens of millions of euros and triggers contract penalties.
-
-RailRisk Radar watches the world for events that threaten suppliers, traces each one through the bill of materials to the trains it would delay, puts a euro figure on it, and recommends what to do.
+A train is built from tens of thousands of parts. A buyer sourcing a critical component has to narrow hundreds of candidate suppliers down to a shortlist, compare them side by side and justify the final choice. RailRisk Radar does that over the challenge's 10,000-supplier dataset, answers questions in plain language grounded in the data, and researches any real company on the web.
 
 ## What it does
 
 | Tab | What happens |
 |---|---|
-| **Overview** | Risk map of 32 tier-1 and tier-2 suppliers, top-10 scores broken down by factor, ranked watch list, one-click **agent risk scan** |
-| **Supplier deep dive** | Explainable 0–100 score, delivery trend, certificate expiry, cited news events, outage simulator (supplier → component → train → €), AI mitigation plan with a drafted supplier email |
-| **What-if scenario** | Type any disruption ("flooding in Penang"). The LLM maps it to affected suppliers and the supply graph traces the cascade to train projects and penalty exposure |
-| **Risk copilot** | Chat agent that calls tools: supplier data, live news search, impact tracing, alternative sources |
-| **Live due diligence** | Deep research on any real company. The agent searches, plans follow-up queries to close gaps, and writes a cited risk report |
+| **Find suppliers** | Filter 10,000 suppliers by TRI, level, sourcing risk, complexity, delivery and confirmation rates, PO volume, and knock-out rules ("no Critical financial health"). Rank by the official TRI or a **risk lens**, then tick rows to shortlist them |
+| **Compare shortlist** | Up to 20 suppliers side by side: ranking table, 18-score heatmap, TRI composition by risk family, radar overlay and a head-to-head diff. **Write decision memo** drafts a cited selection memo from the comparison data (download as .md) |
+| **Supplier profile** | Exact explanation of any supplier's TRI (waterfall from the dataset average), percentile per score, operational metrics, and lower-risk alternatives with a similar profile |
+| **Ask the data** | Chat assistant that calls tools over the dataset (filter, compare, explain, statistics). It picks its own charts to show under the answer and can add suppliers to the shortlist. The full tool trace is visible |
+| **Research agent** | Name a real company. The agent plans its research, searches news and the web, reads the company's own site, **digs deeper on red flags**, closes evidence gaps, then scores the company on the dataset's 18 dimensions with a source link behind each finding. It computes a TRI with the dataset's formula, so you can see where a real company would rank among your 10,000 suppliers |
+| **Rail impact lab** | Extension on a separate, fictional 32-supplier rail dataset: supplier → component → train project → € penalty cascade, live news scan, what-if disruption simulation, rail copilot |
+
+## What we found in the data
+
+- **Total_Risk_Index is an exact weighted sum** of the 18 scores. We recovered the weights by regression and verified them on all 10,000 rows: Operational Resilience, Financial Health and Quality 10% each; Compliance 8%; Credit Rating, Safety and Sub-Tier Visibility 6% each; Geopolitical, Governance and ESG 5% each; Environmental, Labor, Digital Security, Political Stability and Industry Benchmark 4% each; Market, Media and External Intelligence 3% each. Every "why is this TRI high?" answer is therefore exact, not a guess.
+- Levels: Low < 25 ≤ Medium < 50 ≤ High < 75 ≤ Critical.
+- The operational metrics are not part of the TRI. Delivery rating still correlates strongly with it (r = −0.71), which suggests the scores predict real delivery problems.
+- Hard-to-replace suppliers (Sourcing Risk High) average TRI 61, versus 39 for easy-to-replace ones.
+- The dataset has no country, category or component columns, so the assistant says so instead of guessing.
+
+**Risk lenses** re-weight the same 18 scores for a sourcing situation: *Safety-critical component*, *Long-term strategic partner*, *ESG & compliance first*, or *Custom* sliders. The official TRI stays visible everywhere.
 
 ## How it works
 
 ```
-data/ (suppliers, BOM, projects, alternatives, country risk)
+supplier_risk_dataset.csv, risk_criteria_description.md   (challenge inputs)
    │
-   ├── core/model.py      explainable scoring + networkx supply graph + impact propagation
-   ├── core/agent.py      tool-calling agent loop with visible reasoning trace
-   ├── core/workflows.py  news scan · scenario mapping · mitigation · due diligence
-   └── core/llm.py        Nemotron on Nebius Token Factory (OpenAI-compatible) + Tavily search
-                          (core/llm_claude.py: optional Claude backend via LLM_PROVIDER=claude)
-app.py                    Streamlit UI
+   ├── core/dataset.py    loading, exact TRI decomposition, filters, comparison, lenses, swap candidates
+   ├── core/agent.py      tool-calling agent loop with visible trace; dataset tools + rail tools
+   ├── core/workflows.py  research agent · decision memo · rail news scan, scenarios, mitigation
+   ├── core/llm.py        Nemotron on Nebius Token Factory (OpenAI-compatible) + Tavily search/extract
+   │                      (core/llm_claude.py: optional Claude backend via LLM_PROVIDER=claude)
+   └── core/model.py      rail extension: scoring + networkx supply graph + impact propagation (data/)
+views/                    one module per tab; charts.py holds the Plotly figures
+app.py                    Streamlit shell: login, sidebar (lens, shortlist), tabs
 ```
-
-**Risk score** = weighted sum of factor scores (0–100, higher = riskier):
-
-| Factor | Weight | Source |
-|---|---|---|
-| External events | 30% | Agent: live news → structured events (type, severity, confidence, relevance, URL) |
-| Single-source dependency | 15% | BOM share and lead time |
-| Financial health | 15% | Supplier data |
-| Country / geopolitical | 10% | Country risk table |
-| On-time delivery trend | 10% | Last 6 months |
-| Quality | 10% | PPM and non-conformance reports |
-| Certification | 10% | Expired, expiring or missing rail certificates |
-
-Bands: low < 40 ≤ watch < 60 ≤ act now.
-
-**Impact propagation:** outage weeks plus a restart ramp (scaled by lead time), minus stock buffer. A second source covers part of the gap for dual-sourced parts. Delay beyond each project's schedule slack is multiplied by its contract penalty per day.
 
 ## Run it
 
 ```bash
 uv venv --python 3.12 .venv && uv pip install --python .venv/bin/python -r requirements.txt
-cp .env.example .env   # add NEBIUS_API_KEY and TAVILY_API_KEY
+cp .env.example .env   # add NEBIUS_API_KEY and TAVILY_API_KEY; optional APP_USERS=jury:password
 .venv/bin/streamlit run app.py
 ```
 
-`cache/events.json` ships with a pre-run scan so the dashboard is populated without keys. Regenerate the dataset with `python data/seed.py`.
+Filtering, comparison and profiles work without any keys. The chat assistant, memo and research agent need an LLM key, and the research agent also needs Tavily. `python prewarm.py` pre-runs the slow agent workflows into `cache/` so every tab opens populated.
 
 ## Data
 
-Supplier and customer names are **fictional**, and so are the planted KPIs. Train product names are used for context only. News signals come from live web search (Tavily). Country risk values are illustrative approximations of public governance indices. To use real data, replace the files in `data/` with ERP/SRM exports in the same shape.
+The 10,000 suppliers are the challenge's anonymized dataset. The rail impact lab uses separate fictional suppliers, customers and KPIs (`data/`, regenerate with `python data/seed.py`); train product names are used for context only. News and research come from live web search.

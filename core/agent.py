@@ -2,7 +2,7 @@
 import json
 from pathlib import Path
 
-from core import llm, model as m
+from core import dataset as ds, llm, model as m
 
 CACHE = Path(__file__).resolve().parent.parent / "cache"
 CACHE.mkdir(exist_ok=True)
@@ -84,7 +84,105 @@ def t_list_projects():
     return list(m.projects().values())
 
 
+# ---------- tools over the 10,000-supplier Siemens dataset ----------
+
+KEY_COLS = ["Supplier Name", "Total_Risk_Index", "Total_Risk_Index_Level", "Sourcing Risk Level",
+            "Supply Chain Complexity", "Supplier Delivery Rating"]
+
+
+def _rows(d, extra=()):
+    cols = list(dict.fromkeys(["supplierID"] + KEY_COLS + [c for c in extra if c in d.columns]))
+    return d[cols].to_dict("records")
+
+
+def t_find_suppliers(conditions: list | None = None, sort_by: str = "Total_Risk_Index", ascending: bool = True,
+                     limit: int = 10, columns: list | None = None):
+    rows, warn, total = ds.query(conditions or [], sort_by, ascending, limit)
+    extra = [ds.resolve_column(c.get("column", "")) for c in conditions or []] + \
+            [ds.resolve_column(sort_by)] + [ds.resolve_column(c) for c in columns or []]
+    return {"total_matches": total, "showing": len(rows), "warnings": warn,
+            "suppliers": _rows(rows, [c for c in extra if c])}
+
+
+def t_get_suppliers(suppliers: list | str):
+    ids, bad = ds.resolve_many(suppliers)
+    out = []
+    for sid in ids[:20]:
+        r = ds.df().loc[sid]
+        out.append({"supplierID": sid, "riskier_than_pct_of_suppliers": float(r["TRI_Percentile"]),
+                    **{k: (v.item() if hasattr(v, "item") else v) for k, v in r.drop(["supplierID", "TRI_Percentile"]).items()}})
+    return {"suppliers": out, "not_found": bad}
+
+
+def t_explain_risk(supplier: str):
+    sid = ds.resolve(supplier)
+    if not sid:
+        return {"error": f"no supplier '{supplier}' in the dataset"}
+    e = ds.explain(sid)
+    e.pop("contributions")
+    return e
+
+
+def t_compare_suppliers(suppliers: list | str, columns: list | None = None):
+    ids, bad = ds.resolve_many(suppliers)
+    if not ids:
+        return {"error": "none of these suppliers exist in the dataset", "not_found": bad}
+    return {**ds.compare(ids[:20], columns), "not_found": bad}
+
+
+def t_column_stats(column: str, group_by: str = "", suppliers: list | None = None):
+    ids = ds.resolve_many(suppliers)[0] if suppliers else None
+    return ds.stats(column, group_by or None, ids)
+
+
+def t_show_chart(kind: str, suppliers: list | None = None, columns: list | None = None, title: str = ""):
+    ids = ds.resolve_many(suppliers)[0] if suppliers else []
+    return {"rendered": kind, "suppliers": ids[:20], "columns": [c for c in (ds.resolve_column(x) for x in columns or []) if c]}
+
+
+def t_add_to_shortlist(suppliers: list | str):
+    ids, bad = ds.resolve_many(suppliers)
+    return {"added": ids[:20], "not_found": bad}
+
+
+COLUMN_HELP = ("Columns: Total_Risk_Index, the 18 risk scores (" + ", ".join(ds.SCORES) +
+               "), each with a *_Level column (Low/Medium/High/Critical), Purchase Order Volume (EUR), Order Change Rate, "
+               "Supplier Delivery Rating, Order Confirmation Rate, Sourcing Risk Level (Low/Medium/High), "
+               "Supply Chain Complexity (Simple/Moderate/Complex), Supplier Name. Loose names like 'financial' work.")
+
 TOOLS = {
+    "find_suppliers": (t_find_suppliers, "Filter, sort and rank the 10,000 suppliers. " + COLUMN_HELP,
+                       {"conditions": {"type": "array", "description": "filters, ANDed",
+                                       "items": {"type": "object", "properties": {
+                                           "column": {"type": "string"},
+                                           "op": {"type": "string", "enum": ["<", "<=", ">", ">=", "==", "!=", "in", "contains"]},
+                                           "value": {"description": "number, string or list for 'in'"}},
+                                           "required": ["column", "op", "value"]}},
+                        "sort_by": {"type": "string"}, "ascending": {"type": "boolean", "description": "true = lowest first"},
+                        "limit": {"type": "integer", "description": "max rows, up to 100"},
+                        "columns": {"type": "array", "items": {"type": "string"}, "description": "extra columns to return"}}, []),
+    "get_suppliers": (t_get_suppliers, "All columns for up to 20 suppliers by ID (SUPP_00012) or name.",
+                      {"suppliers": {"type": "array", "items": {"type": "string"}}}, ["suppliers"]),
+    "explain_risk": (t_explain_risk, "Exact breakdown of one supplier's Total_Risk_Index: each score x its weight, which "
+                     "scores push it above/below the dataset average, percentiles, operational metrics.",
+                     {"supplier": {"type": "string"}}, ["supplier"]),
+    "compare_suppliers": (t_compare_suppliers, "Side-by-side values for 2-20 suppliers with lowest/highest risk per column. "
+                          "Omit columns to compare everything.",
+                          {"suppliers": {"type": "array", "items": {"type": "string"}},
+                           "columns": {"type": "array", "items": {"type": "string"}}}, ["suppliers"]),
+    "column_stats": (t_column_stats, "Distribution of a column across all suppliers (or a given set), optionally "
+                     "averaged by a category column.",
+                     {"column": {"type": "string"}, "group_by": {"type": "string"},
+                      "suppliers": {"type": "array", "items": {"type": "string"}}}, ["column"]),
+    "show_chart": (t_show_chart, "Show the buyer a chart under your answer. kind: 'risk_breakdown' (one supplier, "
+                   "why its TRI is what it is), 'compare_bars' (suppliers x a few columns), 'heatmap' (suppliers x all "
+                   "scores), 'radar' (2-5 suppliers' risk profiles), 'distribution' (one column across all suppliers, "
+                   "marking the given suppliers). Call it once when a visual helps.",
+                   {"kind": {"type": "string", "enum": ["risk_breakdown", "compare_bars", "heatmap", "radar", "distribution"]},
+                    "suppliers": {"type": "array", "items": {"type": "string"}},
+                    "columns": {"type": "array", "items": {"type": "string"}}, "title": {"type": "string"}}, ["kind"]),
+    "add_to_shortlist": (t_add_to_shortlist, "Add suppliers to the buyer's comparison shortlist (max 20) when asked.",
+                         {"suppliers": {"type": "array", "items": {"type": "string"}}}, ["suppliers"]),
     "list_suppliers": (t_list_suppliers, "List suppliers with current risk score. Optional filters.",
                        {"country": {"type": "string", "description": "ISO code or country name"},
                         "category": {"type": "string", "description": "e.g. 'brake', 'HVAC'"},
@@ -101,6 +199,10 @@ TOOLS = {
                           {"component": {"type": "string"}}, ["component"]),
     "list_projects": (t_list_projects, "Train projects with delivery dates and contract penalties.", {}, []),
 }
+
+DATA_TOOLS = ["find_suppliers", "get_suppliers", "explain_risk", "compare_suppliers", "column_stats",
+              "show_chart", "add_to_shortlist"]
+RAIL_TOOLS = ["list_suppliers", "get_supplier", "search_news", "trace_impact", "find_alternatives", "list_projects"]
 
 
 def tool_specs(names=None):
@@ -135,9 +237,30 @@ When you finish, answer concisely in markdown: findings first, then quantified i
 concrete recommended actions. Cite news URLs when you used them."""
 
 
-def run(question: str, history: list | None = None, max_steps: int = 8, tools=None):
+DATA_SYSTEM = f"""You are the supplier selection assistant for Siemens rail procurement buyers. You answer questions
+about a dataset of 10,000 anonymized suppliers (IDs like SUPP_00012) using tools. Every number you state must come
+from a tool result in this conversation; never guess. If something is not in the data (country, product category,
+real company identity) say so plainly.
+
+Facts about the data:
+- All risk scores run 0-100, higher = riskier. Levels: Low <25, Medium 25-49, High 50-74, Critical >=75.
+- Total_Risk_Index (TRI) is exactly round(sum of the 18 scores x fixed weights): {", ".join(f"{ds.label(k)} {v:.0%}" for k, v in ds.TRI_WEIGHTS.items())}.
+  Use explain_risk to say why a TRI is high or low: name the scores that add the most points vs the dataset average.
+- Operational metrics are NOT part of TRI: Supplier Delivery Rating and Order Confirmation Rate (higher = better),
+  Order Change Rate (higher = worse), Purchase Order Volume (EUR) = financial exposure.
+- Sourcing Risk Level = how hard the supplier is to replace (Low = easy to find alternatives, High = hard).
+  Supply Chain Complexity = complexity of the supplier's logistics routes and sub-tiers.
+- "Financial risk" is ambiguous: Financial_Health_Score and Credit_Rating_Score both measure it. Answer with
+  Financial_Health_Score and mention Credit_Rating_Score when it changes the picture.
+
+Style: lead with the direct answer and the supplier ID in bold, then the evidence as a short list or small markdown
+table. Keep it under 200 words unless asked for more. Call show_chart once when comparing several suppliers or
+explaining a score, so the buyer sees it. Only call add_to_shortlist when the buyer asks."""
+
+
+def run(question: str, history: list | None = None, max_steps: int = 8, tools=None, system: str = SYSTEM):
     """Generator yielding trace steps: {'type': 'tool_call'|'tool_result'|'thought'|'answer'|'error', ...}."""
-    msgs = [{"role": "system", "content": SYSTEM}] + (history or []) + [{"role": "user", "content": question}]
+    msgs = [{"role": "system", "content": system}] + (history or []) + [{"role": "user", "content": question}]
     specs = tool_specs(tools)
     for step in range(max_steps):
         try:

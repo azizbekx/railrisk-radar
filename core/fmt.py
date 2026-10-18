@@ -2,6 +2,8 @@
 
 
 def eur(x: float) -> str:
+    if abs(x) >= 1e9:
+        return f"€{x/1e9:.1f}bn"
     return f"€{x/1e6:.1f}M" if abs(x) >= 1e6 else f"€{x/1e3:.0f}k"
 
 
@@ -40,6 +42,22 @@ def summarize(name: str, c) -> str:
             return f"{len(c)} supplier(s): " + ", ".join(x["name"].split()[0] for x in c[:6])
         if name == "list_projects" and isinstance(c, list):
             return f"{len(c)} train projects"
+        if name == "find_suppliers":
+            ids = ", ".join(x["supplierID"] for x in c["suppliers"][:4])
+            return f"{c['total_matches']:,} match(es), top: {ids}" + (f" · {'; '.join(c['warnings'])}" if c["warnings"] else "")
+        if name == "get_suppliers":
+            return ", ".join(f"{x['supplierID']} TRI {x['Total_Risk_Index']}" for x in c["suppliers"][:6])
+        if name == "explain_risk":
+            ups = ", ".join(f"{p['label']} +{p['vs_average']:.1f}" for p in c["drivers_up"][:3])
+            return f"{c['id']}: TRI **{c['total_risk_index']}** ({c['level']}), main drivers {ups}"
+        if name == "compare_suppliers":
+            return f"{len(c['suppliers'])} suppliers × {len(c['columns'])} columns"
+        if name == "column_stats":
+            return f"{c['column']}: mean {c['mean']}" if "mean" in c else f"{c['column']}: {c.get('counts')}"
+        if name == "show_chart":
+            return f"chart `{c['rendered']}` for {', '.join(c['suppliers']) or 'all suppliers'}"
+        if name == "add_to_shortlist":
+            return f"added {', '.join(c['added'])} to the shortlist"
     except (KeyError, TypeError, IndexError):
         pass
     n = len(c) if isinstance(c, (list, dict)) else 0

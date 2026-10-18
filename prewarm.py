@@ -25,10 +25,13 @@ save("threats", wf.headline_threats())
 sc = wf.scenario(SCENARIO)
 save("scenario", sc)
 trace, answer = [], ""
-for step in agent.run(wf.response_prompt(sc), max_steps=8):
+for step in agent.run(wf.response_prompt(sc), max_steps=8, tools=agent.RAIL_TOOLS):
     if step["type"] == "answer":
         answer = step["content"]
     else:
         trace.append(trace_line(step))
 save("response", {"trace": trace, "answer": answer})
-save("dd", wf.due_diligence(DD_COMPANY))
+trace = []
+rep = wf.research_company(DD_COMPANY, log=lambda s: trace.append(trace_line(s)))
+rep["trace"] = trace
+save("research", rep)
