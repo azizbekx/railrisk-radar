@@ -8,4 +8,5 @@ __pycache__/
 .claude/
 # local demo state (PERSIST_DEMO_CACHE=1 / prewarm.py --local); tracked seeds live in cache/demo/
 cache/last_*.json
+evals/results/
 cache/*.tmp
