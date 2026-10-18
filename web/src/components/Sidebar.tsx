@@ -1,4 +1,4 @@
-import { Bot, Building2, Compass, GitCompareArrows, Globe, LogOut, MessagesSquare, Radar, ScanSearch, SlidersHorizontal, Users, X } from 'lucide-react'
+import { Activity, Bot, Building2, Compass, GitCompareArrows, Globe, LogOut, MessagesSquare, Radar, ScanSearch, SlidersHorizontal, Users, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { post } from '../lib/api'
 import { LEVEL } from '../lib/chart'
@@ -13,6 +13,7 @@ const NAV: { page: Page; label: string; icon: React.ReactNode; hint: string }[] 
   { page: 'profile', label: 'Supplier profile', icon: <ScanSearch className="size-[18px]" />, hint: 'Why is the TRI high?' },
   { page: 'chat', label: 'Ask the data', icon: <MessagesSquare className="size-[18px]" />, hint: 'Grounded assistant' },
   { page: 'research', label: 'Research agent', icon: <Building2 className="size-[18px]" />, hint: 'Real company due diligence' },
+  { page: 'tracking', label: 'Live tracking', icon: <Activity className="size-[18px]" />, hint: 'Daily agent monitoring' },
 ]
 
 export function Sidebar({ user, onLogout }: { user: string | null; onLogout: () => void }) {

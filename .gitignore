@@ -12,3 +12,4 @@ web/dist/
 cache/last_*.json
 evals/results/
 cache/*.tmp
+cache/tracking/

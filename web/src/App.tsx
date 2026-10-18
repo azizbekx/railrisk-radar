@@ -11,6 +11,7 @@ import Explore from './pages/explore'
 import Profile from './pages/profile'
 import Research from './pages/research'
 import Team from './pages/team'
+import Tracking from './pages/tracking'
 
 function Login({ onDone }: { onDone: (u: string) => void }) {
   const [u, setU] = useState(''), [p, setP] = useState(''), [err, setErr] = useState(''), [busy, setBusy] = useState(false)
@@ -55,7 +56,7 @@ function Toast() {
   )
 }
 
-const PAGES = { explore: Explore, compare: Compare, team: Team, profile: Profile, chat: Chat, research: Research }
+const PAGES = { explore: Explore, compare: Compare, team: Team, profile: Profile, chat: Chat, research: Research, tracking: Tracking }
 
 export default function App() {
   const { page, setMeta, meta } = useApp()

@@ -27,6 +27,9 @@ export const post = <T,>(path: string, body?: unknown) =>
     body: JSON.stringify(body ?? {}),
   }).then(r => handle<T>(r))
 
+export const del = <T = { ok: boolean },>(path: string) =>
+  fetch(`/api${path}`, { method: 'DELETE', credentials: 'same-origin' }).then(r => handle<T>(r))
+
 export type StreamEvent<S = any, R = any> =
   | { event: 'step'; data: S }
   | { event: 'result'; data: R }

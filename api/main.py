@@ -16,8 +16,8 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from pydantic import BaseModel  # noqa: E402
 
 from api.common import jsonable, row  # noqa: E402
-from api.routes import chat, compare, explore, profile, research, team  # noqa: E402
-from core import dataset as ds, llm  # noqa: E402
+from api.routes import chat, compare, explore, profile, research, team, tracking as tracking_routes  # noqa: E402
+from core import dataset as ds, llm, tracking  # noqa: E402
 
 app = FastAPI(title="RailRisk Radar")
 DIST = Path(__file__).resolve().parent.parent / "web" / "dist"
@@ -124,8 +124,13 @@ def lookup(q: str = "", limit: int = 8):
     return jsonable([row(i) for i in hits[:limit]])
 
 
-for r in (explore, compare, team, profile, chat, research):
+for r in (explore, compare, team, profile, chat, research, tracking_routes):
     app.include_router(r.router, prefix="/api")
+
+
+@app.on_event("startup")
+def start_tracking():
+    tracking.start_scheduler()  # daily live-supplier run; skips quietly without keys or suppliers
 
 
 # ---------- the React app ----------

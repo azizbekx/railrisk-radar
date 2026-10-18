@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 import type { Meta } from './types'
 
-export type Page = 'explore' | 'compare' | 'team' | 'profile' | 'chat' | 'research'
+export type Page = 'explore' | 'compare' | 'team' | 'profile' | 'chat' | 'research' | 'tracking'
 export const MAX_SHORTLIST = 20
 export const OFFICIAL_LENS = 'Dataset TRI (official)'
 /** The jury's example shortlist (same as views/compare.py). */
@@ -15,7 +15,7 @@ const save = (k: string, v: unknown) => { try { localStorage.setItem(k, JSON.str
 
 const initialPage = (): Page => {
   const h = window.location.hash.replace('#/', '').split('/')[0] as Page
-  return ['explore', 'compare', 'team', 'profile', 'chat', 'research'].includes(h) ? h : 'explore'
+  return ['explore', 'compare', 'team', 'profile', 'chat', 'research', 'tracking'].includes(h) ? h : 'explore'
 }
 
 interface State {
