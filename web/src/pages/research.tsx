@@ -64,6 +64,14 @@ function Severity({ n }: { n: number }) {
   )
 }
 
+/** Where the agent's dig-deeper loop left a flag (core/workflows.py RESOLUTION). */
+const RESOLUTION_TONE: Record<string, 'bad' | 'good' | 'warn'> = { confirmed: 'bad', refuted: 'good', unresolved: 'warn' }
+
+function Resolution({ value }: { value?: string }) {
+  if (!value) return null
+  return <Tag tone={RESOLUTION_TONE[value] ?? 'neutral'}>{value === 'unresolved' ? 'still open' : value}</Tag>
+}
+
 function ProgressStrip({ stage, running }: { stage: number; running: boolean }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
@@ -163,6 +171,9 @@ function ReportView({ report, meta, src, onDownload }: { report: any; meta: Meta
   const flags = (report.red_flags ?? []).filter((f: any) => f && typeof f === 'object')
     .sort((a: any, b: any) => (b.severity ?? 0) - (a.severity ?? 0))
   const sources: any[] = report.sources ?? []
+  const refuted = (report.triage_flags ?? []).filter((f: any) => f && typeof f === 'object' && f.resolution === 'refuted')
+  const digLog: any[] = report.dig_log ?? []
+  const hasRange = typeof report.tri_low === 'number' && typeof report.tri_high === 'number'
 
   return (
     <div className="space-y-5">
@@ -179,13 +190,20 @@ function ReportView({ report, meta, src, onDownload }: { report: any; meta: Meta
               </a>
             )}
             <p className="mt-2 max-w-2xl text-sm text-ink-2"><Cited text={report.overview} src={src} /></p>
-            <p className="mt-2 text-xs text-muted">Researched {report.researched_at} · {sources.length} sources</p>
+            <p className="mt-2 text-xs text-muted">
+              Researched {report.researched_at} · {sources.length} sources
+              {typeof report.rounds === 'number' && ` · ${report.rounds} dig-deeper round${report.rounds === 1 ? '' : 's'}`}
+              {typeof report.pages_read === 'number' && report.pages_read > 0 && ` · ${report.pages_read} pages read in full`}
+            </p>
           </div>
           <div className="flex shrink-0 gap-3">
             <div className="rounded-2xl bg-sunken px-4 py-3 text-right">
               <div className="text-[11px] font-medium text-muted">Total Risk Index</div>
               <div className="text-2xl font-bold tracking-tight text-ink tabular-nums">{report.total_risk_index}</div>
               <div className="mt-1"><LevelBadge level={report.level} size="sm" /></div>
+              {hasRange && report.tri_low !== report.tri_high && (
+                <div className="mt-1 text-[11px] text-muted tabular-nums" title="Plausible range given the dimensions without evidence">range {report.tri_low}–{report.tri_high}</div>
+              )}
             </div>
             <div className="rounded-2xl bg-sunken px-4 py-3 text-right">
               <div className="text-[11px] font-medium text-muted">Red flags</div>
@@ -205,7 +223,10 @@ function ReportView({ report, meta, src, onDownload }: { report: any; meta: Meta
               <span>Evidence coverage</span><span className="font-semibold text-ink">{Math.round(report.evidence_coverage * 100)}%</span>
             </div>
             <Meter value={report.evidence_coverage * 100} color="var(--color-accent)" />
-            <div className="mt-1 text-[11px] text-muted">Share of the TRI weight backed by sources; the rest uses the dataset average.</div>
+            <div className="mt-1 text-[11px] text-muted">
+              Share of the TRI weight backed by sources; the rest uses the dataset average.
+              {hasRange && ` If the ${report.unknown_dimensions?.length ?? 0} dimensions without evidence sit anywhere between the dataset's 10th and 90th percentile, the TRI is ${report.tri_low}–${report.tri_high}.`}
+            </div>
           </div>
           <div className="rounded-2xl bg-accent-soft px-4 py-3 text-sm text-accent-strong">
             <Cited text={report.recommendation} src={src} />
@@ -231,10 +252,25 @@ function ReportView({ report, meta, src, onDownload }: { report: any; meta: Meta
                       <div className="text-sm font-semibold text-ink">{f.title}</div>
                       <Severity n={f.severity ?? 0} />
                     </div>
-                    {f.status && <Tag tone="neutral" className="mt-1.5">{f.status}</Tag>}
+                    {(f.status || f.resolution) && (
+                      <div className="mt-1.5 flex flex-wrap gap-1.5">
+                        {f.status && <Tag tone="neutral">{f.status}</Tag>}
+                        {f.resolution !== f.status && <Resolution value={f.resolution} />}
+                      </div>
+                    )}
                     <p className="mt-1.5 text-xs text-ink-2"><Cited text={f.detail} src={src} /><SourceLinks ns={f.sources} src={src} /></p>
                   </div>
                 ))}
+              </div>
+            )}
+            {refuted.length > 0 && (
+              <div className="mt-4 border-t border-line pt-3">
+                <div className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-muted"><CheckCircle2 className="size-3.5 text-low-dot" />Checked and refuted</div>
+                <ul className="space-y-1.5 text-xs text-ink-2">
+                  {refuted.map((f: any, i: number) => (
+                    <li key={i}><span className="font-semibold text-ink">{f.flag}</span>{f.evidence && <>: <Cited text={f.evidence} src={src} /></>}<SourceLinks ns={f.sources} src={src} /></li>
+                  ))}
+                </ul>
               </div>
             )}
           </Card>
@@ -258,7 +294,7 @@ function ReportView({ report, meta, src, onDownload }: { report: any; meta: Meta
 
       <Card>
         <button onClick={() => setShowPlan(s => !s)} className="flex w-full items-center justify-between text-left text-sm font-semibold text-ink">
-          Research plan &amp; triage
+          Research plan, triage &amp; dig-deeper rounds
           <ChevronDown className={clsx('size-4 text-muted transition', showPlan && 'rotate-180')} />
         </button>
         {showPlan && (
@@ -279,9 +315,30 @@ function ReportView({ report, meta, src, onDownload }: { report: any; meta: Meta
                 <div className="mb-1.5 text-xs font-semibold text-muted">Triage: what the agent chose to dig into</div>
                 <ul className="space-y-1.5 text-xs text-ink-2">
                   {report.triage_flags.map((f: any, i: number) => (
-                    <li key={i}><span className="font-semibold text-ink">{f.flag}</span> (severity {f.severity}) — {f.evidence}</li>
+                    <li key={i} className="flex flex-wrap items-baseline gap-1.5">
+                      <span className="font-semibold text-ink">{f.flag}</span><span>(severity {f.severity})</span><Resolution value={f.resolution} />
+                      {f.evidence && <span>— <Cited text={f.evidence} src={src} /></span>}
+                    </li>
                   ))}
                 </ul>
+              </div>
+            )}
+            {digLog.length > 0 && (
+              <div>
+                <div className="mb-1.5 text-xs font-semibold text-muted">Dig-deeper rounds</div>
+                <ol className="space-y-2 text-xs text-ink-2">
+                  {digLog.map((r: any) => (
+                    <li key={r.round} className="rounded-xl bg-sunken/60 px-3 py-2">
+                      <div className="font-semibold text-ink">
+                        Round {r.round} · {r.new_sources ?? 0} new source{r.new_sources === 1 ? '' : 's'}
+                        {typeof r.pages_read === 'number' && r.pages_read > 0 && ` · ${r.pages_read} read in full`}
+                      </div>
+                      <ul className="mt-1 list-disc space-y-0.5 pl-4">{(r.queries ?? []).map((q: string, i: number) => <li key={i}>{q}</li>)}</ul>
+                      {r.reason && <div className="mt-1 text-muted">{r.reason}</div>}
+                    </li>
+                  ))}
+                </ol>
+                {report.stop_reason && <div className="mt-1.5 text-[11px] text-muted">Stopped: {report.stop_reason}</div>}
               </div>
             )}
           </div>
@@ -338,7 +395,7 @@ export default function Page() {
           if (/Planning research/i.test(c)) bump(0)
           else if (/Research plan:/i.test(c)) bump(1)
           else if (/Red flags to verify|No red flags/i.test(c)) bump(2)
-          else if (/Closing evidence gaps|Follow-up research/i.test(c)) bump(3)
+          else if (/Round \d+: digging|Closing evidence gaps|Follow-up research/i.test(c)) bump(3)
           else if (/Writing the cited report/i.test(c)) bump(4)
           else if (e.data?.type === 'tool_call' && st >= 2) bump(3)
         } else if (e.event === 'result') {

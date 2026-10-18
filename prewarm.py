@@ -1,6 +1,6 @@
 """Pre-run the slow agent workflows so every tab opens populated (and the demo survives a slow API).
 
-Run: .venv/bin/python prewarm.py [--scan] [--team] [--local]   (--team: only the Compare tab's agent team run)
+Run: .venv/bin/python prewarm.py [--scan] [--team | --research] [--local]   (--team / --research: only that run)
 
 By default this regenerates the tracked demo seeds in cache/demo/<key>.json, which a fresh clone or a
 deployment loads into each new session. With --local it writes cache/last_<key>.json instead (gitignored,
@@ -31,21 +31,26 @@ if "--scan" in sys.argv:
     wf.scan_many(list(m.suppliers()), workers=8)
     print("scan done")
 
-save("team", team.run(TEAM_IDS, TEAM_CONTEXT, "Dataset TRI (official)", ds.TRI_WEIGHTS))
+if "--research" not in sys.argv:
+    save("team", team.run(TEAM_IDS, TEAM_CONTEXT, "Dataset TRI (official)", ds.TRI_WEIGHTS))
 if "--team" in sys.argv:
     sys.exit()
 
-save("threats", wf.headline_threats())
-sc = wf.scenario(SCENARIO)
-save("scenario", sc)
-trace, answer = [], ""
-for step in agent.run(wf.response_prompt(sc), max_steps=8, tools=agent.RAIL_TOOLS):
-    if step["type"] == "answer":
-        answer = step["content"]
-    else:
-        trace.append(trace_line(step))
-save("response", {"trace": trace, "answer": answer})
-trace = []
-rep = wf.research_company(DD_COMPANY, log=lambda s: trace.append(trace_line(s)))
-rep["trace"] = trace
+if "--research" not in sys.argv:
+    save("threats", wf.headline_threats())
+    sc = wf.scenario(SCENARIO)
+    save("scenario", sc)
+    trace, answer = [], ""
+    for step in agent.run(wf.response_prompt(sc), max_steps=8, tools=agent.RAIL_TOOLS):
+        if step["type"] == "answer":
+            answer = step["content"]
+        else:
+            trace.append(trace_line(step))
+    save("response", {"trace": trace, "answer": answer})
+
+# same shape as api/routes/research.py: raw steps (the React trace renders them) and the downloadable markdown
+steps = []
+rep = wf.research_company(DD_COMPANY, log=steps.append)
+rep["trace"] = steps
+rep["markdown"] = wf.report_markdown(rep)
 save("research", rep)

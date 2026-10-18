@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from core import dataset as ds, llm, workflows as wf
-from core.fmt import esc, safe_url
+from core.fmt import esc, safe_url, trace_line
 from views.common import pill, remember, run_streaming
 
 VERDICT_COLOR = {"approve": "Low", "approve with conditions": "Medium", "escalate": "High", "reject": "Critical"}
@@ -88,7 +88,7 @@ def show_report(rep: dict):
 
     if rep.get("trace"):
         with st.expander(f"How the agent researched this ({len(rep['trace'])} steps)"):
-            st.markdown("\n\n".join(rep["trace"]), unsafe_allow_html=True)
+            st.markdown("\n\n".join(t if isinstance(t, str) else trace_line(t) for t in rep["trace"]), unsafe_allow_html=True)
 
     left, right = st.columns([3, 2])
     with left:
