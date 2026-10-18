@@ -4,6 +4,15 @@ import os
 
 import streamlit as st
 
+# Streamlit Community Cloud passes keys via st.secrets; core/ reads os.environ. Real env vars win.
+for _k in ("NEBIUS_API_KEY", "TAVILY_API_KEY", "ANTHROPIC_API_KEY", "LLM_PROVIDER", "NEMOTRON_MODEL",
+           "NEBIUS_BASE_URL", "CLAUDE_MODEL", "APP_USERS", "PERSIST_DEMO_CACHE"):
+    try:
+        if not os.getenv(_k) and _k in st.secrets:
+            os.environ[_k] = str(st.secrets[_k])
+    except Exception:  # no secrets.toml
+        break
+
 from core import dataset as ds, llm
 from views import chat, compare, explore, profile, rail, research
 from views.common import MAX_SHORTLIST, restore, set_shortlist, shortlist
@@ -25,12 +34,8 @@ div[data-testid="stMetricValue"] {font-size: 1.6rem}
 # ---------- jury login (APP_USERS="user:password,user2:password2"; unset = open) ----------
 
 def users() -> dict:
-    raw = os.getenv("APP_USERS", "")
-    try:
-        raw = raw or st.secrets.get("APP_USERS", "")
-    except Exception:  # no secrets file
-        pass
-    return dict(u.split(":", 1) for u in raw.split(",") if ":" in u)
+    raw = os.getenv("APP_USERS", "")  # env, .env or st.secrets (bridged above)
+    return dict(map(str.strip, u.split(":", 1)) for u in raw.split(",") if ":" in u)
 
 
 def login_gate():
@@ -42,10 +47,10 @@ def login_gate():
         st.markdown("## 🚆 RailRisk Radar")
         st.caption("Supplier selection and risk intelligence for rail procurement")
         with st.form("login"):
-            u = st.text_input("Username")
+            u = st.text_input("Username").strip()
             p = st.text_input("Password", type="password")
             if st.form_submit_button("Sign in", type="primary", width="stretch"):
-                if u in accounts and hmac.compare_digest(accounts[u], p):
+                if u in accounts and hmac.compare_digest(accounts[u].encode(), p.encode()):
                     st.session_state["user"] = u
                     st.rerun()
                 st.error("Wrong username or password")
@@ -65,9 +70,12 @@ with st.sidebar:
     st.markdown(f"{llm_name}: {'🟢' if keys['llm'] else '🔴 no key'} · Web search: {'🟢' if keys['tavily'] else '🔴'}")
     models = llm.nemotron_models() if keys["llm"] and keys["provider"] == "nebius" else []
     if models:
-        default = llm.model()
-        llm.MODEL["name"] = st.selectbox("Model", models, index=models.index(default) if default in models else 0)
+        default = llm.default_model()
+        # per session: the widget value lives in this user's session_state, set_model() scopes it to this run
+        llm.set_model(st.selectbox("Model", models, index=models.index(default) if default in models else 0,
+                                   key="llm_model"))
     else:
+        llm.set_model(None)
         st.caption(f"Model: `{llm.model()}`")
 
     st.divider()

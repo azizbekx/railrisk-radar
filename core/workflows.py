@@ -2,9 +2,9 @@
 import json
 import re
 import time
-from concurrent.futures import ThreadPoolExecutor
 
 from core import dataset as ds, llm, model as m
+from core.llm import ContextPool as ThreadPoolExecutor  # workers keep the session's model choice
 from core.agent import load_events, save_events
 
 EVENT_TYPES = "financial, geopolitical, operational, natural_disaster, labour, regulatory, cyber, raw_material, logistics, quality, esg"
